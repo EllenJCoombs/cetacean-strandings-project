@@ -1,0 +1,35 @@
+---
+
+title: "Sources of bias in the cetacean stranding dataset"
+
+author: "Ellen Coombs"
+
+output: html_document
+
+--- 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(dplyr)
+```
+
+# Whale bias ideas
+
+### Bias, level of importance, possible solution
+
+
+```{r, echo = FALSE, include = FALSE}
+nhmcsipbias <- read.csv("NHMCSIPbias.csv", header = TRUE)
+nhmcsipbias
+names(nhmcsipbias) 
+
+```
+
+
+```{r, echo = FALSE}
+
+biastable <- select(nhmcsipbias, Bias, Bias.effect, Dealing.with.bias, Notes) %>%
+  rename("Bias effect" = Bias.effect, "Dealing with bias" = Dealing.with.bias)
+
+kable(biastable)
