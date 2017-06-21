@@ -18,6 +18,10 @@ install.packages("mapdata")
 library(maps)
 library(mapdata)
 
+
+nhmcsip <- read.csv("cleandates.csv")
+
+
 #Map that includes all of the islands as well 
 map('worldHires',
     c('UK', 'Ireland', 'Isle of Man','Isle of Wight', 'Wales:Anglesey'))
@@ -85,12 +89,12 @@ ggplot() +
 
 
 #Plotting counties with GADM - for United Kingdom 
-gadm <- readRDS("/Users/ellencoombs/Desktop/R copies /whales/GBR_adm2 (1).rds")
+gadm <- readRDS("/Users/ellencoombs/Desktop/Projects/Strandings/data/GBR_adm2 (1).rds")
 plot(gadm)
 
 
 #Plotting counties - southern Ireland
-gadmireland <- readRDS("/Users/ellencoombs/Desktop/R copies /whales/IRL_adm1.rds")
+gadmireland <- readRDS("/Users/ellencoombs/Desktop/Projects/Strandings/data/IRL_adm1.rds")
 plot(gadmireland)
 
 
@@ -104,6 +108,7 @@ gg1 <- ggplot() +
   geom_polygon(data = gadmireland, aes(x = long, y = lat, group = group), fill = NA, color = "black") + 
   coord_fixed(1.3) 
   
+
 
 #Adds long and lat points 
 points <- data.frame(
@@ -409,7 +414,7 @@ ukcounty <- read.csv("infuse_cnty_lyr_2011.csv")
 
 
 #Plotting counties with GADM
-gadm <- readRDS("/Users/ellencoombs/Desktop/R copies /whales/GBR_adm2 (1).rds")
+gadm <- readRDS("/Users/ellencoombs/Desktop/Projects/Strandings/data/GBR_adm2 (1).rds")
 plot(gadm)
 #Changing the border and fill color 
 plot(gadm, col = 'NA', border = 'black')
@@ -513,6 +518,9 @@ library(animate)
 #Heat map of all strandings 
 install.packages("viridis")
 library(viridis)
+library(ggplot2)
+library(dplyr)
+
 
 #Playing with colour palettes 
 mypalette<-brewer.pal(8,"Dark2")
@@ -524,8 +532,8 @@ rename(counts, count = n)
 gg1 <- ggplot() + 
   geom_polygon(data = uk, aes(x=long, y = lat, group = group), fill = "white", color = "black") + 
   #If you want to add the county lines then uncomment the next two lines 
-  #geom_polygon(data = gadm, aes(x = long, y = lat, group = group), fill = NA, color = "black") + 
-  #geom_polygon(data = gadmireland, aes(x = long, y = lat, group = group), fill = NA, color = "black") + 
+  geom_polygon(data = gadm, aes(x = long, y = lat, group = group), fill = NA, color = "black") + 
+  geom_polygon(data = gadmireland, aes(x = long, y = lat, group = group), fill = NA, color = "black") + 
   coord_fixed(1.3) 
 
 #Adds long and lat points 
@@ -540,7 +548,7 @@ gg1 +
   geom_tile(colour = "blue") +
   #scale_fill_gradient(low = "white", high = "red",
   #                    breaks = seq(0, 200, by = 30)) + 
-  scale_colour_gradientn(colors = mypalette,
+  scale_colour_gradientn(colours = terrain.colors(10),
                          breaks = seq(0, 300, by = 10)) +
   coord_map(xlim=c(-11,3), ylim=c(49,60.9)) +
   theme_bw() +
