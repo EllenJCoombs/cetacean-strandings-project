@@ -520,7 +520,8 @@ install.packages("viridis")
 library(viridis)
 library(ggplot2)
 library(dplyr)
-
+install.packages("RColorBrewer")
+library(RColorBrewer)
 
 #Playing with colour palettes 
 mypalette<-brewer.pal(8,"Dark2")
@@ -571,8 +572,38 @@ gg1+
 geom_point(data = points, aes(x = long, y = lat, colour = count), size = 0.5, alpha = 0.5) +
   stat_density2d(aes(colour = count), alpha=0.5, geom = "polygon") +
   geom_point(colour = "red") +
-  geom_path(data = points,aes(x=long, y=lat,group=group), colour="grey50")+
-  scale_fill_gradientn(colours=rev(brewer.pal(7,"Spectral")), guide = guide_legend(nrow=1))+
-  coord_map(xlim=c(-11,3), ylim=c(49,60.9))
+  geom_path(data = points,aes(x = long, y = lat,group=group), colour ="grey50")+
+  scale_fill_gradientn(colours = rev(brewer.pal(7,"Spectral")), guide = guide_legend(nrow=1))+
+  coord_map(xlim = c(-11,3), ylim = c(49,60.9))
   
+
+install.packages("rgdal")
+library(rgdal)         # for readOGR(...)
+
+sample <- data.frame(Longitude=c(-1+rnorm(50,0,.5),-2+rnorm(50,0,0.5),-4.5+rnorm(50,0,.5)),
+                     Latitude =c(52+rnorm(50,0,.5),54+rnorm(50,0,0.5),56+rnorm(50,0,.5)))
+UKmap <- readRDS("/Users/ellencoombs/Desktop/Projects/Strandings/data/GBR_adm2 (1).rds")
+IRmap <- readRDS("/Users/ellencoombs/Desktop/Projects/Strandings/data/IRL_adm1.rds")
+map.df <- fortify(UKmap)
+ir.df <- fortify(IRmap)
+
+ggplot(points, aes(x = long, y = lat)) + 
+  stat_density2d(aes(fill = ..level..), alpha = 1, geom ="polygon")+
+  geom_point(colour = "black", size = 0.5)+
+  geom_path(data = map.df, aes(x = long, y = lat, group = group), colour ="grey50")+
+  geom_path(data = ir.df, aes(x = long, y = lat, group = group), colour ="grey50")+
+  scale_fill_gradient2(low = "blue", mid = "yellow", high = "red", space = "Lab", 
+  na.value = "grey50", guide = "colourbar") +
+  xlim(-10,+2.5) +
+  coord_map(xlim = c(-11,3), ylim = c(49,60.9))
+
+#Different colour palettes and experimentation (can't see points/density easily)
+ggplot(points, aes(x = long, y = lat)) + 
+  stat_density2d(aes(fill = ..level..), alpha=0.5, geom ="polygon")+
+  geom_point(colour = "black", size = 0.5)+
+  geom_path(data = map.df, aes(x = long, y = lat,group = group), colour ="grey50")+
+  scale_fill_gradientn(colours = rev(brewer.pal(7,"Spectral")), breaks = seq(0,200, by = 5) +
+                                       xlim(-10,+2.5) +
+                                       coord_map(xlim = c(-11,3), ylim = c(49,60.9))
+
 
