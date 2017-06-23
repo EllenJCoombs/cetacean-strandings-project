@@ -161,7 +161,8 @@ ggplot(sortedmysticetes, aes(x = Year)) +
 
 #Odontocetes plot 
 ggplot(sortedodonts, aes(x = Year)) +
-  stat_count(width = 0.5)
+  stat_count(width = 0.5) +
+  facet_wrap(~ Name.Current.Sci)
 
 library(ggplot2)
 

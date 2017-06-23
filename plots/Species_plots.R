@@ -1,7 +1,7 @@
 
 library(readr)
 library(ggplot2) 
-
+library(gridExtra)
 
 # Plot whale occurrences through time
 # Note that I hardcoded the Year variable due to some issues I had with ggplot
@@ -99,4 +99,15 @@ plot_all_whale_years(ds, species.col = "Name.Current.Sci", whales,
                      binwidth = 0.5, start.date = 1913, end.date = 2017)
 
 
+#Mysitcetes 
+mysticetesplot <- c("balaenoptera acutorostrata", "balaenoptera borealis", "balaenoptera musculus", "balaenoptera physalus", 
+                    "megaptera novaeangliae", "un. mystitcete", "unknown balaenoptera", "unknown balaenopterid",
+                    "unknown mysticete")
+                  
+plot_all_whale_years(ds, species.col = "Name.Current.Sci", mysticetesplot,
+                     binwidth = 0.5, start.date = 1913, end.date = 2017)
 
+#unknowns
+unknowns <- c("unknown odontocete", "unknown mysticete", "unknown", "unknown balaenoptera", "unknown delphinidae")
+plot_all_whale_years(ds, species.col = "Name.Current.Sci", whales,
+                     binwidth = 0.5, start.date = 1913, end.date = 2017)
