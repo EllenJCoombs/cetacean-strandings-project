@@ -99,7 +99,7 @@ plot_all_whale_years(ds, species.col = "Name.Current.Sci", whales,
                      binwidth = 0.5, start.date = 1913, end.date = 2017)
 
 
-#Mysitcetes 
+#Mysitcetes ###########################################################################
 mysticetesplot <- c("balaenoptera acutorostrata", "balaenoptera borealis", "balaenoptera musculus", "balaenoptera physalus", 
                     "megaptera novaeangliae", "un. mystitcete", "unknown balaenoptera", "unknown balaenopterid",
                     "unknown mysticete") 
@@ -107,12 +107,20 @@ mysticetesplot <- c("balaenoptera acutorostrata", "balaenoptera borealis", "bala
 plot_all_whale_years(ds, species.col = "Name.Current.Sci", mysticetesplot,
                      binwidth = 0.5, start.date = 1913, end.date = 2017)
 
-#unknowns
+#unknowns #############################################################################
 unknowns <- c("unknown odontocete", "unknown mysticete", "unknown", "unknown balaenoptera", "unknown delphinidae")
 plot_all_whale_years(ds, species.col = "Name.Current.Sci", unknowns,
                      binwidth = 0.5, start.date = 1913, end.date = 2017)
 
-#Beaked and bottlenose whales 
+#Beaked and bottlenose whales ########################################################
 beakers <- c("hyperoodon ampullatus", "mesoplodon densirostris", "mesoplodon europaeus", "mesoplodon mirus")
 plot_all_whale_years(ds, species.col = "Name.Current.Sci", beakers,
                      binwidth = 0.5, start.date = 1913, end.date = 2017) 
+
+#Bycatch candidates 
+bycatch_candidates <- c("phocoena phocoena", "delphinus delphis", "tursiops truncatus")
+plot_all_whale_years(ds, species.col = "Name.Current.Sci", bycatch_candidates,
+                     binwidth = 0.5, start.date = 1913, end.date = 2017) 
+
+
+
