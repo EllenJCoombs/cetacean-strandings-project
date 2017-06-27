@@ -30,9 +30,6 @@ install.packages("lubridate")
 library(lubridate)
 library(dplyr)
 
-#The columns I want to select to look at 
-selectnhm <- select(nhm, Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
-selectcsip <- select(csip, Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
 
 #Changing CSIP date to YYYYMMMDD
 csip$Date
@@ -42,40 +39,51 @@ csip <- mutate(csip, Date = dmy(Date))
 #Names are tidy in the CSIP dataset (would use code as before if not)
 
 #Columns that I want to work with 
-csipfinal <- select(csip, Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
-csipfinal
+csipchoices <- select(csip, Name.Current.Sci, Name.Common, Latitude, Longitude, County, 
+                      Date, Date.Certainty, Year, Pathologist, Cause.of.Death.Category)
+
+write.csv(csipchoices, file = "csip_choices.csv")
+
+#Selecting by-catch
+cause_death <- csipchoices %>% 
+  filter(Cause.of.Death.Category %in% c("Bycatch", "Bycatch (known)", 
+                                        "Entanglement", "Entanglement (known)")) 
 
 
-#merging the two datasets
-#Checking that both have the same classes
+#grouping all to bycatch (including entanglement)
+#replace didn't work
 
-sapply(nhmfinal, class)
-sapply(csipfinal, class)
+#cause_death <- replace(cause_death, "Bycatch (unknown)" , "Bycatch") %>%
+#replace(cause_death, "Entanglement (unknown)", "Entanglement") 
 
-#Merging the two datasets 
-nhmcsip <- bind_rows(nhmfinal, csipfinal)
-View(nhmcsip)
+cause_death$Cause.of.Death.Category[cause_death$Cause.of.Death.Category %in% "Bycatch (known)"] <- "Bycatch"
+cause_death$Cause.of.Death.Category[cause_death$Cause.of.Death.Category %in% "Entanglement (known)"] <- "Entanglement" 
 
-nhmfinal$Latitude
+cause_death$Cause.of.Death.Category
 
-
-#Saving the new dataset 
-
-write.csv(nhmcsip, file = "cleandates.csv") 
-
-
-#Notes to think about 
-#105 fail to parse - was 130, am still missing some - need to work out how to change 'June 1929" etc
-View(selectnhm$Date)
-selectnhm
-labels(selectnhm$Date)
-selectnhm$Date
-selectnhm
-
-View(selectnhm)
-
-nhm$Date
+speciesyear <- select(csipchoices, Year, Name.Current.Sci)
+speciesyearcount <- count(csipchoices, Name.Current.Sci, Year)
+speciesbyyear <- speciesyearcount %>%
+  group_by(n, Year, Name.Current.Sci) %>%
+  arrange(Year)
 
 
-csip$Name.Current.Sci
-levels(csip$Name.Current.Sci)
+speciestotal <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
+
+d <- cause_death 
+d_bg <- speciesyear
+ggplot(d, aes(x = Year)) +
+  geom_histogram(data = d_bg, fill = "grey", alpha = 0.3) +
+  geom_histogram(colour = "grey") +
+  xlim (1990, 2015)
+
+ggplot(speciesyearcount, aes(x = Year)) +
+  geom_histogram(binwidth = 0.5) 
+
+ggplot(speciesyear, aes(x = Year)) +
+  geom_histogram()  
+
+
+
+dev.off() 
+
