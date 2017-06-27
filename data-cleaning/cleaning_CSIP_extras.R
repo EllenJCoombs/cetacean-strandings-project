@@ -70,19 +70,35 @@ speciesbyyear <- speciesyearcount %>%
 
 speciestotal <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
 
+#ugly plot of total deaths and number of deaths by bycatch 
 d <- cause_death 
 d_bg <- speciesyear
 ggplot(d, aes(x = Year)) +
   geom_histogram(data = d_bg, fill = "grey", alpha = 0.3) +
   geom_histogram(colour = "grey") +
-  xlim (1990, 2015)
+  xlim (1990, 2015) +
+  facet_wrap(~ Name.Current.Sci)
 
-ggplot(speciesyearcount, aes(x = Year)) +
-  geom_histogram(binwidth = 0.5) 
 
+#This is plotting species by bycatch
+ggplot(cause_death, aes(x = Year)) +
+  geom_histogram(colour = "grey") +
+  facet_wrap(~ Name.Current.Sci)
+
+#This is plotting each total species from CSIP
 ggplot(speciesyear, aes(x = Year)) +
-  geom_histogram()  
+  geom_histogram(colour = "black") +
+  facet_wrap(~ Name.Current.Sci)
 
+#Want to look at bycatch per species with the total species deaths in background 
+d <- speciesyearcount
+d_bg <- cause_death
+ggplot(speciesyearcount, aes(x = Year)) +
+  facet_wrap(~ Name.Current.Sci) +
+  geom_histogram(data = d_bg, fill = "grey", alpha = 0.3) +
+  geom_histogram(colour = "grey") +
+  xlim (1990, 2015) +
+  facet_wrap(~ Name.Current.Sci)
 
 
 dev.off() 
