@@ -6,6 +6,8 @@
 #Code for renaming columns so that both datsets have the same variables 
 #Code for binding the two datasets together 
 
+#Should have named cause_death -> "bycatch_deaths" or similar 
+
 #Load libraries/packages
 library(dplyr)
 library(tidyr)
@@ -50,6 +52,7 @@ cause_death <- csipchoices %>%
                                         "Entanglement", "Entanglement (known)")) 
 
 
+#BYCATCH
 #grouping all to bycatch (including entanglement)
 #replace didn't work
 
@@ -70,7 +73,8 @@ speciesbyyear <- speciesyearcount %>%
 
 speciestotal <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
 
-#ugly plot of total deaths and number of deaths by bycatch 
+#ugly plot of total deaths and number of deaths by bycatch and with species if you put 
+#in facet_wrap line 
 d <- cause_death 
 d_bg <- speciesyear
 ggplot(d, aes(x = Year)) +
@@ -101,5 +105,136 @@ ggplot(speciesyearcount, aes(x = Year)) +
   facet_wrap(~ Name.Current.Sci)
 
 
+
+#Focusing on phocoena 
+pphocoena <- filter(csipchoices, Name.Current.Sci == "Phocoena phocoena")
+pphocoenabycatch <- filter(cause_death, Name.Current.Sci == "Phocoena phocoena")
+#Phocoena bycatch 
+ggplot(pphocoenabycatch, aes(x = Year)) +
+  geom_histogram(binwidth = 0.5) +
+  theme_bw()
+
+#phocoena all deaths and bycatch deaths 
+ggplot(pphocoenabycatch, aes(x = Year)) +
+  geom_histogram(data = pphocoena, fill = "grey", alpha = 0.3) +
+  geom_histogram(colour = "grey") +
+  xlim (1990, 2015) +
+  facet_wrap(~ Name.Current.Sci)
+
+########################################################################################
+#Physical trauma - ship strike 
+
+trauma <- csipchoices %>% 
+  filter(Cause.of.Death.Category %in% c("Physical Trauma", 
+                                        "Physical Trauma Boat/Ship Strike")) 
+
+
+#Mapping these
+#Adds long and lat points 
+trauma_points <- data.frame(
+  long = trauma$Longitude,
+  lat = trauma$Latitude,
+  species = trauma$Name.Current.Sci) 
+
+gg1 +
+  geom_point(data = trauma_points, aes(x = long, y = lat), color = "red", size = 0.5) +
+  geom_point(data = trauma_points, aes(x = long, y = lat), color = "red", size = 0.5) +
+  coord_map(xlim=c(-11,3), ylim=c(49,60.9)) + 
+  facet_wrap(~ species)
+
+
+ggplot(trauma_points, aes(x = long, y = lat)) + 
+  stat_density2d(aes(fill = ..level..), alpha = 1, geom ="polygon")+
+  geom_point(colour = "black", size = 0.5)+
+  geom_path(data = map.df, aes(x = long, y = lat, group = group), colour ="grey50")+
+  geom_path(data = ir.df, aes(x = long, y = lat, group = group), colour ="grey50")+
+  scale_fill_gradient2(low = "blue", mid = "yellow", high = "red", space = "Lab", 
+                       na.value = "grey50", guide = "colourbar") +
+  xlim(-10,+2.5) +
+  coord_map(xlim = c(-11,3), ylim = c(49,60.9))
+
+
+
+#Map bycatch ###############################################################################
+library(maps)
+library(mapdata)
+
+uk <- map_data("world", regions = c('UK', 'Ireland'))
+uk <- map_data("uk")
+ggplot() + geom_polygon(data = uk, aes(x=long, y = lat, group = group)) + 
+  coord_fixed(1.3)
+
+
+#changing map outline and colours - just for fun 
+ggplot() + 
+  geom_polygon(data = uk, aes(x=long, y = lat, group = group), fill = NA, color = "red") +
+  
+  
+  geom_polygon(data = ukcounty, aes(x = long, y = lat, group = group), fill = NA, color = "black")
+coord_fixed(1.3)
+
+
+#Plotting counties with GADM - for United Kingdom 
+gadm <- readRDS("/Users/ellencoombs/Desktop/Projects/Strandings/data/GBR_adm2 (1).rds")
+plot(gadm)
+
+
+#Plotting counties - southern Ireland
+gadmireland <- readRDS("/Users/ellencoombs/Desktop/Projects/Strandings/data/IRL_adm1.rds")
+plot(gadmireland)
+
+
+gg1 <- ggplot() + 
+  geom_polygon(data = uk, aes(x=long, y = lat, group = group), fill = "white", color = "black") + 
+  geom_polygon(data = gadm, aes(x = long, y = lat, group = group), fill = NA, color = "black") + 
+  geom_polygon(data = gadmireland, aes(x = long, y = lat, group = group), fill = NA, color = "black") + 
+  coord_fixed(1.3) 
+
+#Adds long and lat points 
+points <- data.frame(
+  long = cause_death$Longitude,
+  lat = cause_death$Latitude,
+  species = cause_death$Name.Current.Sci) 
+
+#Plotting lats and longs - last line is a zoom in to Scotland - remove if wanting to see the whole dataset
+gg1 +
+  geom_point(data = points, aes(x = long, y = lat), color = "red", size = 0.5) +
+  geom_point(data = points, aes(x = long, y = lat), color = "red", size = 0.5) +
+  coord_map(xlim=c(-11,3), ylim=c(49,60.9)) + 
+  facet_wrap(~ species)
+
+
+install.packages("viridis")
+library(viridis)
+install.packages("RColorBrewer")
+library(RColorBrewer)
+
+UKmap <- readRDS("/Users/ellencoombs/Desktop/Projects/Strandings/data/GBR_adm2 (1).rds")
+IRmap <- readRDS("/Users/ellencoombs/Desktop/Projects/Strandings/data/IRL_adm1.rds")
+map.df <- fortify(UKmap)
+ir.df <- fortify(IRmap)
+
+ggplot(points, aes(x = long, y = lat)) + 
+  stat_density2d(aes(fill = ..level..), alpha = 1, geom ="polygon")+
+  geom_point(colour = "black", size = 0.5)+
+  geom_path(data = map.df, aes(x = long, y = lat, group = group), colour ="grey50")+
+  geom_path(data = ir.df, aes(x = long, y = lat, group = group), colour ="grey50")+
+  scale_fill_gradient2(low = "blue", mid = "yellow", high = "red", space = "Lab", 
+                       na.value = "grey50", guide = "colourbar") +
+  xlim(-10,+2.5) +
+  coord_map(xlim = c(-11,3), ylim = c(49,60.9))
+
+
+
+
+
+
+
+
 dev.off() 
+
+#PHYSICAL TRAUMA - boat strike and storms 
+
+
+
 
