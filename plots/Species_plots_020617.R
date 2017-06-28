@@ -10,7 +10,7 @@ library(ggplot2)
 library(reshape) 
 
 
-data <- read.csv("cleaned.data.300517.csv")
+data <- read.csv("cleandatesnames.csv")
 names(data)
 
 #Getting rid of the extra X1 column - not sure where this comes from 
@@ -111,18 +111,17 @@ ggplot(sortedodonts, aes(x = Year, y = n, color = Name.Current.Sci)) +
 
 
 #Splitting out baleen whales - must be a better way to use filter....
-bphysalus <- filter(speciesyear, Name.Current.Sci ==  "balaenoptera physalus") 
-bactorostrata <- filter(speciesyear, Name.Current.Sci ==  "balaenoptera acutorostrata") 
-bborealis <- filter(speciesyear, Name.Current.Sci ==  "balaenoptera borealis")
-bmusculus <- filter(speciesyear, Name.Current.Sci ==  "balaenoptera musculus") 
-unmysticete <- filter(speciesyear, Name.Current.Sci ==  "unknown mysticete") 
-unbalaenopterid <- filter(speciesyear, Name.Current.Sci ==  "unknown balaenoptera") 
-mysticete <- filter(speciesyear, Name.Current.Sci == "un. mystitcete")
-mnovaeangliae <- filter(speciesyear, Name.Current.Sci == "megaptera novaeangliae") 
+bphysalus <- filter(speciesyear, Name.Current.Sci ==  "Balaenoptera physalus") 
+bactorostrata <- filter(speciesyear, Name.Current.Sci ==  "Balaenoptera acutorostrata") 
+bborealis <- filter(speciesyear, Name.Current.Sci ==  "Balaenoptera borealis")
+bmusculus <- filter(speciesyear, Name.Current.Sci ==  "Balaenoptera musculus") 
+unmysticete <- filter(speciesyear, Name.Current.Sci ==  "Unknown mysticete") 
+unbalaenopterid <- filter(speciesyear, Name.Current.Sci ==  "Unknown balaenoptera") 
+mnovaeangliae <- filter(speciesyear, Name.Current.Sci == "Megaptera novaeangliae") 
 
 
 
-combinedmysticetes <- rbind(bphysalus, bactorostrata, bborealis, bmusculus, unmysticete, unbalaenopterid, mysticete, mnovaeangliae) 
+combinedmysticetes <- rbind(bphysalus, bactorostrata, bborealis, bmusculus, unmysticete, unbalaenopterid, mnovaeangliae) 
 #Putting year in ascending order 
 sortedmysticetes <- arrange(combinedmysticetes,(Year))
 #counting up each year - total mysts, not species specific 
@@ -133,6 +132,8 @@ write.csv(sortedmysticetes, file = "mysticetes_by_year.csv")
 #Selecting out odontocetes (did speciesyear (all species) - mysticetes data)
 odontocetes <- speciesyear[ !(speciesyear$Name.Current.Sci %in% sortedmysticetes$Name.Current.Sci), ]
 View(odontocetes)
+
+write.csv(odontocetes, file = "odontocetes_by_year.csv")
 
 #Ordering and combining species by year - to arrange in descending order put "desc" before the year 
 sortedodonts <- arrange(odontocetes,(Year))
@@ -160,7 +161,8 @@ ggplot(sortedmysticetes, aes(x = Year)) +
 
 #Odontocetes plot 
 ggplot(sortedodonts, aes(x = Year)) +
-  stat_count(width = 0.5)
+  stat_count(width = 0.5) +
+  facet_wrap(~Name.Current.Sci)
 
 library(ggplot2)
 

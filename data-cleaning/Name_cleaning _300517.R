@@ -26,7 +26,6 @@ levels(nhmcsip$Name.Common)
 #This is just a quick clean up as I'll be focusing on Name.Current.Sci 
 nhmcsip$Name.Common
 nhmcsip$Name.Common<-as.character(nhmcsip$Name.Common) 
-nhmcsip$Name.Current.Sci<-as.character(nhmcsip$Name.Current.Sci) 
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "WhiteNAsided dolphin"]<- "White-sided dolphin" 
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "LongNAfinned Pilot whale"] <- "Long-finned pilot whale" 
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "BottleNAnosed whale"] <- "Bottlenose whale" 
@@ -39,17 +38,19 @@ nhmcsip$Name.Common[nhmcsip$Name.Common %in% "un. mysticete"] <- "Unknown mystic
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Unknown odontocete  "] <- "Unknown odontocete" 
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Un. mysticete"] <- "Unknown mysticete"
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "un. mysticete"] <- "Unknown mysticete"
-
-
 #Replace NA with "unknown" - the only replace command that I can get to work 
 replace(nhmcsip$Name.Common, is.na(nhmcsip$Name.Common), "Unknown")
 
 
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinidae "] <- "Unknown delphinidae" 
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinidae"] <- "Unknown delphinidae" 
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenoptera "] <- "Unknown balaenopteridae" 
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenoptera"] <- "Unknown balaenopteridae"
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "unknown balaenoptera"] <- "Unknown balaenopteridae"
+
+nhmcsip$Name.Current.Sci<-as.character(nhmcsip$Name.Current.Sci) 
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinid "] <- "Unknown delphinid" 
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinid"] <- "Unknown delphinid" 
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinidae "] <- "Unknown delphinid" 
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinidae"] <- "Unknown delphinid" 
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenoptera "] <- "Unknown balaenoptera" 
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenopterid"] <- "Unknown balaenoptera"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenoptera"] <- "Unknown balaenoptera"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown odontocete "] <- "Unknown odontocete" 
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown odontocete"] <- "Unknown odontocete" 
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Un. mysticete"] <- "Unknown mysticete"
@@ -59,9 +60,12 @@ nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Balaenoptera acutorostra
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Balaenoptera physalus?"] <- "Balaenoptera physalus"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Phocoena phocoena?"] <- "Phocoena phocoena"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "phocoena phocoena"] <- "Phocoena phocoena"
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Mystitcete"] <- "Unknown mysticete"
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Lagenorhyncus"] <- "Unknown "
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Mystitcete "] <- "Unknown mysticete"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Lagenorhyncus "] <- "Unknown delphinid"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Ziphiidae "]<- "Unknown odontocete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Physeter catodon"]<- "Physeter macrocephalus"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Lagenorhynchus acutus?"]<- "Lagenorhynchus acutus"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown "]<- "Unknown"
 replace(nhmcsip$Name.Current.Sci, is.na(nhmcsip$Name.Current.Sci), "Unknown")
 
 View(nhmcsip)

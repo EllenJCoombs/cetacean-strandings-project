@@ -603,6 +603,6 @@ ggplot(points, aes(x = long, y = lat)) +
   geom_path(data = map.df, aes(x = long, y = lat,group = group), colour ="grey50")+
   scale_fill_gradientn(colours = rev(brewer.pal(7,"Spectral")), breaks = seq(0,200, by = 5) +
                                        xlim(-10, +2.5) +
-                                       coord_map(xlim = c(-11,3), ylim = c(49,60.9))
+                                       coord_map(xlim = c(-11,3), ylim = c(49,60.9)))
 
 
