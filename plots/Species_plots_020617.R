@@ -25,6 +25,8 @@ species <- count(cleaneddata, Name.Current.Sci)
 #'Speciesyearcount' cleaned data: a count of current scientific name and year 
 speciesyearcount <- count(cleaneddata, Name.Current.Sci, Year)
 
+#Counts for all species combined in a year 
+yearcount <- count(speciesyear, Year)
 
 View(species)
 #This is just species and the year - no counting or sorting 
