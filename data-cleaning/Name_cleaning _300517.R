@@ -15,15 +15,15 @@ names(nhmcsip)
 nhmcsip$Name.Current.Sci
 nhmcsip$Name.Common
 
-
-#This works for replacing NA with uknown
-nhmcsip$Name.Current.Sci<-as.character(nhmcsip$Name.Current.Sci)
-nhmcsip$Name.Current.Sci
-replace(nhmcsip$Name.Current.Sci, is.na(nhmcsip$Name.Current.Sci), "Unknown")
 nhmcsip$Name.Common
 
+#Have a look at which names need to be changed 
+levels(nhmcsip$Name.Current.Sci)
+levels(nhmcsip$Name.Common)
 
-#Cleaning some of the common names 
+#Cleaning some of the common names - Can't seem to be able to get replace to work 
+#so using base R 
+#This is just a quick clean up as I'll be focusing on Name.Current.Sci 
 nhmcsip$Name.Common
 nhmcsip$Name.Common<-as.character(nhmcsip$Name.Common) 
 nhmcsip$Name.Current.Sci<-as.character(nhmcsip$Name.Current.Sci) 
@@ -34,47 +34,51 @@ nhmcsip$Name.Common[nhmcsip$Name.Common %in% "WhiteNAbeaked dolphin"] <- "White-
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "BottleNAnosed dolphin"] <- "Bottlenose dolphin" 
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Unknown delphinidae "] <- "Unknown delphinid" 
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Unknown balaenoptera"] <- "Unknown balaenopterid" 
+nhmcnhmcsip$Name.Common[nhmcsip$Name.Common %in% "Un. mysticete"] <- "Unknown mysticete"
+nhmcsip$Name.Common[nhmcsip$Name.Common %in% "un. mysticete"] <- "Unknown mysticete"
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Unknown odontocete  "] <- "Unknown odontocete" 
+nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Un. mysticete"] <- "Unknown mysticete"
+nhmcsip$Name.Common[nhmcsip$Name.Common %in% "un. mysticete"] <- "Unknown mysticete"
 
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinidae "] <- "Unknown delphinid" 
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenoptera "] <- "Unknown balaenopterid" 
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenoptera"] <- "Unknown balaenopterid"
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "unknown balaenoptera"] <- "Unknown balaenopterid"
+
+#Replace NA with "unknown" - the only replace command that I can get to work 
+replace(nhmcsip$Name.Common, is.na(nhmcsip$Name.Common), "Unknown")
+
+
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinidae "] <- "Unknown delphinidae" 
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinidae"] <- "Unknown delphinidae" 
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenoptera "] <- "Unknown balaenopteridae" 
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenoptera"] <- "Unknown balaenopteridae"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "unknown balaenoptera"] <- "Unknown balaenopteridae"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown odontocete "] <- "Unknown odontocete" 
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown odontocete"] <- "Unknown odontocete" 
-
-
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Un. mysticete"] <- "Unknown mysticete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. mysticete"] <- "Unknown mysticete"
-nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Un. mysticete"] <- "Unknown mysticete"
-nhmcsip$Name.Common[nhmcsip$Name.Common %in% "un. mysticete"] <- "Unknown mysticete"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Mysticete "] <- "Unknown mysticete"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Balaenoptera acutorostrata?"] <- "Balaenoptera acutorostrata"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Balaenoptera physalus?"] <- "Balaenoptera physalus"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Phocoena phocoena?"] <- "Phocoena phocoena"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "phocoena phocoena"] <- "Phocoena phocoena"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Mystitcete"] <- "Unknown mysticete"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Lagenorhyncus"] <- "Unknown "
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Physeter catodon"]<- "Physeter macrocephalus"
+replace(nhmcsip$Name.Current.Sci, is.na(nhmcsip$Name.Current.Sci), "Unknown")
 
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Un. mysticete"] <- "Unknown mysticete"
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. mysticete"] <- "Unknown mysticete"
-nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Un. mysticete"] <- "Unknown mysticete"
-nhmcsip$Name.Common[nhmcsip$Name.Common %in% "un. mysticete"] <- "Unknown mysticete"
+View(nhmcsip)
 
+#putting all in lowercase - this was fir ease of quick tyoing - don't do normally 
+#nhmcsip$Name.Current.Sci<-tolower(nhmcsip$Name.Current.Sci)
+#nhmcsip$Name.Common<-tolower(nhmcsip$Name.Common)
 
-#Replacing NA with "unknown" 
-replace(nhmcsip$Name.Common, is.na(nhmcsip$Name.Common), "unknown cetacean")
-replace(nhmcsip$Name.Current.Sci, is.na(nhmcsip$Name.Current.Sci), "unknown cetacean") 
-
-
-#putting all in lowercase 
-nhmcsip$Name.Current.Sci<-tolower(nhmcsip$Name.Current.Sci)
-nhmcsip$Name.Current.Sci
-nhmcsip$Name.Common<-tolower(nhmcsip$Name.Common)
-nhmcsip$Name.Common
 
 #variations in species name 
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "physeter catodon"]<- "physeter macrocephalus" 
+ 
 nhmcsip$Name.Current.Sci
 
 
-#Code for using 'replace' instead of base R 
-nhmcsip$Name.Common
-replace(nhmcsip$Name.Common, "unknown delphinidae", "unknown delphinid")
-replace(nhmcsip$Name.Common, "unknown odontocete", "unknown odontocete  ") 
+#Code for using 'replace' instead of base R - not working - not sure why! 
+#replace(nhmcsip$Name.Common, "unknown delphinidae", "unknown delphinid")
+#replace(nhmcsip$Name.Common, "unknown odontocete", "unknown odontocete  ") 
 
 
 write.csv(nhmcsip, file = "cleandatesnames.csv")

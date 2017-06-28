@@ -113,10 +113,7 @@ gg1 <- ggplot() +
 #Adds long and lat points 
 points <- data.frame(
   long = nhmcsip$Longitude,
-  lat = nhmcsip$Latitude,
-  names = c("one", "two"),
-  stringsAsFactors = FALSE
-)  
+  lat = nhmcsip$Latitude)  
 
 #Plotting lats and longs - last line is a zoom in to Scotland - remove if wanting to see the whole dataset
 gg1 +
