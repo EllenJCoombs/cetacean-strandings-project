@@ -44,6 +44,16 @@ plot(ukbathy, deep = 0, shallow = 0, step = 0,
      lwd = 0.4, add = TRUE)
 
 
+#####################################################################
+#Ocean wind speeds - could bias where whales strand 
+install.packages("utils")
+install.packages("colorRamps")
+install.packages("RNetCDF")
+install.packages("sp")
+require(utils)
+require(colorRamps)
+require(RNetCDF)
+
 
 
 

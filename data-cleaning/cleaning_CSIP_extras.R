@@ -118,40 +118,7 @@ ggplot(pphocoenabycatch, aes(x = Year)) +
 ggplot(pphocoenabycatch, aes(x = Year)) +
   geom_histogram(data = pphocoena, fill = "grey", alpha = 0.3) +
   geom_histogram(colour = "grey") +
-  xlim (1990, 2015) +
-  facet_wrap(~ Name.Current.Sci)
-
-########################################################################################
-#Physical trauma - ship strike 
-
-trauma <- csipchoices %>% 
-  filter(Cause.of.Death.Category %in% c("Physical Trauma", 
-                                        "Physical Trauma Boat/Ship Strike")) 
-
-
-#Mapping these
-#Adds long and lat points 
-trauma_points <- data.frame(
-  long = trauma$Longitude,
-  lat = trauma$Latitude,
-  species = trauma$Name.Current.Sci) 
-
-gg1 +
-  geom_point(data = trauma_points, aes(x = long, y = lat), color = "red", size = 0.5) +
-  geom_point(data = trauma_points, aes(x = long, y = lat), color = "red", size = 0.5) +
-  coord_map(xlim=c(-11,3), ylim=c(49,60.9)) + 
-  facet_wrap(~ species)
-
-
-ggplot(trauma_points, aes(x = long, y = lat)) + 
-  stat_density2d(aes(fill = ..level..), alpha = 1, geom ="polygon")+
-  geom_point(colour = "black", size = 0.5)+
-  geom_path(data = map.df, aes(x = long, y = lat, group = group), colour ="grey50")+
-  geom_path(data = ir.df, aes(x = long, y = lat, group = group), colour ="grey50")+
-  scale_fill_gradient2(low = "blue", mid = "yellow", high = "red", space = "Lab", 
-                       na.value = "grey50", guide = "colourbar") +
-  xlim(-10,+2.5) +
-  coord_map(xlim = c(-11,3), ylim = c(49,60.9))
+  xlim (1990, 2015)
 
 
 
@@ -225,15 +192,63 @@ ggplot(points, aes(x = long, y = lat)) +
   coord_map(xlim = c(-11,3), ylim = c(49,60.9))
 
 
+########################################################################################
+#Physical trauma - ship strike 
+
+trauma <- csipchoices %>% 
+  filter(Cause.of.Death.Category %in% c("Physical Trauma", 
+                                        "Physical Trauma Boat/Ship Strike")) 
 
 
+#Mapping these
+#Adds long and lat points 
+trauma_points <- data.frame(
+  long = trauma$Longitude,
+  lat = trauma$Latitude,
+  species = trauma$Name.Current.Sci) 
+
+gg1 +
+  geom_point(data = trauma_points, aes(x = long, y = lat), color = "red", size = 0.5) +
+  geom_point(data = trauma_points, aes(x = long, y = lat), color = "red", size = 0.5) +
+  coord_map(xlim=c(-11,3), ylim=c(49,60.9)) + 
+  facet_wrap(~ species)
 
 
+ggplot(trauma_points, aes(x = long, y = lat)) + 
+  stat_density2d(aes(fill = ..level..), alpha = 1, geom ="polygon")+
+  geom_point(colour = "black", size = 0.5)+
+  geom_path(data = map.df, aes(x = long, y = lat, group = group), colour ="grey50")+
+  geom_path(data = ir.df, aes(x = long, y = lat, group = group), colour ="grey50")+
+  scale_fill_gradient2(low = "blue", mid = "yellow", high = "red", space = "Lab", 
+                       na.value = "grey50", guide = "colourbar") +
+  xlim(-10,+2.5) +
+  coord_map(xlim = c(-11,3), ylim = c(49,60.9))
 
 
 dev.off() 
 
-#PHYSICAL TRAUMA - boat strike and storms 
+##############################################################################
+#Sonar and military testing 
+
+#Using the cleaneddata dataset 
+library(dplyr)
+library(ggplot2)
+
+nw_scotland_strandings <- cleaneddata %>% 
+  filter(County %in% c("Western Isles", "Highland", "Argyll and Bute", "Highland, Scotland", "Argyll and Bute, Scotland", "Western Isles, Scotland"))
+
+
+nw_window <- nw_scotland_strandings %>% 
+  filter(Year %in% c(2001:2005))
+
+#Shows this datset by year but I need it by month.....
+ggplot(nw_window, aes(x = Date)) + 
+  stat_count(width = 0.5) + 
+  facet_wrap(~ Year)
+
+
+
+
 
 
 

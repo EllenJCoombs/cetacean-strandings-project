@@ -1,4 +1,6 @@
 
+#Using Natalie's code to look at whaling plots 
+
 library(readr)
 library(ggplot2) 
 library(gridExtra)
@@ -99,27 +101,28 @@ plot_all_whale_years(ds, species.col = "Name.Current.Sci", whales,
                      binwidth = 0.5, start.date = 1913, end.date = 2017)
 
 
-#Mysitcetes ###########################################################################
-mysticetesplot <- c("balaenoptera acutorostrata", "balaenoptera borealis", "balaenoptera musculus", "balaenoptera physalus", 
-                    "megaptera novaeangliae", "un. mystitcete", "unknown balaenoptera", "unknown balaenopterid",
-                    "unknown mysticete") 
-                  
-plot_all_whale_years(ds, species.col = "Name.Current.Sci", mysticetesplot,
-                     binwidth = 0.5, start.date = 1913, end.date = 2017)
 
-#unknowns #############################################################################
-unknowns <- c("unknown odontocete", "unknown mysticete", "unknown", "unknown balaenoptera", "unknown delphinidae")
-plot_all_whale_years(ds, species.col = "Name.Current.Sci", unknowns,
-                     binwidth = 0.5, start.date = 1913, end.date = 2017)
+#Minkes 
+whales <- c("balaenoptera acutorostrata")
 
-#Beaked and bottlenose whales ########################################################
-beakers <- c("hyperoodon ampullatus", "mesoplodon densirostris", "mesoplodon europaeus", "mesoplodon mirus")
-plot_all_whale_years(ds, species.col = "Name.Current.Sci", beakers,
-                     binwidth = 0.5, start.date = 1913, end.date = 2017) 
+# Plot graphs for 1985 - 2017 (that's the catch data I have)
+minkes <- plot_all_whale_years(ds, species.col = "Name.Current.Sci", whales,
+                     binwidth = 0.5, start.date = 1985, end.date = 2017)
 
-#Bycatch candidates 
-bycatch_candidates <- c("phocoena phocoena", "delphinus delphis", "tursiops truncatus")
-plot_all_whale_years(ds, species.col = "Name.Current.Sci", bycatch_candidates,
-                     binwidth = 0.5, start.date = 1913, end.date = 2017) 
+
+#Minke catch data from Norway following 1986 moratorium - need to find dat from 1960
+
+library(dplyr)
+minkecount <- speciesyearcount %>%
+  filter(Name.Current.Sci == "Balaenoptera acutorostrata")
+rename(minkecount, Count = n)
+
+
+minke_catch_data <- read.csv("Minke_catch_data_Norway_1986.csv")
+  
+ggplot() + 
+  geom_line(data = minke_catch_data, aes(x = Year, y = Count), col = "red") +
+  geom_line(data = minkecount, aes(x = Year, y = n), alpha = .5) +
+  xlim(1985, 2015)
 
 
