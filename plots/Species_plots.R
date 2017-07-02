@@ -81,7 +81,7 @@ plot_all_whale_years <- function(data, species.col, whales,
 library(ggplot2)
 library(gridExtra)
 
-# Read in the data
+c# Read in the data
 ds <- read_csv("cleaned.data.300517.csv")
 
 # This would get a full list of the whale species

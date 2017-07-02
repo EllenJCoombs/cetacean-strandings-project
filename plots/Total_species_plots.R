@@ -156,7 +156,8 @@ ggplot(sortmystcount, aes(x = Year, y = n)) +
   
 #Mysticete plots - why does stat count work?
 ggplot(sortedmysticetes, aes(x = Year)) +
-  stat_count(width = 0.5)
+  stat_count(width = 0.5) +
+  facet_wrap(~ Name.Current.Sci)
 
 
 #Odontocetes plot 
