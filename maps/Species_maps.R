@@ -135,6 +135,22 @@ gg1 +
     geom_point(data = pointsmultiple, aes(x = Longitude, y = Latitude, color = Species), size = 0.5) + 
     coord_map(xlim=c(-11,3), ylim=c(49,60.9)) 
   
+################################
+#Mapping the beakers 
+#With Scottish coordinates (change to coord_map(xlim=c(-11,3), ylim=c(49,60.9)) if wanting
+#the whole UK)
+
+pointsbeakers <- cleaneddata %>% 
+  select(Latitude, Longitude, Name.Current.Sci) %>%
+  filter(Name.Current.Sci %in% c ("Hyperoodon ampullatus", "Mesoplodon densirostris", "Mesoplodon europaeus", "Mesoplodon mirus"))
+
+#Plotting lats and longs 
+gg1 +
+  geom_point(data = pointsbeakers, aes(x = Longitude, y = Latitude), color = "red", size = 0.5) +
+  geom_point(data = pointsbeakers, aes(x = Longitude, y = Latitude), color = "red", size = 0.5) +
+  coord_map(xlim=c(-8, -4), ylim=c(54.5, 59.5))
+
+
 
 
 
