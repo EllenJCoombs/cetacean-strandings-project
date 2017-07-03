@@ -17,6 +17,7 @@ names(data)
 cleaneddata <- select(data, Name.Current.Sci, Name.Common, Latitude, Longitude, County, Year, Date) 
 levels(cleaneddata$Name.Current.Sci)
 
+write.csv(cleaneddata, file = "cleaneddata.csv")
 
 #Having a look at how many of each species 
 select(cleaneddata, Name.Current.Sci)
