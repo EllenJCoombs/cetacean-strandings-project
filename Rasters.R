@@ -24,12 +24,14 @@ points <- data.frame(
 
 #Plotting lats and longs
 gg1 +
-  geom_point(data = points, aes(x = long, y = lat), color = "red", size = 0.5) +
-  geom_point(data = points, aes(x = long, y = lat), color = "red", size = 0.5) +
-  geom_polygon(data = UKmap_utm, aes(x=long, y=lat, group=group), fill=NA, color="black") +
-  geom_polygon(data = sq_grid, aes(x=long, y=lat, group=group), fill="blue", alpha=0.4) +
-  coord_map(xlim=c(-11,3), ylim=c(49,60.9)) 
+  geom_point(data = longlat, aes(x = points, y = lat), color = "red", size = 0.5) +
+  geom_point(data = longlat, aes(x = points, y = lat), color = "red", size = 0.5) +
+  #over(geom_polygon(data = UKmap_utm, aes(x=long, y=lat, group=group), fill=NA, color="black")) +
+  geom_path(sq_grid, border = "orange", add = TRUE) + 
+  coord_map(xlim=c(-11,3), ylim=c(49,60.9))
   
+
+
 
 ###########
 library(dplyr)
@@ -108,19 +110,18 @@ UKmap_utm <- CRS("+proj=utm +zone=44 +datum=WGS84 +units=km +no_defs") %>%
 IRmap_utm <- CRS("+proj=utm +zone=44 +datum=WGS84 +units=km +no_defs") %>% 
   spTransform(IRmap, .)
 
-UKmap_utm <- CRS("+proj=utm +zone=44 +datum=WGS84 +units=km +no_defs") %>% 
-  spTransform(UKmap, .)
-IRmap_utm <- CRS("+proj=utm +zone=44 +datum=WGS84 +units=km +no_defs") %>% 
-  spTransform(IRmap, .)
-
+points_utm <- CRS("+proj=utm +zone=44 +datum=WGS84 +units=km +no_defs") %>% 
+  spTransform(points, .)
 
 
 #Square cells 
-sq_grid <- make_grid(UKmap, type = "square", cell_area = 625, clip = FALSE)
+sq_grid <- make_grid(UKmap_utm, type = "square", cell_area = 625, clip = FALSE) 
 plot(UKmap_utm, col = "grey50", bg = "light blue", axes = FALSE)
-plot(IRmap_utm, col = "grey50", bg = "light blue", axes = FALSE)
-plot(sq_grid, border = "orange", add = TRUE)
-box()
+plot(sq_grid, border = "orange", add = TRUE) 
+overlay(points)
+box() 
+
+geom_point(longlat)
 
 
 #################################
@@ -139,4 +140,55 @@ library(config)
 
 
 
+GB <- getData(name = "GADM", country = "GB", level = 0) %>% 
+  disaggregate %>% 
+  geometry
+# exclude gapalapos
+GB <- sapply(GB@polygons, slot, "area") %>% 
+{which(. == max(.))} %>% 
+  GB[.]
+# albers equal area for Great Britain 
+GB <- spTransform(GB, CRS(
+  paste("+proj=aea +lat_1=-5 +lat_2=-42 +lat_0=-32 +lon_0=-60",
+        "+x_0=0 +y_0=0 +ellps=aust_SA +units=km +no_defs")))
+hex_gb <- make_grid(GB, type = "hexagonal", cell_area = 2500, clip = FALSE)
 
+
+#families = name 
+#family = species 
+#bird_families = categories 
+
+fill_missing <- expand.grid(id = row.names(hex_gb), 
+                            family = points, stringsAsFactors = FALSE)
+point_density <- overlay(hex_gb, longlat, returnList = TRUE) %>% 
+  plyr::ldply(.fun = function(x) x, .id = "id") %>%
+  mutate(id = as.character(id)) %>% 
+  count(id, points) %>% 
+  left_join(fill_missing, ., by = c("id", "family")) %>%
+  # log transform
+  mutate(n = ifelse(is.na(n), -1, log10(n))) %>% 
+  spread(points, n, fill = -1) %>% 
+  SpatialPolygonsDataFrame(hex_gb, .)
+
+spplot(point_density, points,
+       main = "Ecuador eBird Sightings by Family",
+       col.regions = c("grey20", viridis(255)),
+       colorkey = list(
+         space = "bottom",
+         at = c(-0.1, seq(0, log10(1200), length.out = 255)),
+         labels = list(
+           at = c(-0.1, log10(c(1, 5, 25, 75, 250, 1200))),
+           labels = c(0, 1, 5, 25, 75, 250, 1200)
+         )
+       ),
+       xlim = bbexpand(bbox(point_density)[1, ], 0.04), 
+       ylim = bbexpand(bbox(point_density)[2, ], 0.04),
+       par.strip.text = list(col = "white"),
+       par.settings = list(
+         strip.background = list(col = "grey40"))
+)
+
+
+
+
+       
