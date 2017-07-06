@@ -121,7 +121,7 @@ plot(sq_grid, border = "orange", add = TRUE)
 overlay(points)
 box() 
 
-geom_point(longlat)
+geom_point(longlat) 
 
 
 #################################
