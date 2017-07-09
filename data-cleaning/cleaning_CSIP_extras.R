@@ -234,12 +234,13 @@ dev.off()
 library(dplyr)
 library(ggplot2)
 
+#Sleceting the chosen areas 
 nw_scotland_strandings <- cleaneddata %>% 
   filter(County %in% c("Western Isles", "Highland", "Argyll and Bute", "Highland, Scotland", "Argyll and Bute, Scotland", "Western Isles, Scotland"))
 
 #Have been using 1986 - 2005 for full window (for which military testing data is available)
 nw_window <- nw_scotland_strandings %>% 
-  filter(Year %in% c(1996:1997))
+  filter(Year %in% c(1989:2000))
 
 #Shows this datset by year but I need it by month.....
 ggplot(nw_window, aes(x = Date))+ 
@@ -249,21 +250,19 @@ install.packages("zoo")
 library(zoo)
 library(dplyr)
 
-#Splitting my data into strandings per week 
-
-
+#Splitting my data into strandings per month 
 nw_window$monthYear <- as.Date(as.yearmon(nw_window$Date))
 nw_window$quarterYear <- as.Date(as.yearqtr(nw_window$Date))
 head(nw_window)
 #Strandings gathered into months 
-nw_monthly <- head(nw_window %>% group_by(monthYear) %>% summarise(n = n()), 143)
+nw_monthly <- head(nw_window %>% group_by(monthYear) %>% summarise(n = n()), 720)
 #Strandings per quarter 
 nw_quarter <- head(nw_window %>% group_by(quarterYear) %>% summarise(n = n()), 143)
 
 #Grouping by week number - not really needed 
 nw_window$week <- as.Date("1984-07-01")+7*trunc((nw_window$joinTimestamp / 1000)/(3600*24*7))
 
-#Line plot of stranings 1986:2005
+#Line plot of strandings per month (grouped)
 ggplot(data = nw_monthly, aes(x = monthYear, y = n, group=1)) +
   geom_line()
 
@@ -273,7 +272,7 @@ ggplot(data = nw_monthly, aes(x = monthYear, y = n, group=1)) +
 ggplot(data = nw_monthly, aes(x = monthYear, y = n, group=1)) +
   geom_line()
   
-
+#Need to use this if plot window isn't opening
 dev.off()
 
 
