@@ -123,3 +123,19 @@ plot_all_whale_years(ds, species.col = "Name.Current.Sci", bycatch_candidates,
                      binwidth = 0.5, start.date = 1913, end.date = 2017) 
 
 
+#Plot without Phocoena Phocoena
+#Need to strip out PP
+allphocoena <- cleaneddata %>%
+  filter(Name.Current.Sci == "Phocoena phocoena")
+
+nophocoena <- cleaneddata[ !(cleaneddata$Name.Current.Sci %in% allphocoena$Name.Current.Sci), ]
+ggplot(nophocoena, aes(x = Year)) +
+  stat_count(width = 0.5) 
+  #Facet_wrap if splitting by species 
+  #facet_wrap(~ Name.Current.Sci)
+
+#Removing Phocoena from the odontocetes (not just from all whales as above)
+nophocoena_odonts <- odontocetes[ !(odontocetes$Name.Current.Sci %in% allphocoena$Name.Current.Sci), ]
+ggplot(nophocoena_odonts, aes(x = Year)) +
+  stat_count(width = 0.5) +
+  facet_wrap(~ Name.Current.Sci)
