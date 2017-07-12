@@ -33,7 +33,7 @@ nhmcsip$Name.Common[nhmcsip$Name.Common %in% "WhiteNAbeaked dolphin"] <- "White-
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "BottleNAnosed dolphin"] <- "Bottlenose dolphin" 
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Unknown delphinidae "] <- "Unknown delphinid" 
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Unknown balaenoptera"] <- "Unknown balaenopterid" 
-nhmcnhmcsip$Name.Common[nhmcsip$Name.Common %in% "Un. mysticete"] <- "Unknown mysticete"
+nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Un. mysticete"] <- "Unknown mysticete"
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "un. mysticete"] <- "Unknown mysticete"
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Unknown odontocete  "] <- "Unknown odontocete" 
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Un. mysticete"] <- "Unknown mysticete"
@@ -106,7 +106,7 @@ sapply(namesdatesedit, class)
 #making a final clean file 
 write.csv(namesdatesedit, file = "cleaned.data.300517.csv")
 
-
+finalclean <- read.csv("cleandatesnames.csv")
 
 
 
