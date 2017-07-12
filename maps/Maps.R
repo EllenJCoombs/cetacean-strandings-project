@@ -424,10 +424,11 @@ plot(gadm, col = wholemap, border = 'black')
 
 
 ###########################################################################################
-#Use geom density for heat maps???
+#Use geom density for heat maps??? Done 
 #Use animate for a decade by decade animation 
 
 ############################################################################################
+#This is Natalie's code 
 ## Some code to make maps for each decade and plot in the same
 # plotting window
 # Load libraries 
@@ -596,7 +597,10 @@ ggplot(points, aes(x = long, y = lat)) +
   xlim(-10,+2.5) +
   coord_map(xlim = c(-11,3), ylim = c(49,60.9))
 
+ 
+#This is juts another variation of above - the above works well 
 #Different colour palettes and experimentation (can't see points/density easily)
+#Something going wrong with the sequence section (seq, 0,200) 
 ggplot(points, aes(x = long, y = lat)) + 
   stat_density2d(aes(fill = ..level..), alpha=0.5, geom ="polygon")+
   geom_point(colour = "black", size = 0.5)+
