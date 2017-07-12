@@ -36,3 +36,18 @@ gg1+
         axis.ticks = element_blank(),
         axis.title = element_blank()) +
   guides(fill = guide_colorbar(title = NULL, ticks = FALSE))
+
+
+# And finally (I am in love with this feature)
+# if you want to know the values for each of the hexagons...
+
+gg2 <- gg1+
+geom_hex(data = ds, aes(y = Latitude, x= Longitude), bins = 10, alpha = 0.5) +
+scale_fill_gradientn(colours = viridis(4))
+
+pg <- ggplot_build(gg2)
+
+# Look at this object
+pg
+
+# Hex values are in pg$data[[2]]$count
