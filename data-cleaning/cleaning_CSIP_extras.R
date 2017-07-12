@@ -243,7 +243,7 @@ nw_window <- nw_scotland_strandings %>%
   filter(Year %in% c(1989:2000))
 
 #Shows this datset by year but I need it by month.....
-ggplot(nw_window, aes(x = Date))+ 
+ggplot(nw_window, aes(x = Date)) + 
   stat_count(width = 0.5) 
 
 install.packages("zoo")
