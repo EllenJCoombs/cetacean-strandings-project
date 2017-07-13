@@ -10,7 +10,7 @@ library(ggplot2)
 library(reshape) 
 
 
-data <- read.csv("cleaned.data.300517.csv")
+data <- read.csv("cleaned-data/cleandatesnames.csv")
 names(data)
 
 #Getting rid of the extra X1 column - not sure where this comes from 
@@ -41,7 +41,7 @@ ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Name.Current.Sci))+
   facet_wrap(~ Name.Current.Sci)
 
 
-#Plot of all species 
+#Plot of all species - ugly histogram 
 library(ggplot2)
 ggplot(speciesyear, aes(x = Year)) +
   geom_histogram()

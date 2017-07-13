@@ -1,6 +1,10 @@
 # Plot strandings as hex grids rather than points
 # Because it looks cool :)
 
+library(ggplot2)
+library(viridis)
+library(dplyr)
+
 # Extract UK map
 uk <- map_data("world", region = "UK")
 
@@ -51,3 +55,4 @@ pg <- ggplot_build(gg2)
 pg
 
 # Hex values are in pg$data[[2]]$count
+pg$data[[2]]$count

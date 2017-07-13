@@ -47,6 +47,19 @@ plot(whale.curve, ci.type = "poly", col = "blue", ci.col = "lightblue",
 
 
 
+#PLaying around with permutations 
+#whale.curve1 <- specaccum(whale.matrix, method = "random", permutations = 1)
+#whale.curve2 <- specaccum(whale.matrix, method = "random", permutations = 1)
+
+#par(mfrow = c(1,2))
+
+#plot(whale.curve1,  
+     #xlab = "number of sites", ylab = "Cumulative number of whale species")
+
+#plot(whale.curve2, 
+     #xlab = "number of sites", ylab = "Cumulative number of whale species")
+
+#par(mfrow = c(1,1))
 
 
 dev.off()
@@ -62,11 +75,16 @@ ggplot(data = total_speciesbyyear, aes(x = Year, y = x)) +
   geom_smooth() +
   geom_line()
 
-estimateR(total_speciesbyyear)
 
-#Not sure what this is showing... 
-sumtotal_speciesbyyear<-colSums(total_speciesbyyear)
-rarecurve(sumtotal_speciesbyyear)
+#Estimating total richness across years 
+#Chao2
+specpool(whale.matrix)
+#Species     chao  chao.se    jack1 jack1.se    jack2     boot  boot.se   n
+#All            33 35.64078 3.455292 36.96117 2.429669 37.97059 35.00546 1.346503 103
+
+
+
+
 
 
 
