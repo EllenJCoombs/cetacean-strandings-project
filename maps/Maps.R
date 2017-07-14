@@ -559,7 +559,7 @@ gg1 +
         axis.ticks.y = element_blank() 
   ) 
 
-#cleaning the plot window - don;t know why the plots are opening like this 
+#cleaning the plot window - don't know why the plots are opening like this 
  dev.off() 
 ?scale_fill_gradient
 
@@ -588,10 +588,10 @@ map.df <- fortify(UKmap)
 ir.df <- fortify(IRmap)
 
 ggplot(points, aes(x = long, y = lat)) + 
-  stat_density2d(aes(fill = ..level..), alpha = 1, geom ="polygon")+
+  stat_density2d(aes(fill = ..level..), alpha = 1, geom ="polygon") +
   geom_point(colour = "black", size = 0.5)+
-  geom_path(data = map.df, aes(x = long, y = lat, group = group), colour ="grey50")+
-  geom_path(data = ir.df, aes(x = long, y = lat, group = group), colour ="grey50")+
+  geom_path(data = map.df, aes(x = long, y = lat, group = group), colour ="grey50") +
+  geom_path(data = ir.df, aes(x = long, y = lat, group = group), colour ="grey50") +
   scale_fill_gradient2(low = "blue", mid = "yellow", high = "red", space = "Lab", 
   na.value = "grey50", guide = "colourbar") +
   xlim(-10,+2.5) +

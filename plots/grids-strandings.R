@@ -6,7 +6,8 @@ library(viridis)
 library(dplyr)
 
 # Extract UK map
-uk <- map_data("world", region = "UK")
+#Added Ireland 
+uk <- map_data("world", regions = c('UK', 'Ireland'))
 
 # Create base map
 gg1 <- 
@@ -16,7 +17,7 @@ gg1 <-
   coord_fixed(1.3) 
 
 # Read in the strandings data
-ds <- read_csv("cleaned-data/cleandatesnames.csv")
+ds <- read.csv("cleandatesnames.csv")
 
 # Remove NAs from coordinates
 # And restrict to things in UK waters
@@ -33,7 +34,7 @@ scale_fill_gradientn(colours = viridis(4))
 
 # More complex plot, with axes removed, smaller bins, defined colours, and simpler legend
 gg1+
-  geom_hex(data = ds, aes(y = Latitude, x= Longitude), bins = 50, alpha = 0.5) +
+  geom_hex(data = ds, aes(y = Latitude, x= Longitude), bins = 100, alpha = 0.5) +
   scale_fill_gradientn(colours = c("blue", "red")) +
   theme(axis.line  = element_blank(),
         axis.text  = element_blank(),
@@ -46,7 +47,7 @@ gg1+
 # if you want to know the values for each of the hexagons...
 
 gg2 <- gg1+
-geom_hex(data = ds, aes(y = Latitude, x= Longitude), bins = 10, alpha = 0.5) +
+geom_hex(data = ds, aes(y = Latitude, x= Longitude), bins = 100, alpha = 0.5) +
 scale_fill_gradientn(colours = viridis(4))
 
 pg <- ggplot_build(gg2)
