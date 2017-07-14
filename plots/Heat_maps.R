@@ -6,6 +6,8 @@ library(mapdata)
 #Had to install this to get it running - no idea why - was running fine before without 
 install.packages("mapproj")
 library(mapproj)
+install.packages("grid")
+library(grid)
 # Read in the strandings data
 #This is nhmcsip here 
 
@@ -54,16 +56,17 @@ for(i in seq_along(decades)){
   # placed into map.list
   map.list[[i]] <- 
     base.map +
-    ggplot(data = one.decade, aes(x = long, y = lat)) + 
+    geom_point(data = one.decade, aes(x = Longitude, y = Latitude)) + 
     stat_density2d(aes(fill = ..level..), alpha = 1, geom ="polygon")+
     geom_point(colour = "black", size = 0.5)+
     scale_fill_gradient2(low = "blue", mid = "yellow", high = "red", space = "Lab", 
-                         na.value = "grey50", guide = "colourbar", guide = guide_legend(nrow=1))
+                         na.value = "grey50", guide = "colourbar")
     # Add title with years covered
     labs(title = paste(start.year, "-", end.year))
 } # end loop
 # Plot all the plots in map.list
 do.call(grid.arrange, map.list)
+
 
 map.list
 

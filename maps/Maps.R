@@ -598,7 +598,7 @@ ggplot(points, aes(x = long, y = lat)) +
   coord_map(xlim = c(-11,3), ylim = c(49,60.9))
 
  
-#This is juts another variation of above - the above works well 
+#This is just another variation of above - the above works well 
 #Different colour palettes and experimentation (can't see points/density easily)
 #Something going wrong with the sequence section (seq, 0,200) 
 ggplot(points, aes(x = long, y = lat)) + 
