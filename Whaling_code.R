@@ -126,3 +126,86 @@ ggplot() +
   xlim(1985, 2015)
 
 
+#######################################################################################
+#Looking at whether the whaling data is consistent with the stranding data 
+#Blue, Fin, Sei, Right, Bottlenose, Minke, Humpback, Sperm, others 
+
+whaling <- read.csv("North_Atlantic_whaling.csv")
+View(whaling)
+
+#Selecting the species and the year 
+whaling_species <- whaling %>%
+  select(Year, Balaenoptera.musculus, Balaenoptera.physalus, 
+         Megaptera.novaeangliae, Balaenoptera.borealis, Physeter.macrocephalus, 
+         Others, Eubalaena.glacialis, Hyperoodon.ampullatus, Balaenoptera.acutorostrata, 
+         Total.catch)
+
+#Plotting species and year 
+library("reshape2")
+library(RColorBrewer)
+
+whaling_plot <- melt(whaling_species, id="Year")  # convert to long format
+
+rename(whaling_plot, Count = value)
+
+#Plotting all catch, North Atlantic + Total catch 
+ggplot(data = whaling_plot,
+       aes(x = Year, y = value, colour = variable, ylab = "Count")) +
+  geom_line() +
+  facet_wrap(~ variable) 
+
+#Want to order the data by year (not species as it currently is)
+whaling_plot %>%
+  arrange(Year)
+
+#Need to remove "Total.Catch" column" 
+whaling_species_no_total <- whaling %>%
+  select(Year, Balaenoptera.musculus, Balaenoptera.physalus, 
+         Megaptera.novaeangliae, Balaenoptera.borealis, Physeter.macrocephalus, 
+         Others, Eubalaena.glacialis, Hyperoodon.ampullatus, Balaenoptera.acutorostrata)
+
+
+Total_whaled <- aggregate(n ~ Year, hunted_stranders_total, sum)
+
+
+#Stripping out the same species from the stranding data (those that were hunted)
+
+hunted_stranders <- cleaneddata %>% 
+  filter(Name.Current.Sci %in% c("Balaenoptera musculus", "Balaenoptera physalus", 
+                                 "Megaptera novaeangliae", "Balaenoptera borealis", 
+                                 "Physeter macrocephalus", "Eubalaena glacialis", 
+                                 "Hyperoodon ampullatus", "Balaenoptera acutorostrata"))
+
+#Aggregating by year 
+hunted_strandersyear <- count(hunted_stranders, Name.Current.Sci, Year)
+
+#Arranging species by year by count 
+hunted_stranders_total <- hunted_strandersyear %>%
+  group_by(n, Year, Name.Current.Sci) %>%
+  arrange(Year)
+
+
+ggplot(data = hunted_stranders_total,
+       aes(x = Year, y = n, colour = Name.Current.Sci, ylab = "Count")) +
+  geom_line() +
+  facet_wrap(~ variable) 
+
+#The totals of stranded whales (that were hunting candidates) stranding each year
+Total_hunted_stranders <- aggregate(n ~ Year, hunted_stranders_total, sum)
+#Total hunted each year 
+Total_hunted <- whaling %>% 
+  select(Year, Total.catch)
+
+#Want to plot total whaled and total strandings of hunted species 
+
+Total_hunted_rename <- rename(Total_hunted, n = Total.catch)
+
+ggplot(data = Total_hunted_stranders,
+       aes(x = Year, y = n, ylab = "Count")) +
+  geom_line(data = Total_hunted_rename,
+            aes(x= Year, y = n))
+
+ggplot(Total_hunted_stranders,aes(x = Year, y = n, ylab = "Count")) + geom_line(aes(color = "Strandings"))+
+  geom_line(data = Total_hunted_rename,aes(color="Hunted"))+
+  labs(color = "Stranding and hunting data")
+
