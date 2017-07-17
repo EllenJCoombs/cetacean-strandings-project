@@ -169,7 +169,6 @@ Total_whaled <- aggregate(n ~ Year, hunted_stranders_total, sum)
 
 
 #Stripping out the same species from the stranding data (those that were hunted)
-
 hunted_stranders <- cleaneddata %>% 
   filter(Name.Current.Sci %in% c("Balaenoptera musculus", "Balaenoptera physalus", 
                                  "Megaptera novaeangliae", "Balaenoptera borealis", 
@@ -198,14 +197,37 @@ Total_hunted <- whaling %>%
 
 #Want to plot total whaled and total strandings of hunted species 
 
+#Changing the total.catch column to n 
 Total_hunted_rename <- rename(Total_hunted, n = Total.catch)
 
-ggplot(data = Total_hunted_stranders,
-       aes(x = Year, y = n, ylab = "Count")) +
-  geom_line(data = Total_hunted_rename,
-            aes(x= Year, y = n))
+#Plotting total hunted and total strandeds (of hunted species)
+ggplot(Total_hunted_stranders$n*100, aes(x = Year, y = n, ylab = "Count")) + geom_line(aes(color = "Strandings"))+
+  geom_line(data = Total_hunted_rename, aes(color="Hunted")) +
+  scale_y_continuous(sec.axis = sec_axis(~.*10))
+  labs(color = "Stranding and hunting data") 
 
-ggplot(Total_hunted_stranders,aes(x = Year, y = n, ylab = "Count")) + geom_line(aes(color = "Strandings"))+
-  geom_line(data = Total_hunted_rename,aes(color="Hunted"))+
-  labs(color = "Stranding and hunting data")
+  
+#Might be easier to bind the two datasets (Total_hunted and Total_hunted_stranding)
+
+bind_cols(Total_hunted, Total_hunted_stranders) 
+#Columns need to be the same length
+
+
+  p <- ggplot(obs, aes(x = Timestamp))
+  p <- p + geom_line(aes(y = air_temp, colour = "Temperature"))
+  
+  # adding the relative humidity data, transformed to match roughly the range of the temperature
+  p <- p + geom_line(aes(y = rel_hum/5, colour = "Humidity"))
+  
+  # now adding the secondary axis, following the example in the help file ?scale_y_continuous
+  # and, very important, reverting the above transformation
+  p <- p + scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Relative humidity [%]"))
+  
+  # modifying colours and theme options
+  p <- p + scale_colour_manual(values = c("blue", "red"))
+  p <- p + labs(y = "Air temperature [°C]",
+                x = "Date and time",
+                colour = "Parameter")
+  p <- p + theme(legend.position = c(0.8, 0.9))
+  p  
 
