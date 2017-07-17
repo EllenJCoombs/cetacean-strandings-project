@@ -140,32 +140,46 @@ whaling_species <- whaling %>%
          Others, Eubalaena.glacialis, Hyperoodon.ampullatus, Balaenoptera.acutorostrata, 
          Total.catch)
 
+#Want to rename the columns to match species name in other plots 
+whaling_species <- rename(whaling_species, "Balaenoptera physalus" = "Balaenoptera.physalus", 
+       "Balaenoptera musculus" = "Balaenoptera.musculus",
+       "Megaptera novaeangliae" = "Megaptera.novaeangliae",
+       "Balaenoptera borealis" = "Balaenoptera.borealis",
+       "Physeter macrocephalus" = "Physeter.macrocephalus", 
+       "Eubalaena glacialis" = "Eubalaena.glacialis", 
+       "Hyperoodon ampullatus" = "Hyperoodon.ampullatus",
+       "Balaenoptera acutorostrata" = "Balaenoptera.acutorostrata")
+
+
+
 #Plotting species and year 
 library("reshape2")
 library(RColorBrewer)
 
 whaling_plot <- melt(whaling_species, id="Year")  # convert to long format
 
-rename(whaling_plot, Count = value)
+#Renaming the columns 
+whaling_plot <- rename(whaling_plot, Count = value, 
+       Name.Current.Sci = variable)
 
 #Plotting all catch, North Atlantic + Total catch 
 ggplot(data = whaling_plot,
-       aes(x = Year, y = value, colour = variable, ylab = "Count")) +
+       aes(x = Year, y = Count, colour = Name.Current.Sci, ylab = "Count")) +
   geom_line() +
-  facet_wrap(~ variable) 
+  facet_wrap(~ Name.Current.Sci) 
 
 #Want to order the data by year (not species as it currently is)
 whaling_plot %>%
   arrange(Year)
 
 #Need to remove "Total.Catch" column" 
-whaling_species_no_total <- whaling %>%
-  select(Year, Balaenoptera.musculus, Balaenoptera.physalus, 
-         Megaptera.novaeangliae, Balaenoptera.borealis, Physeter.macrocephalus, 
-         Others, Eubalaena.glacialis, Hyperoodon.ampullatus, Balaenoptera.acutorostrata)
+whaling_species_no_total <- whaling_species %>%
+  select("Year", "Balaenoptera musculus", "Balaenoptera physalus", 
+         "Megaptera novaeangliae", "Balaenoptera borealis", "Physeter macrocephalus", 
+         "Others", "Eubalaena glacialis", "Hyperoodon ampullatus", "Balaenoptera acutorostrata")
 
 
-Total_whaled <- aggregate(n ~ Year, hunted_stranders_total, sum)
+#If I want to look at total killed - just look at "Total.catch" in the "whaling_species") 
 
 
 #Stripping out the same species from the stranding data (those that were hunted)
@@ -187,13 +201,14 @@ hunted_stranders_total <- hunted_strandersyear %>%
 ggplot(data = hunted_stranders_total,
        aes(x = Year, y = n, colour = Name.Current.Sci, ylab = "Count")) +
   geom_line() +
-  facet_wrap(~ variable) 
+  facet_wrap(~ Name.Current.Sci) 
 
 #The totals of stranded whales (that were hunting candidates) stranding each year
 Total_hunted_stranders <- aggregate(n ~ Year, hunted_stranders_total, sum)
-#Total hunted each year 
+#Total hunted each year (and only looking at 1913 - 2015)
 Total_hunted <- whaling %>% 
-  select(Year, Total.catch)
+  select(Year, Total.catch) %>%
+  filter(Year %in% c(1913:2015))
 
 #Want to plot total whaled and total strandings of hunted species 
 
@@ -207,26 +222,27 @@ ggplot(Total_hunted_stranders$n*100, aes(x = Year, y = n, ylab = "Count")) + geo
   labs(color = "Stranding and hunting data") 
 
   
-#Might be easier to bind the two datasets (Total_hunted and Total_hunted_stranding)
+#Bind the two datasets (Total_hunted and Total_hunted_stranding)
+#Clean up the data 
+Catch_and_strandings <- bind_cols(Total_hunted, Total_hunted_stranders) %>%
+  select(Year, Total.catch, n) %>%
+  rename("Strandings" = "n")
 
-bind_cols(Total_hunted, Total_hunted_stranders) 
-#Columns need to be the same length
-
-
-  p <- ggplot(obs, aes(x = Timestamp))
-  p <- p + geom_line(aes(y = air_temp, colour = "Temperature"))
+#Plot them both on the same graph 
+  p <- ggplot(Catch_and_strandings, aes(x = Year))
+  p <- p + geom_line(aes(y = Strandings, colour = "Total strandings"))
   
-  # adding the relative humidity data, transformed to match roughly the range of the temperature
-  p <- p + geom_line(aes(y = rel_hum/5, colour = "Humidity"))
+  # adding the stranding data, transformed to match roughly the range of the total catch
+  p <- p + geom_line(aes(y = Total.catch/20, colour = "Total catch"))
   
   # now adding the secondary axis, following the example in the help file ?scale_y_continuous
   # and, very important, reverting the above transformation
-  p <- p + scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Relative humidity [%]"))
+  p <- p + scale_y_continuous(sec.axis = sec_axis(~.*20, name = "Total catch"))
   
   # modifying colours and theme options
   p <- p + scale_colour_manual(values = c("blue", "red"))
-  p <- p + labs(y = "Air temperature [°C]",
-                x = "Date and time",
+  p <- p + labs(y = "Total stranding",
+                x = "Year",
                 colour = "Parameter")
   p <- p + theme(legend.position = c(0.8, 0.9))
   p  
