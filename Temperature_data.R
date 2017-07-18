@@ -29,27 +29,15 @@ attributes(ncin2$var)$names
 #[5] "temperature"                     "temperature_observation_weights"
 #[7] "temperature_uncertainty"         "time_bnds"          
 
-<<<<<<< HEAD
-ncatt_get(ncin1, attributes(ncin1$var)$names[5])
-=======
-
->>>>>>> aa1f40f59e329dc7304de29059d8c7c6d305c9aa
 
 print(ncin1)
 print(ncin2)
 
 
-<<<<<<< HEAD
 ncin1_data <- ncvar_get(ncin1, attributes(ncin1$var)$names[1])
 print(ncin1_data)
 
 
-
-
-
-
-=======
->>>>>>> aa1f40f59e329dc7304de29059d8c7c6d305c9aa
 #Global attributes 
 # get global attributes
 title <- ncatt_get(ncin1,0,"title")
