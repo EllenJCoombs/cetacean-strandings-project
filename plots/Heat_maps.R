@@ -17,7 +17,7 @@ library(grid)
 uk <- map_data("world", regions = c('UK', 'Ireland'))
 # Create base map
 base.map <- 
-  ggplot() + 
+  ggplot() +
   # Add country polygons
   geom_polygon(data = uk, aes(x = long, y = lat, group = group), 
                fill = "white", color = "black") + 
