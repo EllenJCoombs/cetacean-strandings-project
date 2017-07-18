@@ -168,7 +168,7 @@ ggplot(data = whaling_plot,
   geom_line() +
   facet_wrap(~ Name.Current.Sci) 
 
-#Want to order the data by year (not species as it currently is)
+#Want to order the data by year (not species as it currently is) 
 whaling_plot %>%
   arrange(Year)
 
