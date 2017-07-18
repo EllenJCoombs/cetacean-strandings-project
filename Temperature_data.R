@@ -29,12 +29,17 @@ attributes(ncin2$var)$names
 #[5] "temperature"                     "temperature_observation_weights"
 #[7] "temperature_uncertainty"         "time_bnds"          
 
+<<<<<<< HEAD
 ncatt_get(ncin1, attributes(ncin1$var)$names[5])
+=======
+
+>>>>>>> aa1f40f59e329dc7304de29059d8c7c6d305c9aa
 
 print(ncin1)
 print(ncin2)
 
 
+<<<<<<< HEAD
 ncin1_data <- ncvar_get(ncin1, attributes(ncin1$var)$names[1])
 print(ncin1_data)
 
@@ -43,6 +48,8 @@ print(ncin1_data)
 
 
 
+=======
+>>>>>>> aa1f40f59e329dc7304de29059d8c7c6d305c9aa
 #Global attributes 
 # get global attributes
 title <- ncatt_get(ncin1,0,"title")
@@ -115,10 +122,32 @@ levelplot(tmp_slice ~ long1 * lat1, data=grid, at=cutpts, cuts=11, pretty=T,
 lonlat <- as.matrix(expand.grid(long1,lat1))
 dim(lonlat)
 
+<<<<<<< HEAD
 
 
 
 
+=======
+# vector of `tmp` values
+tmp_vec <- as.vector(tmp_slice)
+length(tmp_vec)
+
+
+
+ncin1
+
+tustr <- strsplit(tunits$value," ")
+tdstr <- strsplit(unlist(tustr)[3], "-")
+tmonth <- as.integer(unlist(tdstr)[2])
+tday <- as.integer(unlist(tdstr)[3])
+tyear <- as.integer(unlist(tdstr)[1])
+chron(time,origin=c(tmonth, tday, tyear))
+
+save(ncin1, file = "UK_left.switch.EN4.2.RData")
+save(ncin2, file = "UK_right.EN4.2.RData")
+
+save(ncin1, file = "UK.left.switch.en4.2.csv")
+>>>>>>> aa1f40f59e329dc7304de29059d8c7c6d305c9aa
 
 #Create a dataframe 
 # create dataframe -- reshape data
@@ -130,5 +159,17 @@ lonlat2 <- as.matrix(expand.grid(long2,lat2))
 dim(lonlat2)
 
 
+<<<<<<< HEAD
+=======
+#Temperatures 
+# vector of `tmp` values
+# replace netCDF fill values with NA's
+tmp_array[tmp_array==fillvalue$value] <- NA
+
+
+tmp_vec <- as.vector(tmp_slice)
+length(tmp_vec)
+
+>>>>>>> aa1f40f59e329dc7304de29059d8c7c6d305c9aa
 
 
