@@ -1,107 +1,7 @@
+#Whaling data 
+#Practicing with minkes as the data are pretty good 
 
-#Using Natalie's code to look at whaling plots 
-
-library(readr)
-library(ggplot2) 
-library(gridExtra)
-
-# Plot whale occurrences through time
-# Note that I hardcoded the Year variable due to some issues I had with ggplot
-# You'd need to change this if you changed the name of that variable.
-# species.name = name of the species if looking at only one
-# binwidth = width of bins in histogram
-# start.date and end.date - allows you to change the plotting window years
-# You might want to do other things like control the y axis limits, or labels etc.
-whale_years_plot <- function(data, species.name = NULL, binwidth = 0.5, 
-                             start.date = 1913, end.date = 2017){
-  
-  ggplot(data, aes(x = Year)) +
-    geom_histogram(binwidth = binwidth) +
-    xlim(start.date, end.date) +
-    theme_bw() +
-    labs(title = species.name)
-}
-
-# Choose one species from dataset
-# Input name of the column with the species data
-# and the name of the species (both in quotation marks)
-choose_species <- function(data, species.col.no, species.name){
-  data[which(data[, species.col.no] == species.name), ]
-}
-
-# Select a list of all whale species in the strandings dataset
-# Currently this deletes NAs but does not fix "unknowns" etc.
-# Replace unknowns with NA when cleaning data
-whale_list <- function(data, species.col){
-  # Extract column number of species column
-  species.col.no <- which(names(data) == species.col)
-  # Get list of whale species
-  whales <- unique(data[, species.col.no])
-  # Unlist so this is a list of species not a dataframe
-  whales <- unlist(whales, use.names = FALSE)
-  # Remove NAs
-  whales[!is.na(whales)]
-}
-
-# Plot all the plots for all the whales
-# year = name of date variable, not in quotation marks
-# species.name = name of the species if looking at only one
-# binwidth = width of bins in histogram
-# start.date and end.date - allows you to change the plotting window years
-# species.col = name of the column with the species data in quotation marks
-# whales = a vector of names of the whales you want to plot
-# requires library(gridExtra)
-# requires library(ggplot2)
-plot_all_whale_years <- function(data, species.col, whales,
-                                 binwidth = 0.5, start.date = 1913, end.date = 2017){
-  
-  # Extract column number of species column
-  species.col.no <- which(names(data) == species.col)
-  
-  # Make an empty list to put graphs into
-  whale.graph.list <- list()
-  
-  # Loop through each of the whales in the list
-  for(i in seq_along(whales)){
-    
-    # Select one whale
-    one.whale.name <- whales[i]
-    one.whale <- choose_species(data, species.col.no, one.whale.name)
-    
-    # Plot the graph
-    whale.graph.list[[i]] <- 
-      whale_years_plot(one.whale, species.name = one.whale.name, binwidth, 
-                       start.date, end.date)
-  } # end loop
-  
-  # Plot all the plots in whale.graph.list
-  do.call(grid.arrange, whale.graph.list)
-  
-}
-
-# EXAMPLE
-library(ggplot2)
-library(gridExtra)
-
-# Read in the data
-ds <- read_csv("cleaned.data.300517.csv")
-
-# This would get a full list of the whale species
-# But for now we just want a couple as an example
-# whales <- whale_list(ds, "Name.Current.Sci")
-
-#If I want to look at all whales 
-whales <- whale_list(ds, "Name.Current.Sci")
-
-#If I want to look at just these species 
-whales <- c("delphinus delphis", "phocoena phocoena", "kogia sima", "orcinus orca")
-
-# Plot graphs
-plot_all_whale_years(ds, species.col = "Name.Current.Sci", whales,
-                     binwidth = 0.5, start.date = 1913, end.date = 2017)
-
-
-
+#Using Natalie's code 
 #Minkes 
 whales <- c("balaenoptera acutorostrata")
 
@@ -110,19 +10,23 @@ minkes <- plot_all_whale_years(ds, species.col = "Name.Current.Sci", whales,
                      binwidth = 0.5, start.date = 1985, end.date = 2017)
 
 
-#Minke catch data from Norway following 1986 moratorium - need to find dat from 1960
+#Minke catch data from Norway following 1986 moratorium - need to find data from 1960
 
 library(dplyr)
+#Minke stranding data 
 minkecount <- speciesyearcount %>%
   filter(Name.Current.Sci == "Balaenoptera acutorostrata")
-rename(minkecount, Count = n)
 
+minkecount_edit <- rename(minkecount, Strandings = n) %>%
+  filter(Year %in% c(1985:2015))
 
-minke_catch_data <- read.csv("Minke_catch_data_Norway_1986.csv")
+#Minke catch data 
+minke_catch_data <- read.csv("Minke_catch_data_Norway_Iceland.csv")
+minke_catch_data <- rename(minke_catch_data, Catch = Count) 
   
 ggplot() + 
-  geom_line(data = minke_catch_data, aes(x = Year, y = Count), col = "red") +
-  geom_line(data = minkecount, aes(x = Year, y = n), alpha = .5) +
+  geom_line(data = minke_catch_data, aes(x = Year, y = Catch), col = "red") +
+  geom_line(data = minkecount_edit, aes(x = Year, y = Strandings), alpha = .5) +
   xlim(1985, 2015)
 
 
@@ -251,7 +155,39 @@ Catch_and_strandings <- bind_cols(Total_hunted, Total_hunted_stranders) %>%
 #######################################################################################
 #Each species stranding and whaling 
   
-#Need "whaling_species_no_total" and "hunted stranders" 
+#Need "iwc" and "hunted_stranders_total" 
 #Each species seperately...?
   
+iwc <- whaling_species_no_total
+  
+library(reshape2)
+install.packages("mvbutils")
+library(mvbutils)
+  
+#Arranging by species for catch data 
+iwc$X <- NULL
+iwc <- melt(iwc, measure.vars=names(iwc)%except%"Year") 
+
+iwc <- iwc %>% 
+  rename(Name.Current.Sci = variable) %>%
+  rename(Catch = value) %>% 
+  arrange(Year)
+
+#Clean up hunted_stranders_total
+hunted_stranders_total <- hunted_stranders_total %>%
+  rename(Strandings = n)
+
+#Plot the data together 
+ggplot() + 
+  geom_line(data = hunted_stranders_total, aes(x = Year, y = Strandings, colour = "grey")) +
+  geom_line(data = iwc, aes(x = Year, y = Catch/20, colour = "black")) +
+  scale_y_continuous(sec.axis = sec_axis(~.*20, name = "Total catch")) +
+  labs(y = "Total stranding",
+              x = "Year",
+              colour = "Parameter") +
+  facet_wrap(~ Name.Current.Sci)
+
+
+
+
 
