@@ -247,3 +247,11 @@ Catch_and_strandings <- bind_cols(Total_hunted, Total_hunted_stranders) %>%
   p <- p + theme(legend.position = c(0.8, 0.9))
   p  
 
+  
+#######################################################################################
+#Each species stranding and whaling 
+  
+#Need "whaling_species_no_total" and "hunted stranders" 
+#Each species seperately...?
+  
+
