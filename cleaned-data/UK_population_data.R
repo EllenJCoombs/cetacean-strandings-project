@@ -62,5 +62,23 @@ ggplot() +
        colour = "Parameter") 
 
 
+########################################################################################
+#Comparing UK population with UK county data 
+
+uk_counties <- read.csv("Country_county_population.csv", header = TRUE)
+
+#Cleaning up the data quickly 
+uk_counties <- uk_counties %>%
+  select("YEAR", "UK", "CORNWALL", "DEVON", "HAMPSHIRE", "KENT", "CEREDIGION", "NORFOLK", "WEST.LANCASHIRE",
+         "NORTHUMBERLAND", "ARGYLL", "HIGHLAND") 
+
+uk_counties <- uk_counties %>% 
+  filter(YEAR %in% c(1991:2009))
+
+#Having a look at county fluctuations compared to UK 
+ggplot() + 
+  geom_line(data = uk_counties, aes(x = CORNWALL, y = UK, colour = "CORNWALL")) +
+  labs(x = "County population", y = "Country population") + 
+  geom_line(data = uk_counties, aes(x = DEVON, y = UK, colour = "DEVON"))
 
 
