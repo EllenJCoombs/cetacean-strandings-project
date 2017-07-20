@@ -12,8 +12,8 @@ install.packages("ncdf4", repos = NULL, type="source")
 ncname <- "cru10min30_tmp" 
 
 #Reading in .nc data 
-ncin1 <- nc_open("UK_left.switch.EN4.2.nc")
-ncin2 <- nc_open("UK_right.EN4.2.nc")
+ncin1 <- nc_open("UK_left.switch.EN.4.2.nc")
+ncin2 <- nc_open("UK_right.EN.4.2.nc")
 
 #Having a look at what's in the files 
 attributes(ncin1)$names
@@ -82,6 +82,8 @@ temp2 <- ncvar_get(ncin2,"temperature")
 temp_uncertainty1 <- ncvar_get(ncin1,"temperature_uncertainty")
 temp_uncertainty2 <- ncvar_get(ncin2, "temperature_uncertainty")
 
+temp1
+
 # replace netCDF fill values with NA's - no fill values found 
 temp1[temp1==fillvalue$value] <- NA
 temp2[temp2==fillvalue$value] <- NA
@@ -110,17 +112,9 @@ levelplot(tmp_slice ~ long1 * lat1, data=grid, at=cutpts, cuts=11, pretty=T,
 lonlat <- as.matrix(expand.grid(long1,lat1))
 dim(lonlat)
 
-<<<<<<< HEAD
-
-
-
-
-=======
 # vector of `tmp` values
 tmp_vec <- as.vector(tmp_slice)
 length(tmp_vec)
-
-
 
 ncin1
 
@@ -135,7 +129,6 @@ save(ncin1, file = "UK_left.switch.EN4.2.RData")
 save(ncin2, file = "UK_right.EN4.2.RData")
 
 save(ncin1, file = "UK.left.switch.en4.2.csv")
->>>>>>> aa1f40f59e329dc7304de29059d8c7c6d305c9aa
 
 #Create a dataframe 
 # create dataframe -- reshape data
@@ -146,9 +139,6 @@ dim(lonlat1)
 lonlat2 <- as.matrix(expand.grid(long2,lat2))
 dim(lonlat2)
 
-
-<<<<<<< HEAD
-=======
 #Temperatures 
 # vector of `tmp` values
 # replace netCDF fill values with NA's
@@ -158,6 +148,5 @@ tmp_array[tmp_array==fillvalue$value] <- NA
 tmp_vec <- as.vector(tmp_slice)
 length(tmp_vec)
 
->>>>>>> aa1f40f59e329dc7304de29059d8c7c6d305c9aa
 
 
