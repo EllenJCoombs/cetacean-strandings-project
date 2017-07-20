@@ -52,7 +52,7 @@ small_pops <- population_data %>%
                      "SCOTLAND", "SOUTH EAST", "SOUTH WEST", "WALES", "WEST MIDLANDS", "YORKSHIRE AND THE HUMBER"))
 
 
-#Plot both with two different axis
+#Plot both with two different axis ###NEED TO FINISH###
 ggplot() + 
   geom_line(data = small_pops, aes(x = Year, y = Population, colour = "grey")) +
   geom_line(data = large_pops, aes(x = Year, y = Population/100, colour = "black")) +
@@ -72,13 +72,83 @@ uk_counties <- uk_counties %>%
   select("YEAR", "UK", "CORNWALL", "DEVON", "HAMPSHIRE", "KENT", "CEREDIGION", "NORFOLK", "WEST.LANCASHIRE",
          "NORTHUMBERLAND", "ARGYLL", "HIGHLAND") 
 
+
 uk_counties <- uk_counties %>% 
   filter(YEAR %in% c(1991:2009))
 
 #Having a look at county fluctuations compared to UK 
-ggplot() + 
-  geom_line(data = uk_counties, aes(x = CORNWALL, y = UK, colour = "CORNWALL")) +
-  labs(x = "County population", y = "Country population") + 
-  geom_line(data = uk_counties, aes(x = DEVON, y = UK, colour = "DEVON"))
+install.packages("Rmisc")
+library(Rmisc)
+
+c1 <- ggplot(data = uk_counties, aes(x = CORNWALL, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "Cornwall population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
 
+c2 <- ggplot(data = uk_counties, aes(x = DEVON, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "Devon population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+  
+
+c3 <- ggplot(data = uk_counties, aes(x = HAMPSHIRE, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "Hampshire population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+
+c4 <- ggplot(data = uk_counties, aes(x = KENT, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "Kent population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+
+c5 <- ggplot(data = uk_counties, aes(x = CEREDIGION, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "Ceredigion population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+
+c5 <- ggplot(data = uk_counties, aes(x = NORFOLK, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "Norfolk population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+
+c6 <- ggplot(data = uk_counties, aes(x = WEST.LANCASHIRE, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "West Lancashire population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+
+c7 <- ggplot(data = uk_counties, aes(x = NORTHUMBERLAND, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "Northumberland population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+
+c8 <- ggplot(data = uk_counties, aes(x = ARGYLL, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "Argyll population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+  
+
+c9 <- ggplot(data = uk_counties, aes(x = HIGHLAND, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "Highland population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+
+multiplot(c1, c2, c3, c4, c5, c6, c7, c8, c9, cols = 3) 
+  
