@@ -47,7 +47,7 @@ plot(whale.curve, ci.type = "poly", col = "blue", ci.col = "lightblue",
 
 
 
-#PLaying around with permutations 
+#Playing around with permutations 
 #whale.curve1 <- specaccum(whale.matrix, method = "random", permutations = 1)
 #whale.curve2 <- specaccum(whale.matrix, method = "random", permutations = 1)
 
