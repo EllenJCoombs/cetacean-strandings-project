@@ -2,6 +2,7 @@
 #Species richness using the vegan package 
 install.packages("vegan")
 library(vegan)
+library(ggplot2)
 
 #for altering my data into presence/absence???
 install.packages("picante")
@@ -18,11 +19,14 @@ specnumber(whale.matrix)
 
 #Alpha diversity 
 #Simpson's diversity index 
-diversity(whale.matrix, index = "simpson")
+simpson <- diversity(whale.matrix, index = "simpson")
+plot(simpson)
 
 #Shannon's diversity index 
-diversity(whale.matrix, index = "shannon")
+shannon <- diversity(whale.matrix, index = "shannon")
+plot(shannon)
 
+#used years as sites 
 rarecurve(whale.matrix)
 
 #Beta diversity
@@ -61,8 +65,6 @@ plot(whale.curve, ci.type = "poly", col = "blue", ci.col = "lightblue",
 
 #par(mfrow = c(1,1))
 
-
-dev.off()
 
 #Species per year (this incorporates NAs)
 total_speciesbyyear <- aggregate(speciesbyyear$n, by = speciesbyyear[c('Year')], length)
