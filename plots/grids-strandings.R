@@ -21,10 +21,11 @@ ds <- read.csv("cleandatesnames.csv")
 
 # Remove NAs from coordinates
 # And restrict to things in UK waters
+#Filter species here too 
 ds <- ds %>%
   filter(!is.na(Latitude) & !is.na(Longitude)) %>%
   filter(Latitude < 65 & Latitude > 45) %>%
-  filter(Longitude < 3 & Latitude > -8)
+  filter(Longitude < 3 & Latitude > -8) 
 
 # Basic plot using viridis colour scheme
 # Note that you can change bins and transparency
