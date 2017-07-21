@@ -21,7 +21,7 @@ attributes(ncin2)$names
 
 #Variables 
 attributes(ncin1$var)$names
-attributes(ncin2$var)$names
+attributes(ncin2$var)$names 
 
 #They have: 
 #[1] "depth_bnds"                      "salinity"                       
