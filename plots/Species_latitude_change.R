@@ -18,12 +18,9 @@ species_lat <- species_lat %>%
   filter(Latitude < 62.00000)
 
 
-#Can look at this for individual species and decades but can't write a function..
-
-#Need to removed the 0,0 lat/long
-L_albirostris_lat <- species_lat %>% 
-  filter(Name.Current.Sci == "Lagenorhynchus albirostris")
-
+#This bit is for playing around with specific species 
+B_acutorostrata_lat <- species_lat %>% 
+  filter(Name.Current.Sci == "Balaenoptera acutorostrata")
 
 # Create a list for the start years of each decade
 decades <- c(seq(from = 1913, to = 2003, by = 10), 2013)
@@ -41,7 +38,7 @@ for(i in seq_along(decades)){
   }
   
  # Use filter to select just the records for that decade
-  one.decade <- filter(species_lat, Year >= start.year & Year <= end.year)
+  one.decade <- filter(B_acutorostrata_lat, Year >= start.year & Year <= end.year)
   
   
   # Add the points to a plot 
