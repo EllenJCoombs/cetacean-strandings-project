@@ -5,16 +5,10 @@
 library(dplyr)
 library(tidyverse)
 library(tidyr)
-install.packages("ggplot2")
 library(ggplot2)
-install.packages("ggmap")
 library(ggmap)
-install.packages("sp")
 library(sp)
 library(ggfortify)
-
-install.packages("maps")
-install.packages("mapdata")
 library(maps)
 library(mapdata)
 

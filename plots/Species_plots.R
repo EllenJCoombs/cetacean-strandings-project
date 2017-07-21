@@ -134,7 +134,8 @@ ggplot(nophocoena, aes(x = Year)) +
   #Facet_wrap if splitting by species 
   #facet_wrap(~ Name.Current.Sci)
 
-#Removing Phocoena from the odontocetes (not just from all whales as above)
+#Removing Phocoena from the odontocetes (not just from all whales as above as odontocetes make up
+#most strandings 
 nophocoena_odonts <- odontocetes[ !(odontocetes$Name.Current.Sci %in% allphocoena$Name.Current.Sci), ]
 ggplot(nophocoena_odonts, aes(x = Year)) +
   stat_count(width = 0.5) +

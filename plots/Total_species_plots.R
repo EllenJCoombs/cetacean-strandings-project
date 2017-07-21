@@ -25,6 +25,7 @@ select(cleaneddata, Name.Current.Sci)
 species <- count(cleaneddata, Name.Current.Sci)
 #'Speciesyearcount' cleaned data: a count of current scientific name and year 
 speciesyearcount <- count(cleaneddata, Name.Current.Sci, Year)
+species_lat <- count(cleaneddata, Name.Current.Sci, Latitude)
 
 
 View(species)
