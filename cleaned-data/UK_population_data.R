@@ -7,6 +7,7 @@ library(dplyr)
 #Read in the proto-population data (need to make this more detailed)
 library(reshape2)
 library(mvbutils)
+library(ggplot2)
 #Check.names removes the X that randomly appeared (not sure what that was)
 population_data <- read.csv("Population_data.csv", check.names = FALSE)
 
@@ -78,7 +79,7 @@ uk_counties <- uk_counties %>%
 
 #Having a look at county fluctuations compared to UK 
 install.packages("Rmisc")
-library(Rmisc)
+library(Rmisc) #for the multiplot function 
 
 c1 <- ggplot(data = uk_counties, aes(x = CORNWALL, y = UK)) +
   geom_point(size = 0.5) +
@@ -152,3 +153,39 @@ c9 <- ggplot(data = uk_counties, aes(x = HIGHLAND, y = UK)) +
 
 multiplot(c1, c2, c3, c4, c5, c6, c7, c8, c9, cols = 3) 
   
+
+###################################################################################
+#Ireland, Scotland and Wales (more)
+
+extra_counties <- read.csv("Ireland_Scot_Wales.csv")
+
+d1 <- ggplot(data = extra_counties, aes(x = KERRY, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "Kerry population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+
+d2 <- ggplot(data = extra_counties, aes(x = SLIGO, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "Sligo population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+
+d3 <- ggplot(data = extra_counties, aes(x = INVERCLYDE, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "Inverclyde population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+
+d4 <- ggplot(data = extra_counties, aes(x = ANGELSEY, y = UK)) +
+  geom_point(size = 0.5) +
+  labs(x = "Angelsey population", y = "UK population") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+multiplot(d1, d2, d3, d4, cols = 2) 
+
+
