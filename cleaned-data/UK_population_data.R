@@ -64,6 +64,8 @@ ggplot() +
 
 
 ########################################################################################
+library(ggplot2)
+library(dplyr)
 #Comparing UK population with UK county data 
 
 uk_counties <- read.csv("Country_county_population.csv", header = TRUE)

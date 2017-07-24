@@ -1,16 +1,14 @@
 
 #Species richness using the vegan package 
-install.packages("vegan")
 library(vegan)
 library(ggplot2)
 
 #for altering my data into presence/absence???
-install.packages("picante")
 library(picante)
 
 cleaneddata <- read.csv("cleandatesnames.csv")
 
-#Need to reorder the data...?
+#Need to reorder the data
 reordering <- speciesbyyear[c("Year", "n", "Name.Current.Sci")]
 whale.matrix <- sample2matrix(reordering)
 
@@ -69,6 +67,11 @@ plot(whale.curve, ci.type = "poly", col = "blue", ci.col = "lightblue",
 #Species per year (this incorporates NAs)
 total_speciesbyyear <- aggregate(speciesbyyear$n, by = speciesbyyear[c('Year')], length)
 rarecurve(total_speciesbyyear)
+
+#Histogram of species richness 
+ggplot(data = speciesbyyear, aes(x = Year)) +
+  geom_histogram(binwidth = 0.5)
+
 
 #plot of total species per year 
 ggplot(data = total_speciesbyyear, aes(x = Year, y = x)) +
