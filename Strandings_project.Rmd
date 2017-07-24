@@ -1081,14 +1081,56 @@ multiplot(d1, d2, d3, d4, cols = 2)
 ```
 
 
-
-
 ###ii. Sampling bias - Basic plot (specific species/all species for that year)
+Taking a look at individual species/total number of strandings per year 
+
+```{r, include=FALSE}
+#Using the cleaned dataset 
+data <- read.csv("cleandatesnames.csv") 
+
+#Looking at species by year - a count of each species per year
+speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
+View(speciesbyyear)
+#Arranging species by year by count 
+speciesbyyear <- speciesyearcount %>%
+  group_by(n, Year, Name.Current.Sci) %>%
+  arrange(Year)
+
+#Total each of the years - this is using the totalcount dataset 
+totalcount <- speciesyear %>% count("Year") 
+
+ggplot(data = speciesyear, aes(x = Year)) +
+         geom_histogram(binwidth = 0.5) +
+  labs(x = "Year", y = "Total count") 
 
 
+#Creating a data table of species, total per year and basic sampling effort 
+library(dplyr)
+yearoverview <- speciesyearcount %>% left_join(totalcount, by="Year") %>%
+  arrange(Year) %>%
+  mutate(sampling = n/freq)
 
+library(readr)
+library(ggplot2) 
 
+#ugly graph of sampling effort for all species 
+ggplot(data = yearoverview, aes(x = Year, y = sampling, color = Name.Current.Sci)) +
+  geom_line() +
+  xlim(1913, 2017) +
+  theme_bw() +
+  labs(title = "sampling effort")
+```
 
+```{r, include=FALSE}
+sampling_list <- select(yearoverview, Name.Current.Sci, sampling) 
+#Basic sampling effort for each species 
+ggplot(yearoverview, aes(x = Year, y = sampling)) +
+  geom_line() +
+  xlim(1913, 2017) +
+  theme_bw() + 
+  labs(title = "Basic sampling effort for each species") +
+  facet_wrap(~ Name.Current.Sci)
+```
 
 ## Including Plots
 
