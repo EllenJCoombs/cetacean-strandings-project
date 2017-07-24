@@ -643,6 +643,20 @@ I used the 'zoo' package to do this
 library(zoo)
 library(dplyr)
 
+#Here, beaker stradnings in North west Scotland form 1989:2000 were investigated alongside #miltary data - but this code will be used to split up 
+
+#Selecting the chosen areas 
+nw_scotland_strandings <- cleaneddata %>% 
+  filter(County %in% c("Western Isles", "Highland", "Argyll and Bute", "Highland, Scotland", "Argyll and Bute, Scotland", "Western Isles, Scotland"))
+
+#Have been using 1986 - 2005 for full window (for which military testing data is available)
+nw_window <- nw_scotland_strandings %>% 
+  filter(Year %in% c(1989:2000))
+
+#Shows this datset by year but I need it by month.....
+ggplot(nw_window, aes(x = Date)) + 
+  stat_count(width = 0.5) 
+
 #Splitting my data into strandings per month 
 nw_window$monthYear <- as.Date(as.yearmon(nw_window$Date))
 nw_window$quarterYear <- as.Date(as.yearqtr(nw_window$Date))
@@ -669,7 +683,179 @@ ggplot(data = nw_monthly, aes(x = monthYear, y = n, group=1)) +
 
 ###ii. Cross-validation of data: live survey data, bycatch data and whaling data 
 
+```{r, include=FALSE}
+library(dplyr)
+library(ggplot2)
 
+#Cross validation with whaling data 
+#Looking at whether the whaling data is consistent with the stranding data 
+#Blue, Fin, Sei, Right, Bottlenose, Minke, Humpback, Sperm, others 
+
+whaling <- read.csv("North_Atlantic_whaling.csv")
+View(whaling)
+
+#Selecting the species and the year 
+whaling_species <- whaling %>%
+  select(Year, Balaenoptera.musculus, Balaenoptera.physalus, 
+         Megaptera.novaeangliae, Balaenoptera.borealis, Physeter.macrocephalus, 
+         Others, Eubalaena.glacialis, Hyperoodon.ampullatus, Balaenoptera.acutorostrata, 
+         Total.catch)
+
+#Want to rename the columns to match species name in other plots 
+whaling_species <- rename(whaling_species, "Balaenoptera physalus" = "Balaenoptera.physalus", 
+       "Balaenoptera musculus" = "Balaenoptera.musculus",
+       "Megaptera novaeangliae" = "Megaptera.novaeangliae",
+       "Balaenoptera borealis" = "Balaenoptera.borealis",
+       "Physeter macrocephalus" = "Physeter.macrocephalus", 
+       "Eubalaena glacialis" = "Eubalaena.glacialis", 
+       "Hyperoodon ampullatus" = "Hyperoodon.ampullatus",
+       "Balaenoptera acutorostrata" = "Balaenoptera.acutorostrata")
+
+#Plotting species and year 
+library("reshape2")
+library(RColorBrewer)
+
+whaling_plot <- melt(whaling_species, id="Year")  # convert to long format
+
+#Renaming the columns 
+whaling_plot <- rename(whaling_plot, Count = value, 
+       Name.Current.Sci = variable)
+```
+
+```{r, include=FALSE}
+library(ggplot2)
+library(dplyr)
+
+#Plotting all catch, North Atlantic + Total catch 
+ggplot(data = whaling_plot,
+       aes(x = Year, y = Count, colour = Name.Current.Sci, ylab = "Count")) +
+  geom_line() +
+  facet_wrap(~ Name.Current.Sci) 
+
+#Want to order the data by year (not species as it currently is) 
+whaling_plot %>%
+  arrange(Year)
+
+#Need to remove "Total.Catch" column" 
+whaling_species_no_total <- whaling_species %>%
+  select("Year", "Balaenoptera musculus", "Balaenoptera physalus", 
+         "Megaptera novaeangliae", "Balaenoptera borealis", "Physeter macrocephalus", 
+         "Others", "Eubalaena glacialis", "Hyperoodon ampullatus", "Balaenoptera acutorostrata")
+
+
+#If I want to look at total killed - just look at "Total.catch" in the "whaling_species") 
+
+
+#Stripping out the same species from the stranding data (those that were hunted)
+hunted_stranders <- cleaneddata %>% 
+  filter(Name.Current.Sci %in% c("Balaenoptera musculus", "Balaenoptera physalus", 
+                                 "Megaptera novaeangliae", "Balaenoptera borealis", 
+                                 "Physeter macrocephalus", "Eubalaena glacialis", 
+                                 "Hyperoodon ampullatus", "Balaenoptera acutorostrata"))
+
+#Aggregating by year 
+hunted_strandersyear <- count(hunted_stranders, Name.Current.Sci, Year)
+
+#Arranging species by year by count 
+hunted_stranders_total <- hunted_strandersyear %>%
+  group_by(n, Year, Name.Current.Sci) %>%
+  arrange(Year)
+```
+
+Plotting total stranded whales of species that strand 
+
+```{r, include=FALSE}
+
+library(ggplot2)
+library(dplyr)
+
+
+ggplot(data = hunted_stranders_total,
+       aes(x = Year, y = n, colour = Name.Current.Sci, ylab = "Count")) +
+  geom_line() +
+  facet_wrap(~ Name.Current.Sci) 
+
+#The totals of stranded whales (that were hunting candidates) stranding each year
+Total_hunted_stranders <- aggregate(n ~ Year, hunted_stranders_total, sum)
+#Total hunted each year (and only looking at 1913 - 2015)
+Total_hunted <- whaling %>% 
+  select(Year, Total.catch) %>%
+  filter(Year %in% c(1913:2015))
+
+#Want to plot total whaled and total strandings of hunted species 
+#Changing the total.catch column to n 
+Total_hunted_rename <- rename(Total_hunted, n = Total.catch)
+
+#Plotting total hunted and total strandeds (of hunted species)
+#Not sure this works...
+ggplot(Total_hunted_stranders$n*100, aes(x = Year, y = n, ylab = "Count")) + geom_line(aes(color = "Strandings"))+
+  geom_line(data = Total_hunted_rename, aes(color="Hunted")) +
+  scale_y_continuous(sec.axis = sec_axis(~.*100))
+  labs(color = "Stranding and hunting data") 
+
+  
+#Bind the two datasets (Total_hunted and Total_hunted_stranding)
+#Clean up the data 
+Catch_and_strandings <- bind_cols(Total_hunted, Total_hunted_stranders) %>%
+  select(Year, Total.catch, n) %>%
+  rename("Strandings" = "n")
+
+#Plot them both on the same graph 
+  p <- ggplot(Catch_and_strandings, aes(x = Year))
+  p <- p + geom_line(aes(y = Strandings, colour = "Total strandings"))
+  
+  # adding the stranding data, transformed to match roughly the range of the total catch
+  p <- p + geom_line(aes(y = Total.catch/20, colour = "Total catch"))
+  
+  # now adding the secondary axis, following the example in the help file ?scale_y_continuous
+  # and, very important, reverting the above transformation
+  p <- p + scale_y_continuous(sec.axis = sec_axis(~.*20, name = "Total catch"))
+  
+  # modifying colours and theme options
+  p <- p + scale_colour_manual(values = c("blue", "red"))
+  p <- p + labs(y = "Total stranding",
+                x = "Year",
+                colour = "Parameter")
+  p <- p + theme(legend.position = c(0.8, 0.9))
+  p  
+```
+  
+Each species stranding and whaling 
+```{r, include=FALSE}
+
+#Need "iwc" and "hunted_stranders_total" 
+#Each species seperately...?
+  
+iwc <- whaling_species_no_total
+  
+library(reshape2)
+install.packages("mvbutils")
+library(mvbutils)
+  
+#Arranging by species for catch data 
+iwc$X <- NULL
+iwc <- melt(iwc, measure.vars=names(iwc)%except%"Year") 
+
+iwc <- iwc %>% 
+  rename(Name.Current.Sci = variable) %>%
+  rename(Catch = value) %>% 
+  arrange(Year)
+
+#Clean up hunted_stranders_total
+hunted_stranders_total <- hunted_stranders_total %>%
+  rename(Strandings = n)
+
+#Plot the data together 
+ggplot() + 
+  geom_line(data = hunted_stranders_total, aes(x = Year, y = Strandings, colour = "grey")) +
+  geom_line(data = iwc, aes(x = Year, y = Catch/20, colour = "black")) +
+  scale_y_continuous(sec.axis = sec_axis(~.*20, name = "Total catch")) +
+  labs(y = "Total stranding",
+              x = "Year",
+              colour = "Parameter") +
+  facet_wrap(~ Name.Current.Sci)
+
+```
 
 ## Including Plots
 
