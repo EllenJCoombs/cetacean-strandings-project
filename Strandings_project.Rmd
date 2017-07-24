@@ -493,9 +493,10 @@ specpool(whale.matrix)
 Species     chao  chao.se    jack1 jack1.se    jack2     boot  boot.se   n
 All            33 35.64078 3.455292 36.96117 2.429669 37.97059 35.00546 1.346503 103
 
+Chao2 - 35/36?? Number of species 
 
 ###iiii. Species changes 
-Here, I decided to look at any changes in spatial distribution using species latitude over the century 
+Here, I decided to look at any changes in spatial distribution using counts per latitude (degrees parallel north) over the century for individual species, and for all species together
 
 This was done for individual species but can easily be done for each species 
 - Gives an idea of species distribution 
@@ -629,12 +630,51 @@ for(i in seq_along(decades)){
 do.call(grid.arrange, map.list)
 ```
 
+##B. Link to sea surface temperature (SST)
+Still working on this 
+
+##C. Interesting side questions 
+###i. Current seasonal changes in cetacean distributions 
+I have been playing with code to split up data into monthly strandings (total, all species, or for individual species) and also quarterly counts which could be used for looking at seasonal changes 
+
+I used the 'zoo' package to do this 
+
+```{r, include=FALSE}
+library(zoo)
+library(dplyr)
+
+#Splitting my data into strandings per month 
+nw_window$monthYear <- as.Date(as.yearmon(nw_window$Date))
+nw_window$quarterYear <- as.Date(as.yearqtr(nw_window$Date))
+head(nw_window)
+#Strandings gathered into months 
+nw_monthly <- head(nw_window %>% group_by(monthYear) %>% summarise(n = n()), 720)
+#Strandings per quarter 
+nw_quarter <- head(nw_window %>% group_by(quarterYear) %>% summarise(n = n()), 143)
+
+#Grouping by week number - not really needed 
+nw_window$week <- as.Date("1984-07-01")+7*trunc((nw_window$joinTimestamp / 1000)/(3600*24*7))
+
+#Line plot of strandings per month (grouped)
+ggplot(data = nw_monthly, aes(x = monthYear, y = n, group=1)) +
+  geom_line()
+
+#Looking at individual years 
+#Just use above code and change the years 
+
+ggplot(data = nw_monthly, aes(x = monthYear, y = n, group=1)) +
+  geom_line()
+
+```
+
+###ii. Cross-validation of data: live survey data, bycatch data and whaling data 
 
 
 
 ## Including Plots
 
-
-
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Other plots include: 
+- Bycatch heat maps 
+- Focusing on data from CSIP only 
+- Military zone plots and beakers 
+- Heatmap of shipstrike incidents and physical trauma 
