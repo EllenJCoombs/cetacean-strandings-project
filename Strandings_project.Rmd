@@ -847,8 +847,8 @@ hunted_stranders_total <- hunted_stranders_total %>%
 
 #Plot the data together 
 ggplot() + 
-  geom_line(data = hunted_stranders_total, aes(x = Year, y = Strandings, colour = "grey")) +
-  geom_line(data = iwc, aes(x = Year, y = Catch/20, colour = "black")) +
+  geom_line(data = hunted_stranders_total, aes(x = Year, y = Strandings, colour = "Strandings")) +
+  geom_line(data = iwc, aes(x = Year, y = Catch/20, colour = "Hunted")) +
   scale_y_continuous(sec.axis = sec_axis(~.*20, name = "Total catch")) +
   labs(y = "Total stranding",
               x = "Year",
@@ -856,6 +856,111 @@ ggplot() +
   facet_wrap(~ Name.Current.Sci)
 
 ```
+
+- I want to be able to add bycatch data to the above plots but am having trouble finding the data 
+- Same with live sightings data - have spoken to Tom Webb and emailed Peter Evans 
+  - OBIS-Seamap is static, have been told to use JCP but this is also static 
+
+##D. The 'boring' questions 
+###i.Sampling effort - county data - need to work out how to get this on the hex plots 
+
+UK population plots 
+```{r, include=FALSE}
+#Looking at UK population as a means of assessing sampling effort 
+#Step one is to see how regional data compares to total population data
+#I.e. can I used total population data, or would that not reflect regional changes? 
+
+library(dplyr)
+
+#Read in the proto-population data (need to make this more detailed e.g. by county, see below)
+library(reshape2)
+library(mvbutils)
+library(ggplot2)
+#Check.names removes the X that randomly appeared (not sure what that was)
+population_data <- read.csv("Population_data.csv", check.names = FALSE)
+
+#Arranging data in to years, locality and population 
+population_data$X <- NULL
+population_data <- melt(population_data, measure.vars=names(population_data)%except%"Name")
+
+population_data <- population_data %>% 
+  rename(Year = variable) %>%
+  rename(Population = value) 
+
+population <- population_data$Population 
+
+#Transforming population to numeric (was in "")
+population <- gsub(",","", population)
+population_data <- mutate(population_data, Population = as.numeric(Population))
+
+as.numeric <- population
+
+#Checking that it's numeric 
+sapply(population_data, class)
+#Log transformation 
+
+#plotting population data 
+#Need to log the population data 
+ggplot() + 
+  geom_line(data = population_data, aes(x = Year, y = Population, colour = Name, group = factor(Name))) +
+  labs(x = "Year", y = "Population") + 
+  geom_smooth (method=lm, se=FALSE, colour = "grey70", size =0.7)
+  #coord_cartesian(ylim = c(1,000,000, 60,000,000))
+
+```
+
+  
+```{r, include=FALSE}
+library(dplyr)
+#Read in the proto-population data (need to make this more detailed e.g. by county, see below)
+library(reshape2)
+library(mvbutils)
+library(ggplot2)
+
+#Doesn't show much - split out the data fpr larger and smaller populations and put on a
+#seperate y-axis 
+large_pops <- population_data %>% 
+  filter(Name %in% c("UNITED KINGDOM", "ENGLAND", "ENGLAND & WALES", "GREAT BRITAIN"))
+
+#Not sure why the below didn't work 
+#small_pops <- population_data[ !(population_data$Name %in% large_pops$Name), ]
+
+small_pops <- population_data %>% 
+  filter(Name %in% c("EAST", "EAST MIDLANDS", "LONDON", "NORTH EAST", "NORTH WEST", "NORTHERN IRELAND","SCOTLAND", "SOUTH EAST", "SOUTH WEST", "WALES", "WEST MIDLANDS", "YORKSHIRE AND THE HUMBER"))
+
+
+#Plot both with two different axis
+#This isn't right
+ggplot() +
+  geom_point(data = small_pops, aes(x = Year, y = Population, colour = "Regions")) +
+  geom_point(data = large_pops, aes(x = Year, y = Population/100, colour = "Countries")) +
+  scale_y_continuous(sec.axis = sec_axis(~.*100, name = "Total population")) +
+  labs(y = "Regional Population",
+       x = "Year") 
+
+```
+
+
+Looking in a little more detail at county vs. country data 
+```{r, include=FALSE}
+library(dplyr)
+library(reshape2)
+library(mvbutils)
+library(ggplot2)
+
+
+
+```
+
+
+
+
+###ii. Sampling bias - Basic plot (specific species/all species for that year)
+
+
+
+
+
 
 ## Including Plots
 
