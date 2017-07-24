@@ -234,7 +234,7 @@ dev.off()
 library(dplyr)
 library(ggplot2)
 
-#Sleceting the chosen areas 
+#Selecting the chosen areas 
 nw_scotland_strandings <- cleaneddata %>% 
   filter(County %in% c("Western Isles", "Highland", "Argyll and Bute", "Highland, Scotland", "Argyll and Bute, Scotland", "Western Isles, Scotland"))
 

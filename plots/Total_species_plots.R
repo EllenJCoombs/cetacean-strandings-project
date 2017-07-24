@@ -33,7 +33,7 @@ View(species)
 speciesyear <- select(cleaneddata, Year, Name.Current.Sci)
 
 
-#Geom_line of all species for every year year 
+#Geom_line of all species for every year 
 ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Name.Current.Sci))+
   theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
   labs(x = "Year", y = "Species count") +
@@ -47,7 +47,7 @@ library(ggplot2)
 ggplot(speciesyear, aes(x = Year)) +
   geom_histogram()
 
-#Seperate species (messy as there are so many and I need to sort out the names)
+#Seperate species 
 ggplot(speciesyear, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
