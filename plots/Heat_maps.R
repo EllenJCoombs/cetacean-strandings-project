@@ -9,9 +9,11 @@ library(mapproj)
 install.packages("grid")
 library(grid)
 
+cleaneddata <- read.csv("cleaned-data/cleandatesnames.csv")
 
-# Read in the strandings data
-#This is nhmcsip here 
+#Select species 
+L_acutus <- cleaneddata %>%
+  filter(Name.Current.Sci == "Lagenorhynchus acutus")
 
 # Extract map data
 uk <- map_data("world", regions = c('UK', 'Ireland'))
@@ -40,7 +42,7 @@ for(i in seq_along(decades)){
   
   
   # Use filter to select just the records for that decade
-  one.decade <- filter(cleaneddata, Year >= start.year & Year <= end.year)
+  one.decade <- filter(L_acutus, Year >= start.year & Year <= end.year)
   
   # Add the points to the base map
   # Create a different map for each decade with a different name
@@ -64,12 +66,6 @@ for(i in seq_along(decades)){
 # Plot all the plots in map.list
 do.call(grid.arrange, map.list)
 
-map.list
 
-dev.off()
-
-#Had to load gridExtra to get the code to run (couldn't find 'grid.arrange'was the error message)
-install.packages("gridExtra")
-library(gridExtra)
 
 

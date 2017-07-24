@@ -182,11 +182,16 @@ d3 <- ggplot(data = extra_counties, aes(x = INVERCLYDE, y = UK)) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
 
+install.packages("ggpsmisc") #Can't install this 
+
 d4 <- ggplot(data = extra_counties, aes(x = ANGELSEY, y = UK)) +
   geom_point(size = 0.5) +
   labs(x = "Angelsey population", y = "UK population") +
   geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
-  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) +
+  geom_text(aes(x = ANGELSEY, y = UK, label = lm_eqn(lm(y ~ x, df))), parse = TRUE)
+
+d4
 
 multiplot(d1, d2, d3, d4, cols = 2) 
 

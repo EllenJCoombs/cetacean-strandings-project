@@ -11,7 +11,7 @@ write.csv(totalyear, file = "Data_with_totals.csv")
 
 
 #Using the cleaned dataset 
-data <- read.csv("cleaned.data.300517.csv") 
+data <- read.csv("cleandatesnames.csv") 
 
 #Looking at species by year - a count of each species per year
 speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
@@ -22,23 +22,18 @@ speciesbyyear <- speciesyearcount %>%
   arrange(Year)
 
 #Total each of the years - this is using the totalcount dataset 
-totalcount <- speciesyear %>% count(Year) 
+totalcount <- speciesyear %>% count("Year") 
 
-ggplot(data = totalcount, aes(x = Year, y = n))+
-  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
-  labs(x = "Year", y = "Total count") +
-  geom_line()
+ggplot(data = speciesyear, aes(x = Year)) +
+         geom_histogram(binwidth = 0.5) +
+  labs(x = "Year", y = "Total count") 
 
 
 #Creating a data table of species, total per year and basic sampling effort 
 library(dplyr)
 yearoverview <- speciesyearcount %>% left_join(totalcount, by="Year") %>%
-  rename(speciesnumber = n.x) %>%
-  rename(total = n.y) %>%
   arrange(Year) %>%
-  mutate(sampling = speciesnumber/total)
-
-#I want to write a function for this 
+  mutate(sampling = n/freq)
 
 library(readr)
 library(ggplot2) 
@@ -79,7 +74,7 @@ ggplot(yearoverview, aes(x = Year, y = sampling)) +
 
 #plotting using the cleaned Data_with_totals dataset 
 #Should use cleaned data as I haven't cleaned all of the names yet 
-mydata <- read.csv("Data_with_totals")
+mydata <- read.csv("data_with_totals.csv")
 
 total.sampling <-
   mydata %>%

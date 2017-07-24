@@ -120,9 +120,10 @@ Total_hunted <- whaling %>%
 Total_hunted_rename <- rename(Total_hunted, n = Total.catch)
 
 #Plotting total hunted and total strandeds (of hunted species)
+#don't think this works...
 ggplot(Total_hunted_stranders$n*100, aes(x = Year, y = n, ylab = "Count")) + geom_line(aes(color = "Strandings"))+
   geom_line(data = Total_hunted_rename, aes(color="Hunted")) +
-  scale_y_continuous(sec.axis = sec_axis(~.*10))
+  scale_y_continuous(sec.axis = sec_axis(~.*100))
   labs(color = "Stranding and hunting data") 
 
   
@@ -179,8 +180,8 @@ hunted_stranders_total <- hunted_stranders_total %>%
 
 #Plot the data together 
 ggplot() + 
-  geom_line(data = hunted_stranders_total, aes(x = Year, y = Strandings, colour = "grey")) +
-  geom_line(data = iwc, aes(x = Year, y = Catch/20, colour = "black")) +
+  geom_line(data = hunted_stranders_total, aes(x = Year, y = Strandings, colour = "Stranded")) +
+  geom_line(data = iwc, aes(x = Year, y = Catch/20, colour = "Hunted")) +
   scale_y_continuous(sec.axis = sec_axis(~.*20, name = "Total catch")) +
   labs(y = "Total stranding",
               x = "Year",

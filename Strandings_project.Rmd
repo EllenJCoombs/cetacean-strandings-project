@@ -2,7 +2,9 @@
 title: "Strandings project"
 author: "Ellen Coombs"
 date: "24 July 2017"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -13,10 +15,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This is an R markdown document for the cetacean strandings project. It includes: 
 
-- The main questions that are being asked 
+- The main questions that are being asked in my first chapter 
 - My attempt to begin asking them
 - An idea of the code I have used
-- An idea of the plots I would produce 
+- An idea of the plots I will produce and would like to produce 
 
 
 ##Questions 
@@ -41,6 +43,13 @@ This is an R markdown document for the cetacean strandings project. It includes:
 NB. This doucment does not contain details on the data clean-up of the strandings data that occurred earlier in the project.
 Code for cleaning data is ![(available on my GitHub page)](https://github.com/EllenJCoombs/strandings-project)
 
+To open plots in MAC OS X 
+```{r, include=FALSE}
+install.packages("CarbonEL")
+library(CarbonEL)
+quartz() 
+```
+
 All analysis uses the data: "cleandatenames.csv"
 Required packages are put in each section so that each section can be run seperately 
 
@@ -49,6 +58,7 @@ Required packages are put in each section so that each section can be run sepera
 ###ii. Abundance - overall and temporally  
 Firstly, some simple manipulation of the data i.e. species counts 
 ```{r, include=FALSE}
+
 library(dplyr)
 library(ggplot2)
 
@@ -73,7 +83,9 @@ species_lat <- count(cleaneddata, Name.Current.Sci, Latitude)
 
 #This is just species and the year - no counting or sorting 
 speciesyear <- select(cleaneddata, Year, Name.Current.Sci)
+```
 
+```{r, include=FALSE}
 #Geom_line of all species for every year 
 ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Name.Current.Sci))+
   theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
@@ -81,8 +93,10 @@ ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Name.Current.Sci))+
   geom_line() +
   scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE) + 
   facet_wrap(~ Name.Current.Sci)
+```
 
-#Seperate species 
+```{r, include=FALSE}
+#Seperate species by year
 ggplot(speciesyear, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
@@ -90,6 +104,10 @@ ggplot(speciesyear, aes(x = Year, fill = Name.Current.Sci)) +
 ggplot(speciesyear, aes(x = Year)) +
   geom_histogram(binwidth = 0.5) +
   facet_wrap(~ Name.Current.Sci)
+```
+
+```{r, include=FALSE}
+
 
 #Looking at species by year - a count of each species per year
 speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
@@ -98,9 +116,9 @@ View(speciesbyyear)
 speciesbyyear <- speciesyearcount %>%
   group_by(n, Year, Name.Current.Sci) %>%
   arrange(Year)
-
 ```
-##Abundance - spatial data 
+
+##Abundance - spatial data (maps)
 I have chosen to put an example here - these plots can easily be made for any species either as one plot (total strandings) or strandings through time 
 
 ```{r, include =FALSE}
@@ -247,8 +265,8 @@ plot_all_whale_years <- function(data, species.col, whales,
 library(ggplot2)
 library(gridExtra)
 
-c# Read in the data
-ds <- read_csv("cleaned.data.300517.csv")
+# Read in the data
+ds <- read.csv("cleaned-data/cleandatesnames.csv")
 
 # This would get a full list of the whale species
 # But for now we just want a couple as an example
@@ -258,7 +276,7 @@ ds <- read_csv("cleaned.data.300517.csv")
 whales <- whale_list(ds, "Name.Current.Sci")
 
 #If I want to look at just these species 
-whales <- c("delphinus delphis", "phocoena phocoena", "kogia sima", "orcinus orca")
+whales <- c("Delphinus delphis", "Phocoena phocoena", "Kogia sima", "Orcinus orca")
 
 # Plot graphs
 plot_all_whale_years(ds, species.col = "Name.Current.Sci", whales,
@@ -270,9 +288,9 @@ Can be done for any species - Here are some examples
 
 ```{r, include =FALSE}
 #Mysitcetes 
-mysticetesplot <- c("balaenoptera acutorostrata", "balaenoptera borealis", "balaenoptera musculus", "balaenoptera physalus", 
-                    "megaptera novaeangliae", "un. mystitcete", "unknown balaenoptera", "unknown balaenopterid",
-                    "unknown mysticete") 
+mysticetesplot <- c("Balaenoptera acutorostrata", "Balaenoptera borealis", "Balaenoptera musculus", "Balaenoptera physalus", 
+                    "Megaptera novaeangliae", "Unknown balaenoptera",
+                    "Unknown mysticete") 
                   
 plot_all_whale_years(ds, species.col = "Name.Current.Sci", mysticetesplot,
                      binwidth = 0.5, start.date = 1913, end.date = 2017)
@@ -281,21 +299,21 @@ plot_all_whale_years(ds, species.col = "Name.Current.Sci", mysticetesplot,
 
 ```{r, include =FALSE}
 #unknowns 
-unknowns <- c("unknown odontocete", "unknown mysticete", "unknown", "unknown balaenoptera", "unknown delphinidae")
+unknowns <- c("Unknown odontocete", "Unknown mysticete", "Unknown", "Unknown balaenoptera", "Unknown delphinid")
 plot_all_whale_years(ds, species.col = "Name.Current.Sci", unknowns,
                      binwidth = 0.5, start.date = 1913, end.date = 2017)
 ```
 
 ```{r, include =FALSE}
 #Beaked and bottlenose whales ########################################################
-beakers <- c("hyperoodon ampullatus", "mesoplodon densirostris", "mesoplodon europaeus", "mesoplodon mirus")
+beakers <- c("Hyperoodon ampullatus", "Mesoplodon densirostris", "Mesoplodon europaeus", "Mesoplodon mirus")
 plot_all_whale_years(ds, species.col = "Name.Current.Sci", beakers,
                      binwidth = 0.5, start.date = 1913, end.date = 2017) 
 ```
 
 ```{r, include =FALSE}
 #Bycatch candidates 
-bycatch_candidates <- c("phocoena phocoena", "delphinus delphis", "tursiops truncatus")
+bycatch_candidates <- c("Phocoena phocoena", "Delphinus delphis", "Tursiops truncatus")
 plot_all_whale_years(ds, species.col = "Name.Current.Sci", bycatch_candidates,
                      binwidth = 0.5, start.date = 1913, end.date = 2017) 
 ```
@@ -319,7 +337,7 @@ library(gridExtra)
 install.packages("mapproj")
 library(mapproj)
 # Read in the strandings data
-nhmcsip <- read.csv("cleandatesnames.csv")
+nhmcsip <- read.csv("cleaned-data/cleandatesnames.csv")
 # Extract map data
 uk <- map_data("world", regions = c('UK', 'Ireland'))
 # Create base map
@@ -398,6 +416,81 @@ ggplot(points, aes(x = long, y = lat)) +
 
 ```
 
+Species heatmaps - example: Lagenorynchus acutus (White-sided dolphin)
+
+I have produced decadal heatmaps to look at temporal changes over time 
+- The resolution on these is not particularly good - see latitude graphs below for an alternative 
+- Can be produced for any species using the below code 
+```{r, include=FALSE}
+
+#Having a go at plotting species decadal heatmaps 
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(mapdata)
+#Had to install this to get it running - no idea why - was running fine before without 
+install.packages("mapproj")
+library(mapproj)
+install.packages("grid")
+library(grid)
+
+cleaneddata <- read.csv("cleaned-data/cleandatesnames.csv")
+
+#Select species 
+L_acutus <- cleaneddata %>%
+  filter(Name.Current.Sci == "Lagenorhynchus acutus")
+
+# Extract map data
+uk <- map_data("world", regions = c('UK', 'Ireland'))
+# Create base map
+base.map <- 
+  ggplot() +
+  # Add country polygons
+  geom_polygon(data = uk, aes(x = long, y = lat, group = group), 
+               fill = "white", color = "black") + 
+
+# Create a list for the start years of each decade
+decades <- c(seq(from = 1913, to = 2003, by = 10), 2013)
+# Make an empty list that you're going to put all your
+# ggplot maps into
+map.list <- list()
+# Loop through each of the starting years in "decades"
+for(i in seq_along(decades)){
+  
+  # Define the start and end year of the decade
+  start.year <- decades[i]
+  end.year <- decades[i] + 9
+  # Add a short if statement so that you don't go into the future!
+  if(end.year > 2017){
+    end.year <- 2017
+  }
+  
+  
+  # Use filter to select just the records for that decade
+  one.decade <- filter(L_acutus, Year >= start.year & Year <= end.year)
+  
+  # Add the points to the base map
+  # Create a different map for each decade with a different name
+  # placed into map.list
+  map.list[[i]] <- 
+    ggplot(data = one.decade, aes(x = Longitude, y = Latitude)) + 
+    stat_density2d(aes(fill = ..level..), alpha = 1, geom ="polygon") +
+    geom_polygon(data = uk, aes(x = long, y = lat, group = group), 
+                 fill = "white", color = "black") +
+    scale_fill_gradient2(low = "blue", mid = "yellow", high = "red", space = "Lab", 
+                         na.value = "grey50", guide = "colourbar") +
+    coord_map(xlim = c(-11, 3), ylim = c(49, 60.9)) +
+    theme(axis.title.x = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks.y = element_blank()) +
+   labs(title = paste(start.year, "-", end.year))
+} # end loop
+# Plot all the plots in map.list
+do.call(grid.arrange, map.list)
+```
 
 ###ii. Species richness 
 i.e. Number of species present 
@@ -408,7 +501,7 @@ Species richness increases with sample size, and differences in richness actuall
 library(vegan)
 library(picante)
 
-cleaneddata <- read.csv("cleandatesnames.csv")
+cleaneddata <- read.csv("cleaned-data/cleandatesnames.csv")
 
 #Need to reorder the data
 reordering <- speciesbyyear[c("Year", "n", "Name.Current.Sci")]
@@ -469,7 +562,7 @@ length(unique(speciesbyyear$Name.Current.Sci[!is.na(speciesbyyear$n) & speciesby
 
 
 ```{r, include=FALSE}
-#used years as sites 
+#Used years as sites 
 rarecurve(whale.matrix)
 ```
 
@@ -485,7 +578,7 @@ plot(whale.curve, ci.type = "poly", col = "blue", ci.col = "lightblue",
 ```
 
 
-Estimating total richness across years 
+
 Chao2
 ```{r, include=FALSE}
 specpool(whale.matrix)
@@ -498,9 +591,10 @@ Chao2 - 35/36?? Number of species
 ###iiii. Species changes 
 Here, I decided to look at any changes in spatial distribution using counts per latitude (degrees parallel north) over the century for individual species, and for all species together
 
-This was done for individual species but can easily be done for each species 
+This was done for specific, individual species but can easily be done for any species 
 - Gives an idea of species distribution 
 
+Example here is Grampus griseus (Risso's dolphin)
 ```{r, include=FALSE}
 library(dplyr)
 library(gridExtra)
@@ -509,7 +603,7 @@ library(ggplot2)
 library(gridExtra)
 library(magrittr)
 
-cleaneddata <- read.csv("cleandatesnames.csv")
+cleaneddata <- read.csv("cleaned-data/cleandatesnames.csv")
 
 species_lat <- dplyr::count(cleaneddata, Latitude, Name.Current.Sci, Year) 
 
@@ -554,84 +648,12 @@ for(i in seq_along(decades)){
 # Plot all the plots in map.list
 do.call(grid.arrange, plot.list)
 
-plot.list
-
 
 ```
 
-I have also produced decadal heatmaps to look at temporal changes over time 
-- The resolution on these is not particularly good 
-- Can be produced for any species using the below code 
-
-```{r, include=FALSE}
-
-library(dplyr)
-library(ggplot2)
-library(tidyverse)
-library(mapdata)
-#Had to install this to get it running - no idea why - was running fine before without 
-library(mapproj)
-library(grid)
-library(gridExtra)
-
-
-# Read in the strandings data
-cleaneddata <- read.csv("cleandatesnames.csv")
-
-# Extract map data
-uk <- map_data("world", regions = c('UK', 'Ireland'))
-# Create base map
-base.map <- 
-  ggplot() +
-  # Add country polygons
-  geom_polygon(data = uk, aes(x = long, y = lat, group = group), 
-               fill = "white", color = "black") + 
-
-# Create a list for the start years of each decade
-decades <- c(seq(from = 1913, to = 2003, by = 10), 2013)
-# Make an empty list that you're going to put all your
-# ggplot maps into
-map.list <- list()
-# Loop through each of the starting years in "decades"
-for(i in seq_along(decades)){
-  
-  # Define the start and end year of the decade
-  start.year <- decades[i]
-  end.year <- decades[i] + 9
-  # Add a short if statement so that you don't go into the future!
-  if(end.year > 2017){
-    end.year <- 2017
-  }
-  
-  
-  # Use filter to select just the records for that decade
-  one.decade <- filter(cleaneddata, Year >= start.year & Year <= end.year)
-  
-  # Add the points to the base map
-  # Create a different map for each decade with a different name
-  # placed into map.list
-  map.list[[i]] <- 
-    ggplot(data = one.decade, aes(x = Longitude, y = Latitude)) + 
-    stat_density2d(aes(fill = ..level..), alpha = 1, geom ="polygon") +
-    geom_polygon(data = uk, aes(x = long, y = lat, group = group), 
-                 fill = "white", color = "black") +
-    scale_fill_gradient2(low = "blue", mid = "yellow", high = "red", space = "Lab", 
-                         na.value = "grey50", guide = "colourbar") +
-    coord_map(xlim = c(-11, 3), ylim = c(49, 60.9)) +
-    theme(axis.title.x = element_blank(),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank(),
-          axis.title.y = element_blank(),
-          axis.text.y = element_blank(),
-          axis.ticks.y = element_blank()) +
-   labs(title = paste(start.year, "-", end.year))
-} # end loop
-# Plot all the plots in map.list
-do.call(grid.arrange, map.list)
-```
 
 ##B. Link to sea surface temperature (SST)
-Still working on this 
+Still working on this - looking at HadISST1 data (UK SST 1870-present monthly) and EN4 data (UK water column and salinity 1900 - present)
 
 ##C. Interesting side questions 
 ###i. Current seasonal changes in cetacean distributions 
@@ -691,7 +713,7 @@ library(ggplot2)
 #Looking at whether the whaling data is consistent with the stranding data 
 #Blue, Fin, Sei, Right, Bottlenose, Minke, Humpback, Sperm, others 
 
-whaling <- read.csv("North_Atlantic_whaling.csv")
+whaling <- read.csv("cleaned-data/North_Atlantic_whaling.csv")
 View(whaling)
 
 #Selecting the species and the year 
@@ -787,11 +809,11 @@ Total_hunted <- whaling %>%
 Total_hunted_rename <- rename(Total_hunted, n = Total.catch)
 
 #Plotting total hunted and total strandeds (of hunted species)
-#Not sure this works...
-ggplot(Total_hunted_stranders$n*100, aes(x = Year, y = n, ylab = "Count")) + geom_line(aes(color = "Strandings"))+
-  geom_line(data = Total_hunted_rename, aes(color="Hunted")) +
-  scale_y_continuous(sec.axis = sec_axis(~.*100))
-  labs(color = "Stranding and hunting data") 
+#Not sure this works...need to have another look 
+#ggplot(Total_hunted_stranders$n*100, aes(x = Year, y = n, ylab = "Count")) + geom_line(aes(color = "Strandings"))+
+  #geom_line(data = Total_hunted_rename, aes(color="Hunted")) +
+  #scale_y_continuous(sec.axis = sec_axis(~.*100))
+  #labs(color = "Stranding and hunting data") 
 
   
 #Bind the two datasets (Total_hunted and Total_hunted_stranding)
@@ -820,7 +842,8 @@ Catch_and_strandings <- bind_cols(Total_hunted, Total_hunted_stranders) %>%
   p  
 ```
   
-Each species stranding and whaling 
+Each species stranding and whaling on the same plot 
+- This is for cross-validation of data 
 ```{r, include=FALSE}
 
 #Need "iwc" and "hunted_stranders_total" 
@@ -877,7 +900,7 @@ library(reshape2)
 library(mvbutils)
 library(ggplot2)
 #Check.names removes the X that randomly appeared (not sure what that was)
-population_data <- read.csv("Population_data.csv", check.names = FALSE)
+population_data <- read.csv("cleaned-data/Population_data.csv", check.names = FALSE)
 
 #Arranging data in to years, locality and population 
 population_data$X <- NULL
@@ -931,12 +954,12 @@ small_pops <- population_data %>%
 
 #Plot both with two different axis
 #This isn't right
-ggplot() +
-  geom_point(data = small_pops, aes(x = Year, y = Population, colour = "Regions")) +
-  geom_point(data = large_pops, aes(x = Year, y = Population/100, colour = "Countries")) +
-  scale_y_continuous(sec.axis = sec_axis(~.*100, name = "Total population")) +
-  labs(y = "Regional Population",
-       x = "Year") 
+#ggplot() +
+  #geom_point(data = small_pops, aes(x = Year, y = Population, colour = "Regions")) +
+  #geom_point(data = large_pops, aes(x = Year, y = Population/100, colour = "Countries")) +
+  #scale_y_continuous(sec.axis = sec_axis(~.*100, name = "Total population")) +
+ #labs(y = "Regional Population",
+       #x = "Year") 
 
 ```
 
@@ -951,7 +974,7 @@ library(ggplot2)
 library(dplyr)
 #Comparing UK population with UK county data 
 
-uk_counties <- read.csv("Country_county_population.csv", header = TRUE)
+uk_counties <- read.csv("cleaned-data/Country_county_population.csv", header = TRUE)
 
 #Cleaning up the data quickly 
 uk_counties <- uk_counties %>%
@@ -1086,7 +1109,7 @@ Taking a look at individual species/total number of strandings per year
 
 ```{r, include=FALSE}
 #Using the cleaned dataset 
-data <- read.csv("cleandatesnames.csv") 
+data <- read.csv("cleaned-data/cleandatesnames.csv") 
 
 #Looking at species by year - a count of each species per year
 speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
@@ -1132,10 +1155,18 @@ ggplot(yearoverview, aes(x = Year, y = sampling)) +
   facet_wrap(~ Name.Current.Sci)
 ```
 
-## Including Plots
 
-Other plots include: 
+#Other plots include: 
 - Bycatch heat maps 
 - Focusing on data from CSIP only 
 - Military zone plots and beakers 
-- Heatmap of shipstrike incidents and physical trauma 
+- Heatmap of shipstrike incidents and physical trauma
+- Plot of interest - with WW1 and WWII etc marked 
+
+1. Excel spreadsheet: cross validation of data with OBIS:seamap data and JCP data for 'normal' cetacean ranges: Decision making on which species to include and which to omit 
+
+#What I want to plot/look at: 
+1. Statistical analysis of cross validation, population data (regression line), analysis of variance between datasets etc. 
+2. Remove manky specimens and unknowns 
+3. Observers per county - sampling effort 
+4. SST - over the century - species abundance + GLM 

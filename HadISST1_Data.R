@@ -129,11 +129,6 @@ dim(lonlat)
 tmp_vec <- as.vector(tmp_slice)
 length(tmp_vec)
 
-# create dataframe and add names
-tmp_df01 <- data.frame(cbind(lonlat,tmp_vec))
-names(tmp_df01) <- c("lon","lat",paste("sst",as.character(m), sep="_"))
-head(na.omit(tmp_df01), 10)
-
 write.csv(tmp_df01, file = "sst_tmp_1.csv")
 
 #Save everything as a csv 
@@ -146,5 +141,28 @@ write.table(na.omit(csvname),csvfile, row.names=FALSE, sep=",")
 # reshape the array into vector
 tmp_vec_long <- as.vector(tmp_array)
 length(tmp_vec_long)
+
+# create dataframe and add names
+tmp_df01 <- data.frame(cbind(lonlat,tmp_vec))
+names(tmp_df01) <- c("lon","lat",paste("sst",as.character(m), sep="_"))
+head(na.omit(tmp_df01), 10)
+
+# reshape the vector into a matrix
+tmp_mat <- matrix(tmp_vec_long, nrow=nlon*nlat, ncol=nt)
+dim(tmp_mat)
+
+head(na.omit(tmp_mat))
+head(tmp_mat)
+
+lonlat <- as.matrix(expand.grid(lon,lat))
+tmp_df02 <- data.frame(cbind(lonlat,tmp_mat))
+names(tmp_df02) <- c("lon","lat","tmpJan","tmpFeb","tmpMar","tmpApr","tmpMay","tmpJun",
+                     "tmpJul","tmpAug","tmpSep","tmpOct","tmpNov","tmpDec")
+# options(width=96)
+head(na.omit(tmp_df02, 20))
+
+tmp_df02
+
+
 
 
