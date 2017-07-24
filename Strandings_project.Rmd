@@ -1,0 +1,52 @@
+---
+title: "Strandings project"
+author: "Ellen Coombs"
+date: "24 July 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Does climate influence cetacean distributions across the UK? 
+
+This is an R markdown document for the cetacean strandings project. It includes: 
+
+- The main questions that are being asked 
+- My attempt to begin asking them
+- An idea of the code I have used
+- An idea of the plots I would produce 
+
+
+##Questions 
+
+##A. Cetacean distributions across the UK through time 
+###i. Species richness - map/plot different species 
+###ii. Abundance - histogram of species abundance (spatially as well) 
+###iii. Species changes 
+
+##B. Link to sea surface temperature (SST)
+
+##C. Interesting side questions 
+###i. Current seasonal changes in cetacean distributions 
+###ii. Cross-validation of data: live survey data, bycatch data and whaling data 
+
+##D. The 'boring' questions 
+###i.Sampling effort - county data - need to work out how to get this on the hex plots 
+###ii. Sampling bias - Basic plot (specific species/all species for that year)
+
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
