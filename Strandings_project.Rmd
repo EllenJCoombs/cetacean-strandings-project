@@ -22,8 +22,8 @@ This is an R markdown document for the cetacean strandings project. It includes:
 ##Questions 
 
 ##A. Cetacean distributions across the UK through time 
-###i. Species richness - map/plot different species 
-###ii. Abundance - histogram of species abundance (spatially as well) 
+###i. Species abundance 
+###ii. Species richness 
 ###iii. Species changes 
 
 ##B. Link to sea surface temperature (SST)
@@ -37,9 +37,72 @@ This is an R markdown document for the cetacean strandings project. It includes:
 ###ii. Sampling bias - Basic plot (specific species/all species for that year)
 
 
-```{r cars}
-summary(cars)
+NB. This doucment does not contain details on the data clean-up of the strandings data that occurred earlier in the project.
+Code for cleaning data is ![(available on my GitHub page)](https://github.com/EllenJCoombs/strandings-project)
+
+
+##A. Cetacean distributions across the UK through time 
+
+###ii. Abundance - histogram of species abundance (spatially as well) 
+Firstly, some simple manipulation of the data i.e. species counts 
+```{r, include=FALSE}
+library(vegan)
+library(ggplot2)
+library(picante)
+
+#Some simple count data - some prep of the data to approach question A. 
+
+data <- read.csv("cleaned-data/cleandatesnames.csv")
+names(data)
+
+#Getting rid of the extra X1 column - not sure where this comes from 
+cleaneddata <- select(data, Name.Current.Sci, Name.Common, Latitude, Longitude, County, Year, Date) 
+levels(cleaneddata$Name.Current.Sci)
+
+#SPECIES ABUNDANCE 
+
+#Having a look at how many of each species 
+select(cleaneddata, Name.Current.Sci)
+#'Species' just looking at Name.Current.Sci
+species <- count(cleaneddata, Name.Current.Sci)
+#'Speciesyearcount' cleaned data: a count of current scientific name and year 
+speciesyearcount <- count(cleaneddata, Name.Current.Sci, Year)
+species_lat <- count(cleaneddata, Name.Current.Sci, Latitude)
+
+#This is just species and the year - no counting or sorting 
+speciesyear <- select(cleaneddata, Year, Name.Current.Sci)
+
+#Geom_line of all species for every year 
+ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Name.Current.Sci))+
+  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
+  labs(x = "Year", y = "Species count") +
+  geom_line() +
+  scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE) + 
+  facet_wrap(~ Name.Current.Sci)
+
+#Seperate species 
+ggplot(speciesyear, aes(x = Year, fill = Name.Current.Sci)) +
+  geom_histogram(binwidth = 0.5)
+
+#All species histograms seperated with better bin widths 
+ggplot(speciesyear, aes(x = Year)) +
+  geom_histogram(binwidth = 0.5) +
+  facet_wrap(~ Name.Current.Sci)
+
+#Looking at species by year - a count of each species per year
+speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
+View(speciesbyyear)
+#Arranging species by year by count 
+speciesbyyear <- speciesyearcount %>%
+  group_by(n, Year, Name.Current.Sci) %>%
+  arrange(Year)
+
 ```
+###ii. Species richness 
+i.e. Number of species present 
+Species richness increases with sample size, and differences in richness actually may be caused by differences in sample size. To solve this problem, we may try to rarefy species richness to the same number of individuals.
+###iii. Species changes 
+
 
 ## Including Plots
 
