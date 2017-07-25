@@ -11,7 +11,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#Does climate influence cetacean distributions across the UK? 
+#Does climate influence cetacean distributions across the UK?
 
 This is an R markdown document for the cetacean strandings project. It includes: 
 
@@ -46,6 +46,8 @@ Code for cleaning data is ![(available on my GitHub page)](https://github.com/El
 To open plots in MAC OS X 
 ```{r, include=FALSE}
 options(device="quartz")
+options(device="x11")
+
 ```
 
 All analysis uses the data: "cleandatenames.csv"
