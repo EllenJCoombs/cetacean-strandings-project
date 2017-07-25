@@ -45,9 +45,7 @@ Code for cleaning data is ![(available on my GitHub page)](https://github.com/El
 
 To open plots in MAC OS X 
 ```{r, include=FALSE}
-install.packages("CarbonEL")
-library(CarbonEL)
-quartz() 
+options(device="quartz")
 ```
 
 All analysis uses the data: "cleandatenames.csv"
@@ -55,8 +53,17 @@ Required packages are put in each section so that each section can be run sepera
 
 ##A. Cetacean distributions across the UK through time 
 
+The first part of this chapter will be an overview of the strandings data, including overall species richness, diveristy and abundance. 
+
+There will then be a more focused look at:
+a) particular species of interest (see Excel document: "Stranding analysis")
+b) A focus on the years post 1970: abundance, richness and diversity 
+c) Spatial and temporal changes 
+
 ###ii. Abundance - overall and temporally  
 Firstly, some simple manipulation of the data i.e. species counts 
+
+The following code can be manipulated to look at abundance and diversity for any target species - at any time point/period 
 ```{r, include=FALSE}
 
 library(dplyr)
@@ -107,8 +114,6 @@ ggplot(speciesyear, aes(x = Year)) +
 ```
 
 ```{r, include=FALSE}
-
-
 #Looking at species by year - a count of each species per year
 speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
 View(speciesbyyear)
@@ -118,9 +123,10 @@ speciesbyyear <- speciesyearcount %>%
   arrange(Year)
 ```
 
-##Abundance - spatial data (maps)
+###Abundance - spatial data (maps)
 I have chosen to put an example here - these plots can easily be made for any species either as one plot (total strandings) or strandings through time 
 
+This plot shows all species but can easily be manipulated to show just one, or several species
 ```{r, include =FALSE}
 
 #Hexagonal plot - all species 
@@ -186,7 +192,7 @@ pg$data[[2]]$count
 
 ```
 
-##Abundance - temporal 
+###Abundance - temporal 
 Simple plots of each of the species abundance through time 
 ```{r, include =FALSE}
 library(readr)
@@ -284,7 +290,7 @@ plot_all_whale_years(ds, species.col = "Name.Current.Sci", whales,
 
 ```
 
-Can be done for any species - Here are some examples 
+Can be done for any species - Here are some examples for Mysticetes, Odontocetes, Beakers and bycatch candidates 
 
 ```{r, include =FALSE}
 #Mysitcetes 
@@ -318,10 +324,9 @@ plot_all_whale_years(ds, species.col = "Name.Current.Sci", bycatch_candidates,
                      binwidth = 0.5, start.date = 1913, end.date = 2017) 
 ```
 
-##Temporal and spatial changes 
+###Temporal and spatial changes 
 Decadal maps for all species, and decadal maps for certain species
-Individual species can easily be plotted using a modification of the below code 
-
+Individual species can easily be plotted using a modification of the below code. I will also plot these for the data after 1970 only 
 ```{r, include=FALSE}
 
 #This is Natalie's code 
@@ -391,9 +396,9 @@ for(i in seq_along(decades)){
 do.call(grid.arrange, map.list)
 ```
 
-Heat map of all species 
+###Heat map of all species 
 Individual species can easily be plotted using a modification of the below code 
-
+This code plots heatmaps of species diversity through time and currently incorporates indiviudal species 
 ```{r, include=FALSE}
 library(rgdal)         # for readOGR(...)
 
@@ -403,6 +408,12 @@ UKmap <- readRDS("/Users/ellencoombs/Desktop/Projects/Strandings/data/GBR_adm2 (
 IRmap <- readRDS("/Users/ellencoombs/Desktop/Projects/Strandings/data/IRL_adm1.rds")
 map.df <- fortify(UKmap)
 ir.df <- fortify(IRmap)
+
+#Adds long and lat points 
+points <- data.frame(
+  long = counts$Longitude,
+  lat = counts$Latitude,
+  count = counts$n)
 
 ggplot(points, aes(x = long, y = lat)) + 
   stat_density2d(aes(fill = ..level..), alpha = 1, geom ="polygon") +
@@ -416,8 +427,7 @@ ggplot(points, aes(x = long, y = lat)) +
 
 ```
 
-Species heatmaps - example: Lagenorynchus acutus (White-sided dolphin)
-
+###Species heatmaps - example: Lagenorynchus acutus (White-sided dolphin)
 I have produced decadal heatmaps to look at temporal changes over time 
 - The resolution on these is not particularly good - see latitude graphs below for an alternative 
 - Can be produced for any species using the below code 
@@ -507,12 +517,11 @@ cleaneddata <- read.csv("cleaned-data/cleandatesnames.csv")
 reordering <- speciesbyyear[c("Year", "n", "Name.Current.Sci")]
 whale.matrix <- sample2matrix(reordering)
 
-#Number of species per year 
+#Number of species per year (prints out values)
 specnumber(whale.matrix)
 
 #Species per year (this incorporates NAs)
 total_speciesbyyear <- aggregate(speciesbyyear$n, by = speciesbyyear[c('Year')], length)
-rarecurve(total_speciesbyyear)
 ```
 
 ```{r, include=FALSE}
@@ -563,10 +572,13 @@ length(unique(speciesbyyear$Name.Current.Sci[!is.na(speciesbyyear$n) & speciesby
 
 ```{r, include=FALSE}
 #Used years as sites 
+#This plots each of the years as a "site" as would be in a normal rarefaction curve 
 rarecurve(whale.matrix)
 ```
 
-Species accumulation curves
+
+###Species accumulation curves
+Practiced with lots of different permutations - have only put the 1000 example here (others were less useful, of course!)
 ```{r, include=FALSE}
 #Species accumulation curves 
 whale.curve <- specaccum(whale.matrix, method = "random", permutations = 1000)
@@ -576,7 +588,6 @@ plot(whale.curve, ci.type = "poly", col = "blue", ci.col = "lightblue",
      lwd = 2, ci.lty = 0, xlab = "Years: 1913 - 2015", 
      ylab = "Cumulative number of whale species")
 ```
-
 
 
 Chao2
@@ -655,17 +666,19 @@ do.call(grid.arrange, plot.list)
 ##B. Link to sea surface temperature (SST)
 Still working on this - looking at HadISST1 data (UK SST 1870-present monthly) and EN4 data (UK water column and salinity 1900 - present)
 
+Have written some of the code for this but can't get it working 
+
 ##C. Interesting side questions 
 ###i. Current seasonal changes in cetacean distributions 
 I have been playing with code to split up data into monthly strandings (total, all species, or for individual species) and also quarterly counts which could be used for looking at seasonal changes 
 
 I used the 'zoo' package to do this 
-
+This example looks at miltary testing and beaker strandings, but can easily be manipulated to look at any species strandings for any time period
 ```{r, include=FALSE}
 library(zoo)
 library(dplyr)
 
-#Here, beaker stradnings in North west Scotland form 1989:2000 were investigated alongside #miltary data - but this code will be used to split up 
+#Here, beaker strandings in North west Scotland form 1989:2000 were investigated alongside #miltary data - but this code will be used to split up any species 
 
 #Selecting the chosen areas 
 nw_scotland_strandings <- cleaneddata %>% 
@@ -704,7 +717,11 @@ ggplot(data = nw_monthly, aes(x = monthYear, y = n, group=1)) +
 ```
 
 ###ii. Cross-validation of data: live survey data, bycatch data and whaling data 
+Whaling data obtsined from IWC for Blue, Fin, Sei, Right, Bottlenose, Minke, Humpback, Sperm, and 'others' I chose to only look at the stranding data for these species here
 
+'Hunted-stranders' therefore refers to species that have stranded, and were/are also hunted 
+
+Data from the North Atlantic - this is cumulative (Ireland, Scotland, Norway and Iceland)
 ```{r, include=FALSE}
 library(dplyr)
 library(ggplot2)
@@ -765,8 +782,7 @@ whaling_species_no_total <- whaling_species %>%
          "Others", "Eubalaena glacialis", "Hyperoodon ampullatus", "Balaenoptera acutorostrata")
 
 
-#If I want to look at total killed - just look at "Total.catch" in the "whaling_species") 
-
+#If I want to look at total killed - just look at "Total.catch" in the "whaling_species")
 
 #Stripping out the same species from the stranding data (those that were hunted)
 hunted_stranders <- cleaneddata %>% 
@@ -784,8 +800,7 @@ hunted_stranders_total <- hunted_strandersyear %>%
   arrange(Year)
 ```
 
-Plotting total stranded whales of species that strand 
-
+Plotting total stranded whales of species that are hunted 
 ```{r, include=FALSE}
 
 library(ggplot2)
@@ -842,7 +857,7 @@ Catch_and_strandings <- bind_cols(Total_hunted, Total_hunted_stranders) %>%
   p  
 ```
   
-Each species stranding and whaling on the same plot 
+Each species stranding and whaling on the same plot - split by facet_wrap species
 - This is for cross-validation of data 
 ```{r, include=FALSE}
 
@@ -888,6 +903,7 @@ ggplot() +
 ###i.Sampling effort - county data - need to work out how to get this on the hex plots 
 
 UK population plots 
+Can I get an idea of regional population change by looking at the overall country population? 
 ```{r, include=FALSE}
 #Looking at UK population as a means of assessing sampling effort 
 #Step one is to see how regional data compares to total population data
@@ -964,7 +980,8 @@ small_pops <- population_data %>%
 ```
 
 
-Looking in a little more detail at county vs. country data 
+Looking in a little more detail at county vs. country data
+These regions were selected at random from all counties that were not land-locked 
 ```{r, include=FALSE}
 library(dplyr)
 library(reshape2)
@@ -1064,6 +1081,8 @@ multiplot(c1, c2, c3, c4, c5, c6, c7, c8, c9, cols = 3)
 
 
 Looking at rural areas e.g. Ireland, Northern Scotland and rural Wales 
+
+Some of these areas have seeb a population decrease: counties picked ar random
 ```{r, include=FALSE}
 library(Rmisc)
 
@@ -1107,6 +1126,7 @@ multiplot(d1, d2, d3, d4, cols = 2)
 ###ii. Sampling bias - Basic plot (specific species/all species for that year)
 Taking a look at individual species/total number of strandings per year 
 
+Need to analyse the data 
 ```{r, include=FALSE}
 #Using the cleaned dataset 
 data <- read.csv("cleaned-data/cleandatesnames.csv") 
@@ -1161,12 +1181,15 @@ ggplot(yearoverview, aes(x = Year, y = sampling)) +
 - Focusing on data from CSIP only 
 - Military zone plots and beakers 
 - Heatmap of shipstrike incidents and physical trauma
-- Plot of interest - with WW1 and WWII etc marked 
 
-1. Excel spreadsheet: cross validation of data with OBIS:seamap data and JCP data for 'normal' cetacean ranges: Decision making on which species to include and which to omit 
+1. Excel spreadsheet: cross validation of data with OBIS:seamap data and JCP data for 'normal' cetacean ranges: Decision making on which species to include and which to omit
+- "Strandings analysis"
 
 #What I want to plot/look at: 
 1. Statistical analysis of cross validation, population data (regression line), analysis of variance between datasets etc. 
 2. Remove manky specimens and unknowns 
 3. Observers per county - sampling effort 
-4. SST - over the century - species abundance + GLM 
+4. SST - over the century - species abundance + GLM, all species and specifics 
+5. Split up the data into sites e.g. 1-7 as in the literature and then create a rarecurve
+6. Plot of interest - with WW1 and WWII etc marked: Need to find the code for this 
+
