@@ -3,8 +3,9 @@ title: "Strandings project"
 author: "Ellen Coombs"
 date: "24 July 2017"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -118,7 +119,7 @@ ggplot(speciesyear, aes(x = Year)) +
 ```{r, include=FALSE}
 #Looking at species by year - a count of each species per year
 speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
-View(speciesbyyear)
+#View(speciesbyyear)
 #Arranging species by year by count 
 speciesbyyear <- speciesyearcount %>%
   group_by(n, Year, Name.Current.Sci) %>%
@@ -341,7 +342,7 @@ library(mapdata)
 library(gridExtra)
 
 #Had to install this to get it running - no idea why - was running fine before without 
-install.packages("mapproj")
+#install.packages("mapproj")
 library(mapproj)
 # Read in the strandings data
 nhmcsip <- read.csv("cleaned-data/cleandatesnames.csv")
@@ -441,9 +442,9 @@ library(ggplot2)
 library(tidyverse)
 library(mapdata)
 #Had to install this to get it running - no idea why - was running fine before without 
-install.packages("mapproj")
+#install.packages("mapproj")
 library(mapproj)
-install.packages("grid")
+#install.packages("grid")
 library(grid)
 
 cleaneddata <- read.csv("cleaned-data/cleandatesnames.csv")

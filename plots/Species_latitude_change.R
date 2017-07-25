@@ -19,8 +19,8 @@ species_lat <- species_lat %>%
 
 
 #This bit is for playing around with specific species 
-G_griseus_lat <- species_lat %>% 
-  filter(Name.Current.Sci == "Grampus griseus")
+L_albirostris_lat <- species_lat %>% 
+  filter(Name.Current.Sci == "Lagenorhynchus albirostris")
 
 # Create a list for the start years of each decade
 decades <- c(seq(from = 1913, to = 2003, by = 10), 2013)
@@ -38,7 +38,7 @@ for(i in seq_along(decades)){
   }
   
  # Use filter to select just the records for that decade
-  one.decade <- filter(G_griseus_lat, Year >= start.year & Year <= end.year)
+  one.decade <- filter(L_albirostris_lat, Year >= start.year & Year <= end.year)
   
   
   # Add the points to a plot 
