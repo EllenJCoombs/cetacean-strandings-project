@@ -119,7 +119,6 @@ ggplot(speciesyear, aes(x = Year)) +
 ```{r, include=FALSE}
 #Looking at species by year - a count of each species per year
 speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
-#View(speciesbyyear)
 #Arranging species by year by count 
 speciesbyyear <- speciesyearcount %>%
   group_by(n, Year, Name.Current.Sci) %>%
@@ -676,7 +675,9 @@ Have written some of the code for this but can't get it working
 I have been playing with code to split up data into monthly strandings (total, all species, or for individual species) and also quarterly counts which could be used for looking at seasonal changes 
 
 I used the 'zoo' package to do this 
-This example looks at miltary testing and beaker strandings, but can easily be manipulated to look at any species strandings for any time period
+This example looks at miltary testing and beaker strandings, but can easily be manipulated to look at any species strandings for any time period 
+
+Code is below, but I am still working on it....
 ```{r, include=FALSE}
 library(zoo)
 library(dplyr)
@@ -684,38 +685,38 @@ library(dplyr)
 #Here, beaker strandings in North west Scotland form 1989:2000 were investigated alongside #miltary data - but this code will be used to split up any species 
 
 #Selecting the chosen areas 
-nw_scotland_strandings <- cleaneddata %>% 
-  filter(County %in% c("Western Isles", "Highland", "Argyll and Bute", "Highland, Scotland", "Argyll and Bute, Scotland", "Western Isles, Scotland"))
+#nw_scotland_strandings <- cleaneddata %>% 
+  #filter(County %in% c("Western Isles", "Highland", "Argyll and Bute", "Highland, Scotland", "Argyll and Bute, Scotland", "Western Isles, Scotland"))
 
 #Have been using 1986 - 2005 for full window (for which military testing data is available)
-nw_window <- nw_scotland_strandings %>% 
-  filter(Year %in% c(1989:2000))
+#nw_window <- nw_scotland_strandings %>% 
+  #filter(Year %in% c(1989:2000))
 
 #Shows this datset by year but I need it by month.....
-ggplot(nw_window, aes(x = Date)) + 
-  stat_count(width = 0.5) 
+#ggplot(nw_window, aes(x = Date)) + 
+  #stat_count(width = 0.5) 
 
 #Splitting my data into strandings per month 
-nw_window$monthYear <- as.Date(as.yearmon(nw_window$Date))
-nw_window$quarterYear <- as.Date(as.yearqtr(nw_window$Date))
-head(nw_window)
+#nw_window$monthYear <- as.Date(as.yearmon(nw_window$Date))
+#nw_window$quarterYear <- as.Date(as.yearqtr(nw_window$Date))
+#head(nw_window)
 #Strandings gathered into months 
-nw_monthly <- head(nw_window %>% group_by(monthYear) %>% summarise(n = n()), 720)
+#nw_monthly <- head(nw_window %>% group_by(monthYear) %>% summarise(n = n()), 720)
 #Strandings per quarter 
-nw_quarter <- head(nw_window %>% group_by(quarterYear) %>% summarise(n = n()), 143)
+#nw_quarter <- head(nw_window %>% group_by(quarterYear) %>% summarise(n = n()), 143)
 
 #Grouping by week number - not really needed 
-nw_window$week <- as.Date("1984-07-01")+7*trunc((nw_window$joinTimestamp / 1000)/(3600*24*7))
+#nw_window$week <- as.Date("1984-07-01")+7*trunc((nw_window$joinTimestamp / 1000)/(3600*24*7))
 
 #Line plot of strandings per month (grouped)
-ggplot(data = nw_monthly, aes(x = monthYear, y = n, group=1)) +
-  geom_line()
+#ggplot(data = nw_monthly, aes(x = monthYear, y = n, group=1)) +
+  #geom_line()
 
 #Looking at individual years 
 #Just use above code and change the years 
 
-ggplot(data = nw_monthly, aes(x = monthYear, y = n, group=1)) +
-  geom_line()
+#ggplot(data = nw_monthly, aes(x = monthYear, y = n, group=1)) +
+  #geom_line()
 
 ```
 
