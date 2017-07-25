@@ -1178,7 +1178,7 @@ ggplot(yearoverview, aes(x = Year, y = sampling)) +
 
 #Other plots include: 
 - Bycatch heat maps 
-- Focusing on data from CSIP only 
+- Focusing on data from CSIP only
 - Military zone plots and beakers 
 - Heatmap of shipstrike incidents and physical trauma
 
