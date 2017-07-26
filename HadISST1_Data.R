@@ -124,9 +124,11 @@ levelplot(tmp_slice ~ lon * lat, data=grid, at=cutpts, cuts=11, pretty=T,
           col.regions=(rev(brewer.pal(10,"RdBu"))))
 
 ###########################################################
+#Unsure why this doesn't work 
 LonIdx <- which( ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
 LatIdx <- which( ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
-MyVariable <- ncvar_get(ncin, "tmp")[ LonIdx, LatIdx]
+MyVariable <- ncvar_get(ncin, "sst_time")[ LonIdx, LatIdx]
+
 
 ncin$dim$time$units
 
@@ -156,14 +158,18 @@ summary(sst_time)
 
 
 #Selecting a specific lat/long section 
-#lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
-#lat_index <-  which(ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
+lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
+lat_index <-  which(ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
+
+ts.bounds <- nc.make.time.bounds(ts, unit="month")
+
+
 #sst[lon_index, lat_index, time_index]
 
 #Selecting only one point 
 lon_index <- which.min(abs(lon - 0.3))
 lat_index <- which.min(abs(lat - 54.2))
-time_index <- which(format(sst_time, "%Y-%m-%d") == "2017-03-16")
+time_index <- as.PCICt(c("1913-01-01", "2016-01-01"), cal="360")
 sst[lon_index, lat_index, time_index]
 
 
@@ -175,9 +181,9 @@ lat_index <- which.min(abs(lat - 54.2))
 sst <- nc.get.var.subset.by.axes(ncin, "sst",
                                  axis.indices = list(X = lon_index,
                                                      Y = lat_index))
-data_frame(time = sst_time, 
-           sst = as.vector(sst)) %>%
-  mutate(time = as.Date(format(time, "%Y-%m-%d"))) %>%
+data_frame(time = sst_time,
+           sst = as.vector(sst)) %>% 
+  mutate(time = as.Date(format(sst_time, "%Y-%m-%d"))) %>%
   ggplot(aes(x = time, y = sst)) + 
   geom_line() + 
   xlab("Date") + ylab("Temperature (C)") + 
@@ -198,9 +204,9 @@ sst <- nc.get.var.subset.by.axes(ncin, "sst",
                                  axis.indices = list(T = time_index))
 expand.grid(lon, lat) %>%
   rename(lon = Var1, lat = Var2) %>%
-  mutate(lon = ifelse(lon > 180, -(360 - lon), lon),
+  mutate(lon = ifelse(lon > 3, -(11 - lon), lon),
          sst = as.vector(sst)) %>% 
-  #mutate(sst = convert_temperature(sst, "k", "c")) %>%
+  mutate(sst = convert_temperature(sst, "c", "k")) %>%
   ggplot() + 
   geom_point(aes(x = lon, y = lat, color = sst),
              size = 0.8) + 
@@ -211,33 +217,8 @@ expand.grid(lon, lat) %>%
   ggtitle("Measured temperature on 1977-07-16",
           subtitle = "HadISST1") 
 
-##################################################################################
-#Need to subset a data frame of ncin 
-#Limited documentation on this - more on ncdf :( 
 
-# create dataframe -- reshape data
-# matrix (nlon*nlat rows by 2 cols) of lons and lats
-lonlat <- as.matrix(expand.grid(lon,lat))
-dim(lonlat)
-
-# vector of 'tmp' values
-tmp_vec <- as.vector(tmp_slice)
-length(tmp_vec)
-
-# create dataframe and add names
-tmp_df01 <- data.frame(cbind(lonlat,tmp_vec))
-names(tmp_df01) <- c("lon","lat",paste(dname,as.character(m), sep="_"))
-head(na.omit(tmp_df01), 10)
-
-# reshape the array into vector
-tmp_vec_long <- as.vector(tmp_array)
-length(tmp_vec_long)
-
-# reshape the vector into a matrix
-tmp_mat <- matrix(tmp_vec_long, nrow=nlon*nlat, ncol=nt)
-dim(tmp_mat)
-head(tmp_mat)
-
-##################################################
+ts <- as.PCICt(c("1913-01-01", "2016-01-01"), cal="360")
+ts.bounds <- nc.make.time.bounds(ts, unit="month")
 
 
