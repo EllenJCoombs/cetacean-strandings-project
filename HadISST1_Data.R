@@ -5,6 +5,10 @@ library(chron)
 library(RColorBrewer)
 library(lattice)
 library(ncdf4)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 
 #required download 
 install.packages("ncdf4", repos = NULL, type="source")
@@ -58,7 +62,6 @@ head(lon)
 
 lat <- ncvar_get(ncin,"latitude")
 nlat <- dim(lat)
-nlat2 <- dim(lat2)
 head(lat)
 
 print(c(nlon,nlat))
@@ -119,49 +122,97 @@ cutpts <- c(-50,-40,-30,-20,-10,0,10,20,30,40,50)
 levelplot(tmp_slice ~ lon * lat, data=grid, at=cutpts, cuts=11, pretty=T, 
           col.regions=(rev(brewer.pal(10,"RdBu"))))
 
-################################################################################
-# create dataframe -- reshape data
-# matrix (nlon*nlat rows by 2 cols) of lons and lats
-lonlat <- as.matrix(expand.grid(lon,lat))
-dim(lonlat)
+###########################################################
+LonIdx <- which( ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
+LatIdx <- which( ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
+MyVariable <- ncvar_get(ncin, "tmp")[ LonIdx, LatIdx]
 
-# vector of `tmp` values
-tmp_vec <- as.vector(tmp_slice)
-length(tmp_vec)
+ncin$dim$time$units
 
-write.csv(tmp_df01, file = "sst_tmp_1.csv")
+install.packages("ncdf4.helpers")
+library(ncdf4.helpers)
+install.packages("PCICt")
+library(PCICt)
 
-#Save everything as a csv 
-#set path and filename
-csvpath <- "Users/ellencoombs/Desktop/sst_tmp_1.csv"
-csvname <- "sst_tmp_1.csv"
-csvfile <- paste(csvpath, csvname, sep="")
-write.table(na.omit(csvname),csvfile, row.names=FALSE, sep=",")
+#This use of non-standard calendars messes up the calculations of as.Date, 
+#so you must use a more specialized function to read in the time variable of the
+#climate model output and map it to standard calendar dates. 
+#You can do this with the nc.get.time.series function from the ncdf4.helpers package
+#(you should also load the PCICt package to use this function):
 
-# reshape the array into vector
-tmp_vec_long <- as.vector(tmp_array)
-length(tmp_vec_long)
+sst_time <- nc.get.time.series(ncin, v = "sst",
+                               time.dim.name = "time")
+sst_time[c(1:3, length(sst_time) - 2:0)]
 
-# create dataframe and add names
-tmp_df01 <- data.frame(cbind(lonlat,tmp_vec))
-names(tmp_df01) <- c("lon","lat",paste("sst",as.character(m), sep="_"))
-head(na.omit(tmp_df01), 10)
+#Getting sst data 
+sst <- ncvar_get(ncin, "sst")
+dim(sst)
+length(sst_time)
+summary(sst_time)
 
-# reshape the vector into a matrix
-tmp_mat <- matrix(tmp_vec_long, nrow=nlon*nlat, ncol=nt)
-dim(tmp_mat)
+#Selecting a specific time point and place 
+#Answers are in celcius? CHECK
 
-head(na.omit(tmp_mat))
-head(tmp_mat)
 
-lonlat <- as.matrix(expand.grid(lon,lat))
-tmp_df02 <- data.frame(cbind(lonlat,tmp_mat))
-names(tmp_df02) <- c("lon","lat","tmpJan","tmpFeb","tmpMar","tmpApr","tmpMay","tmpJun",
-                     "tmpJul","tmpAug","tmpSep","tmpOct","tmpNov","tmpDec")
-# options(width=96)
-head(na.omit(tmp_df02, 20))
+#Selecting a specific lat/long section 
+lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
+lat_index <-  which(ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
 
-tmp_df02
+
+#Selecting only one point 
+lon_index <- which.min(abs(lon - 0.3))
+lat_index <- which.min(abs(lat - 54.2))
+time_index <- which(format(sst_time, "%Y-%m-%d") == "2011-03-16")
+sst[lon_index, lat_index, time_index]
+
+
+#Picking out specific of data - this is one lat/long from 1870-2017
+#Note that this code uses format and as.Date to convert the PCICt object 
+#to a date object, to allow use of a date axis when plotting with ggplot2.
+lon_index <- which.min(abs(lon - 0.3))
+lat_index <- which.min(abs(lat - 54.2))
+sst <- nc.get.var.subset.by.axes(ncin, "sst",
+                                 axis.indices = list(X = lon_index,
+                                                     Y = lat_index))
+data_frame(time = sst_time, 
+           sst = as.vector(sst)) %>%
+  mutate(time = as.Date(format(time, "%Y-%m-%d"))) %>%
+  ggplot(aes(x = time, y = sst)) + 
+  geom_line() + 
+  xlab("Date") + ylab("Temperature (C)") + 
+  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",
+          subtitle = "At model grid point nearest Scarborough, United Kingdom") + 
+  theme_classic()
+
+
+#Modelling temperature for a single day - need to change the code as this currently 
+#gives a global picture 
+library(ggmap)
+library(viridis)
+install.packages("weathermetrics")
+library(weathermetrics)
+
+time_index <- which(format(sst_time, "%Y-%m-%d") == "2016-07-16")
+sst <- nc.get.var.subset.by.axes(ncin, "sst",
+                                 axis.indices = list(T = time_index))
+expand.grid(lon, lat) %>%
+  rename(lon = Var1, lat = Var2) %>%
+  mutate(lon = ifelse(lon > 180, -(360 - lon), lon),
+         sst = as.vector(sst)) %>% 
+  #mutate(sst = convert_temperature(sst, "k", "c")) %>%
+  ggplot() + 
+  geom_point(aes(x = lon, y = lat, color = sst),
+             size = 0.8) + 
+  borders("world", colour="black", fill=NA) + 
+  scale_color_viridis(name = "Temperature (C)") + 
+  theme_void() + 
+  coord_quickmap() + 
+  ggtitle("Measured temperature on 1977-07-16",
+          subtitle = "HadISST1") 
+
+
+
+
 
 
 
