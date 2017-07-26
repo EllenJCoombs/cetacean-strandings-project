@@ -37,6 +37,7 @@ attributes(ncin$var)$names
 #[1] "time_bnds" "sst" 
 
 print(ncin)
+ncin
 
 #Taking a look at the data 
 ncin_data <- ncvar_get(ncin, attributes(ncin$var)$names[1])
@@ -155,14 +156,14 @@ summary(sst_time)
 
 
 #Selecting a specific lat/long section 
-lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
-lat_index <-  which(ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
-
+#lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
+#lat_index <-  which(ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
+#sst[lon_index, lat_index, time_index]
 
 #Selecting only one point 
 lon_index <- which.min(abs(lon - 0.3))
 lat_index <- which.min(abs(lat - 54.2))
-time_index <- which(format(sst_time, "%Y-%m-%d") == "2011-03-16")
+time_index <- which(format(sst_time, "%Y-%m-%d") == "2017-03-16")
 sst[lon_index, lat_index, time_index]
 
 
@@ -210,10 +211,33 @@ expand.grid(lon, lat) %>%
   ggtitle("Measured temperature on 1977-07-16",
           subtitle = "HadISST1") 
 
+##################################################################################
+#Need to subset a data frame of ncin 
+#Limited documentation on this - more on ncdf :( 
 
+# create dataframe -- reshape data
+# matrix (nlon*nlat rows by 2 cols) of lons and lats
+lonlat <- as.matrix(expand.grid(lon,lat))
+dim(lonlat)
 
+# vector of 'tmp' values
+tmp_vec <- as.vector(tmp_slice)
+length(tmp_vec)
 
+# create dataframe and add names
+tmp_df01 <- data.frame(cbind(lonlat,tmp_vec))
+names(tmp_df01) <- c("lon","lat",paste(dname,as.character(m), sep="_"))
+head(na.omit(tmp_df01), 10)
 
+# reshape the array into vector
+tmp_vec_long <- as.vector(tmp_array)
+length(tmp_vec_long)
 
+# reshape the vector into a matrix
+tmp_mat <- matrix(tmp_vec_long, nrow=nlon*nlat, ncol=nt)
+dim(tmp_mat)
+head(tmp_mat)
+
+##################################################
 
 
