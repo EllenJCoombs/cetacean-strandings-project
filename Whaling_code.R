@@ -189,6 +189,80 @@ ggplot() +
   facet_wrap(~ Name.Current.Sci)
 
 
+#regression lines 
+model1 <- lm(Year ~ Strandings, data = hunted_stranders_total)
+#autoplot(model2, smooth.colour = NA)
+anova(model1)
+summary(model1)
 
+model2 <- lm(Year ~ Catch, data = iwc)
+anova(model2)
+summary(model2) 
+
+###########################################################################
+#Fitting a regression line to whaling and catch data
+#Adding a 'total per year' to each dataset 
+
+#'Total_hunted'
+#'Total-hunted_stranded'
+
+install.packages("devtools")
+library(devtools)
+
+
+hunted_and_stranded <- bind_cols(Total_hunted, Total_hunted_stranders)
+
+#Renaming the columns 
+
+hunted_and_stranded <- hunted_and_stranded %>%
+  rename("Catch" = Total.catch) %>%
+  rename("Stranded" = n) %>%
+  select("Year", "Catch", "Stranded")
+
+#Plot both on the same graph
+#Have done log calc but not sure if it needed it 
+
+#Regression line 
+a1 <- ggplot(data = hunted_and_stranded, aes(x = Stranded, y = Catch)) +
+  geom_point(size = 0.5) +
+  geom_text(aes(label = Year), size = 3, vjust = -0.5) +
+  #geom_smooth(method = lm, formula = y~x) + 
+  labs(x = "Total stranded", y = "Total catch (hunted)") #se=FALSE, colour = "grey70", size =0.7) 
+
+
+m <- lm(hunted_and_stranded$Stranded ~ hunted_and_stranded$Catch)
+a <- signif(coef(m)[1])
+b <- signif(coef(m)[2])
+textlab <- paste("y = ",b,"x + ",a, sep="")
+
+a2 <- a1 + geom_smooth(method = lm, formula = y~x) 
+
+a3 <- a2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
+
+plot(a3)
+
+##############################################
+#After 1970 only 
+
+hunted_and_stranded1970 <- hunted_and_stranded %>% 
+  filter(Year %in% c(1986:2015))
+
+b1 <- ggplot(data = hunted_and_stranded1970, aes(x = Stranded, y = Catch)) +
+  geom_point(size = 0.5) +
+  geom_text(aes(label = Year), size = 3, vjust = -0.5) +
+  #geom_smooth(method = lm, formula = y~x) + 
+  labs(x = "Total stranded", y = "Total catch (hunted)") #se=FALSE, colour = "grey70", size =0.7) 
+
+
+m <- lm(hunted_and_stranded1970$Stranded ~ hunted_and_stranded1970$Catch)
+a <- signif(coef(m)[1])
+b <- signif(coef(m)[2])
+textlab <- paste("y = ",b,"x + ",a, sep="")
+
+b2 <- b1 + geom_smooth(method = lm, formula = y~x) 
+
+b3 <- b2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
+
+plot(b3)
 
 
