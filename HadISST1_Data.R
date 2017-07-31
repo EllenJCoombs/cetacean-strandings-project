@@ -199,6 +199,7 @@ library(viridis)
 install.packages("weathermetrics")
 library(weathermetrics)
 
+#This code maos the temp data for the whole planet 
 time_index <- which(format(sst_time, "%Y-%m-%d") == "2016-07-16")
 sst <- nc.get.var.subset.by.axes(ncin, "sst",
                                  axis.indices = list(T = time_index))
@@ -220,5 +221,31 @@ expand.grid(lon, lat) %>%
 
 ts <- as.PCICt(c("1913-01-01", "2016-01-01"), cal="360")
 ts.bounds <- nc.make.time.bounds(ts, unit="month")
+
+ncin
+
+###################################################
+#Creating a dataframe 
+LonStartIdx <- which(ncin$dim$lon$vals == -3)
+LatStartIdx <- which( ncFile$dim$lat$vals == 49)
+
+LonIdx <- which( ncin$dim$lon$vals > -3 | ncin$dim$lon$vals < 11)
+LatIdx <- which( ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9) 
+#Don't know why this doesn't work 
+MyVariable <- ncvar_get(ncin, sst)[ LonIdx, LatIdx]
+
+
+#Made the nc file a csv file
+sst_csv <- read.csv("sst_tmp_1.csv")
+
+library(dplyr)
+library(tidyverse)
+
+sst_uk_csv <- sst_csv %>% 
+  filter(lat > 49.0) %>%
+  filter(lat < 62.0) %>%
+  filter(lon > -3) %>%
+  filter(lon < 11)
+
 
 
