@@ -182,7 +182,7 @@ d3 <- ggplot(data = extra_counties, aes(x = INVERCLYDE, y = UK)) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
 
-install.packages("ggpsmisc") #Can't install this 
+install.packages("ggpsmisc") #Can't install this
 
 d4 <- ggplot(data = extra_counties, aes(x = ANGELSEY, y = UK)) +
   geom_point(size = 0.5) +
