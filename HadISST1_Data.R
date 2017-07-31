@@ -199,7 +199,7 @@ library(viridis)
 install.packages("weathermetrics")
 library(weathermetrics)
 
-#This code maos the temp data for the whole planet 
+#This code maps the temp data for the whole planet 
 time_index <- which(format(sst_time, "%Y-%m-%d") == "2016-07-16")
 sst <- nc.get.var.subset.by.axes(ncin, "sst",
                                  axis.indices = list(T = time_index))
