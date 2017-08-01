@@ -97,8 +97,9 @@ tdstr <- strsplit(unlist(tustr)[3], "-")
 tmonth <- as.integer(unlist(tdstr)[2])
 tday <- as.integer(unlist(tdstr)[3])
 tyear <- as.integer(unlist(tdstr)[1])
-chron(time,origin=c(tmonth, tday, tyear))
+new_time <- chron(time,origin=c(tmonth, tday, tyear))
 
+new_time
 
 # replace netCDF fill values with NA's - no fill values found 
 tmp_array[tmp_array==fillvalue$value] <- NA
@@ -241,11 +242,32 @@ sst_csv <- read.csv("sst_tmp_1.csv")
 library(dplyr)
 library(tidyverse)
 
-sst_uk_csv <- sst_csv %>% 
+tmp_df01 <- data.frame(cbind(lonlat,tmp, new_time))
+names(tmp_df01) <- c("lon","lat", "tmp" , "time", paste(dname,as.character(m), sep="_"))
+head(na.omit(tmp_df01), 10)
+
+write.csv(tmp_df01, file = "tmp_sst.csv")
+sst_csv <- read.csv("tmp_sst.csv")
+
+write.csv(new_time, file = "new_time.csv")
+new_time <- read.csv("new_time.csv")
+
+sst_csv <- sst_csv %>%
+rename(lat = Var2) %>%
+  rename(lon = Var1) 
+
+sst_csv %>%
   filter(lat > 49.0) %>%
   filter(lat < 62.0) %>%
   filter(lon > -3) %>%
   filter(lon < 11)
+
+
+sst_uk_csv
+sst_csv
+
+tail(sst_csv)
+
 
 
 
