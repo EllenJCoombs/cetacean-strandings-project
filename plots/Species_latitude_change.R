@@ -10,7 +10,7 @@ library(magrittr)
 
 cleaneddata <- read.csv("cleandatesnames.csv")
 
-species_lat <- dplyr::count(cleaneddata, Latitude, Name.Current.Sci, Year) 
+species_lat <- dplyr::count(cleaneddata, Latitude, Name.Current.Sci, Year)
 
 #removing the 0.0000 lats and 
 species_lat <- species_lat %>%
