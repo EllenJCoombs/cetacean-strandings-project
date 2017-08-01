@@ -242,7 +242,7 @@ sst_csv <- read.csv("sst_tmp_1.csv")
 library(dplyr)
 library(tidyverse)
 
-tmp_df01 <- data.frame(cbind(lonlat,tmp, new_time))
+tmp_df01 <- data.frame(cbind(lon, lat,tmp, new_time))
 names(tmp_df01) <- c("lon","lat", "tmp" , "time", paste(dname,as.character(m), sep="_"))
 head(na.omit(tmp_df01), 10)
 
