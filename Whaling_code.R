@@ -179,6 +179,7 @@ hunted_stranders_total <- hunted_stranders_total %>%
   rename(Strandings = n)
 
 #Plot the data together 
+#Remove facet_wrap if you don't want by species plots 
 ggplot() + 
   geom_line(data = hunted_stranders_total, aes(x = Year, y = Strandings, colour = "Stranded")) +
   geom_line(data = iwc, aes(x = Year, y = Catch/20, colour = "Hunted")) +
@@ -220,7 +221,8 @@ hunted_and_stranded <- hunted_and_stranded %>%
   select("Year", "Catch", "Stranded")
 
 #Plot both on the same graph
-#Have done log calc but not sure if it needed it 
+#Have done log calc but not sure if it needed it (can also remove this and do non log
+#calculation)
 
 #Regression line 
 a1 <- ggplot(data = hunted_and_stranded, aes(x = Stranded, y = Catch)) +
