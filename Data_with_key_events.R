@@ -35,19 +35,38 @@ p <- p + labs(y = "Total stranding",
 p <- p + theme(legend.justification = "top")
 
 #WWI
-p <- p + annotate("rect", xmin=1914, xmax=1918, ymin=0, ymax=60, alpha=.1, fill="blue") +
+p <- p + annotate("rect", xmin=1914, xmax=1918, ymin=0, ymax=60, alpha=.2, fill="gray44") +
 geom_text(
-  aes(x = 1916, y = 60, label = "WWI"))
+  aes(x = 1916, y = 60, label = "WWI"), size = 3)
 
 #WWII
-p <- p + annotate("rect", xmin=1939, xmax=1945, ymin=0, ymax=60, alpha=.1, fill="blue") +
+p <- p + annotate("rect", xmin=1939, xmax=1945, ymin=0, ymax=60, alpha=.2, fill="gray44") +
   geom_text(
-    aes(x = 1942, y = 60, label = "WWII"))
+    aes(x = 1942, y = 60, label = "WWII"), size = 3)
 
 #Moratorium 1986
-p <- p + annotate("rect", xmin=1985, xmax=2015, ymin=0, ymax=60, alpha=.1, fill="blue") +
+p <- p + annotate("rect", xmin=1985, xmax=2015, ymin=0, ymax=60, alpha=.4, fill="gray44") +
   geom_text(
-    aes(x = 1985, y = 60, label = "Moratorium: 1985/1986 season"))
+    aes(x = 1985, y = 60, label = "Moratorium comes into effect:
+1985/1986 season start"), size = 3)
+
+#CSIP
+p <- p + annotate("segment", x = 1990, xend = 1990, y = 0, yend = -10, colour="black", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) + 
+  geom_text(
+    aes(x = 1985, y = -12, label = "CSIP programme starts"), size = 3)
+
+p <- p + annotate("segment", x = 1945, xend = 1950, y = 0, yend = -10, colour="black", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) + 
+  geom_text(
+    aes(x = 1945, y = -14, label = "Increase in post-war
+        fishing & whaling effort"), size = 3)
+
+
+#Catches under objection 
+p <- p + annotate("rect", xmin=1986, xmax=2015, ymin=0, ymax=60, alpha=.05, fill="lightsteelblue2") +
+  geom_text(
+    aes(x = 1997, y = 50, label = "Norway and Iceland 
+continue to hunt
+under objection "), size = 3)
 
 p
 
