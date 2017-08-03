@@ -81,6 +81,11 @@ ggplot(data = total_speciesbyyear, aes(x = Year, y = x)) +
   geom_line()
 
 
+#Want to plot this as a histogram 
+ggplot(total_speciesbyyear, aes(x = Year)) +
+  geom_histogram(binwidth = 0.5)
+
+
 #Estimating total richness across years 
 #Chao2
 specpool(whale.matrix)
