@@ -262,12 +262,10 @@ sst_csv %>%
   filter(lon > -3) %>%
   filter(lon < 11)
 
-
 sst_uk_csv
 sst_csv
 
 tail(sst_csv)
-
 
 
 
