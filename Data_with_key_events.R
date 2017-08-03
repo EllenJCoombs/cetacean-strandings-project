@@ -5,7 +5,9 @@
 
 #Using "Catch_and_strandings" dataset (see "Whaling_code.R" for details)
 
+library(ggplot2)
 library(grid)
+library(tidyverse)
 
 #This plot adds the two war periods
 p <- ggplot(Catch_and_strandings, aes(x = Year))
@@ -34,6 +36,7 @@ p <- p + labs(y = "Total stranding",
 #Putting the legend outside the plot 
 p <- p + theme(legend.justification = "top")
 
+#This code adds shaded areas to the plot 
 #WWI
 p <- p + annotate("rect", xmin=1914, xmax=1918, ymin=0, ymax=60, alpha=.2, fill="gray44") +
 geom_text(
@@ -45,11 +48,19 @@ p <- p + annotate("rect", xmin=1939, xmax=1945, ymin=0, ymax=60, alpha=.2, fill=
     aes(x = 1942, y = 60, label = "WWII"), size = 3)
 
 #Moratorium 1986
-p <- p + annotate("rect", xmin=1985, xmax=2015, ymin=0, ymax=60, alpha=.4, fill="gray44") +
+p <- p + annotate("rect", xmin=1985, xmax=1986, ymin=0, ymax=60, alpha=.5, fill="gray44") +
   geom_text(
     aes(x = 1985, y = 60, label = "Moratorium comes into effect:
 1985/1986 season start"), size = 3)
 
+#Catches under objection 
+p <- p + annotate("rect", xmin=1986, xmax=2015, ymin=0, ymax=60, alpha=.2, fill="gray44") +
+  geom_text(
+    aes(x = 1997, y = 50, label = "Norway and Iceland 
+        continue to hunt
+        under objection "), size = 3)
+
+#This code adds arrows to the plot 
 #CSIP
 p <- p + annotate("segment", x = 1990, xend = 1990, y = 0, yend = -10, colour="black", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) + 
   geom_text(
@@ -61,19 +72,13 @@ p <- p + annotate("segment", x = 1945, xend = 1950, y = 0, yend = -10, colour="b
         fishing & whaling effort"), size = 3)
 
 
-#Catches under objection 
-p <- p + annotate("rect", xmin=1986, xmax=2015, ymin=0, ymax=60, alpha=.05, fill="lightsteelblue2") +
-  geom_text(
-    aes(x = 1997, y = 50, label = "Norway and Iceland 
-continue to hunt
-under objection "), size = 3)
+
 
 p
 
 dev.off()
 
 
-#Adding arrows to the graph 
 
 
 
