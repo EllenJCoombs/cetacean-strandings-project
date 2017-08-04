@@ -195,4 +195,45 @@ d4
 
 multiplot(d1, d2, d3, d4, cols = 2) 
 
+##########################################################################################
+#Taking a look at full century data vs. total strandings
+
+#Bring in the data 
+pop_vs_strandings <- read.csv("Population_vs_stranding.csv")
+
+#Plot of UK population and UK strandings 
+p1 <- ggplot(data = pop_vs_strandings, aes(x = POPULATION, y = STRANDINGS)) +
+  geom_point(size = 0.5) +
+  labs(x = "UK population (millions)", y = "Stranding count") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+#Adding a regression line 
+m <- lm(pop_vs_strandings$POPULATION ~ pop_vs_strandings$STRANDINGS)
+a <- signif(coef(m)[1])
+b <- signif(coef(m)[2])
+textlab <- paste("y = ",b,"x + ",a, sep="")
+
+p2 <- p1 + geom_smooth(method = lm, formula = y~x) 
+
+p3 <- p2 + geom_text(aes(x = 50, y = 700, label = textlab), color="black", size= 3, parse = FALSE)  
+
+plot(p3)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
