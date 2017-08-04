@@ -209,7 +209,7 @@ p1 <- ggplot(data = pop_vs_strandings, aes(x = POPULATION, y = STRANDINGS)) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
 #Adding a regression line 
-m <- lm(pop_vs_strandings$POPULATION ~ pop_vs_strandings$STRANDINGS)
+m <- lm(POPULATION ~ STRANDINGS, data = pop_vs_strandings)
 a <- signif(coef(m)[1])
 b <- signif(coef(m)[2])
 textlab <- paste("y = ",b,"x + ",a, sep="")

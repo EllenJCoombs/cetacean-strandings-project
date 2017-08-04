@@ -137,6 +137,7 @@ install.packages("ncdf4.helpers")
 library(ncdf4.helpers)
 install.packages("PCICt")
 library(PCICt)
+library(dplyr)
 
 #This use of non-standard calendars messes up the calculations of as.Date, 
 #so you must use a more specialized function to read in the time variable of the
@@ -268,3 +269,7 @@ sst_csv
 #Stripping out UK data 
 write.csv(tmp_df01, file = "tmp_df01.csv")
 test <- read.csv("tmp_df01.csv")
+
+
+
+ncin
