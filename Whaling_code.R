@@ -131,7 +131,7 @@ ggplot(Total_hunted_stranders$n*100, aes(x = Year, y = n, ylab = "Count")) + geo
 #Clean up the data 
 Catch_and_strandings <- bind_cols(Total_hunted, Total_hunted_stranders) %>%
   select(Year, Total.catch, n) %>%
-  rename("Strandings" = "n")
+  dplyr::rename("Strandings" = "n")
 
 #Plot them both on the same graph 
   p <- ggplot(Catch_and_strandings, aes(x = Year))
@@ -162,21 +162,25 @@ Catch_and_strandings <- bind_cols(Total_hunted, Total_hunted_stranders) %>%
 iwc <- whaling_species_no_total
   
 library(reshape2)
-install.packages("mvbutils")
 library(mvbutils)
   
 #Arranging by species for catch data 
 iwc$X <- NULL
 iwc <- melt(iwc, measure.vars=names(iwc)%except%"Year") 
 
+#Have loaded the reshape package so need to be careful when using dplyr 
 iwc <- iwc %>% 
-  rename(Name.Current.Sci = variable) %>%
-  rename(Catch = value) %>% 
+  dplyr::rename(Name.Current.Sci = variable) %>%
+  dplyr::rename(Catch = value) %>% 
   arrange(Year)
+
+#Remove the 1910 - 1913 data 
+iwc <- iwc %>%
+  filter(Year %in% c(1913:2015))
 
 #Clean up hunted_stranders_total
 hunted_stranders_total <- hunted_stranders_total %>%
-  rename(Strandings = n)
+  dplyr::rename(Strandings = n)
 
 #Plot the data together 
 #Remove facet_wrap if you don't want by species plots 
@@ -209,6 +213,7 @@ summary(model2)
 
 install.packages("devtools")
 library(devtools)
+library(dplyr)
 
 
 hunted_and_stranded <- bind_cols(Total_hunted, Total_hunted_stranders)
@@ -232,16 +237,39 @@ a1 <- ggplot(data = hunted_and_stranded, aes(x = Stranded, y = Catch)) +
   labs(x = "Total stranded", y = "Total catch (hunted)") #se=FALSE, colour = "grey70", size =0.7) 
 
 
-m <- lm(hunted_and_stranded$Stranded ~ hunted_and_stranded$Catch)
-a <- signif(coef(m)[1])
-b <- signif(coef(m)[2])
-textlab <- paste("y = ",b,"x + ",a, sep="")
+#m <- lm(hunted_and_stranded$Stranded ~ hunted_and_stranded$Catch)
+#a <- signif(coef(m)[1])
+#b <- signif(coef(m)[2])
+#textlab <- paste("y = ",b,"x + ",a, sep="")
 
-a2 <- a1 + geom_smooth(method = lm, formula = y~x) 
+#a2 <- a1 + geom_smooth(method = lm, formula = y~x) 
 
-a3 <- a2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
+#a3 <- a2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
 
-plot(a3)
+#plot(a3)
+
+lm_eqn = function(m) {
+  
+  l <- list(a = format(coef(m)[1], digits = 2),
+            b = format(abs(coef(m)[2]), digits = 2),
+            r2 = format(summary(m)$r.squared, digits = 3));
+  
+  if (coef(m)[2] >= 0)  {
+    eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2,l)
+  } else {
+    eq <- substitute(italic(y) == a - b %.% italic(x)*","~~italic(r)^2~"="~r2,l)    
+  }
+  
+  as.character(as.expression(eq));                 
+}
+
+p4 = a1 + geom_text(aes(x = 35, y = 150, label = lm_eqn(lm(y ~ x, df))), parse = TRUE)
+
+
+
+
+
+
 
 ##############################################
 #After 1970 only 

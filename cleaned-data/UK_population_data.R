@@ -221,15 +221,43 @@ p3 <- p2 + geom_text(aes(x = 50, y = 700, label = textlab), color="black", size=
 plot(p3)
 
 
+p1 <- ggplot(data = pop_vs_strandings, aes(x = POPULATION, y = STRANDINGS)) +
+  geom_point(size = 0.5) +
+  labs(x = "UK population (millions)", y = "Stranding count") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
+#Adding a regression line 
+m <- lm(pop_vs_strandings$POPULATION ~ pop_vs_strandings$STRANDINGS)
+a <- signif(coef(m)[1])
+b <- signif(coef(m)[2])
+textlab <- paste("y = ",b,"x + ",a, sep="")
 
+p2 <- p1 + geom_smooth(method = lm, formula = y~x) 
 
+p3 <- p2 + geom_text(aes(x = 50, y = 700, label = textlab), color="black", size= 3, parse = FALSE)  
 
+plot(p3)
 
+#Not sure how these are so different...
+lm_eqn = function(m) {
+  
+  l <- list(a = format(coef(m)[1], digits = 2),
+            b = format(abs(coef(m)[2]), digits = 2),
+            r2 = format(summary(m)$r.squared, digits = 3));
+  
+  if (coef(m)[2] >= 0)  {
+    eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2,l)
+  } else {
+    eq <- substitute(italic(y) == a - b %.% italic(x)*","~~italic(r)^2~"="~r2,l)    
+  }
+  
+  as.character(as.expression(eq));                 
+}
 
+p4 = p1 + geom_text(aes(x = 50, y = 700, label = lm_eqn(lm(y ~ x, df))), parse = TRUE)
 
-
-
+p4
 
 
 
