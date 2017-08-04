@@ -265,7 +265,6 @@ sst_csv %>%
 sst_uk_csv
 sst_csv
 
-tail(sst_csv)
-
-
-
+#Stripping out UK data 
+write.csv(tmp_df01, file = "tmp_df01.csv")
+test <- read.csv("tmp_df01.csv")

@@ -86,6 +86,8 @@ ggplot(total_speciesbyyear, aes(x = Year)) +
   geom_histogram(binwidth = 0.5)
 
 
+dev.off()
+
 #Estimating total richness across years 
 #Chao2
 specpool(whale.matrix)

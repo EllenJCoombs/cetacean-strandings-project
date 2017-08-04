@@ -155,6 +155,10 @@ ggplot(sortmystcount, aes(x = Year, y = n)) +
   ggplot(speciesyear, aes(x = Year)) +
     stat_count(width = 0.5)
   
+#Total strandings per year 
+strandings_year <- count(cleaneddata, Year)
+  
+  
   
 #Mysticete plots - why does stat count work?
 ggplot(sortedmysticetes, aes(x = Year)) +
