@@ -231,16 +231,16 @@ a1 <- ggplot(data = hunted_and_stranded, aes(x = Stranded, y = Catch)) +
 
 a1
 
-#m <- lm(hunted_and_stranded$Stranded ~ hunted_and_stranded$Catch)
-#a <- signif(coef(m)[1])
-#b <- signif(coef(m)[2])
-#textlab <- paste("y = ",b,"x + ",a, sep="")
+m <- lm(Stranded ~ Catch, data = hunted_and_stranded1970)
+a <- signif(coef(m)[1])
+b <- signif(coef(m)[2])
+textlab <- paste("y = ",b,"x + ",a, sep="")
 
-#a2 <- a1 + geom_smooth(method = lm, formula = y~x) 
+a2 <- a1 + geom_smooth(method = lm, formula = y~x) 
 
-#a3 <- a2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
+a3 <- a2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
 
-#plot(a3)
+plot(a3)
 
 
 ##############################################
@@ -257,15 +257,16 @@ b1 <- ggplot(data = hunted_and_stranded1970, aes(x = Stranded, y = Catch)) +
 
 
 #m <- lm(hunted_and_stranded1970$Stranded ~ hunted_and_stranded1970$Catch)
-#a <- signif(coef(m)[1])
-#b <- signif(coef(m)[2])
-#textlab <- paste("y = ",b,"x + ",a, sep="")
+m <- lm(Stranded ~ Catch, data = hunted_and_stranded1970)
+a <- signif(coef(m)[1])
+b <- signif(coef(m)[2])
+textlab <- paste("y = ",b,"x + ",a, sep="")
 
-#b2 <- b1 + geom_smooth(method = lm, formula = y~x) 
+b2 <- b1 + geom_smooth(method = lm, formula = y~x) 
 
-#b3 <- b2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
+b3 <- b2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
 
-#plot(b3)
+plot(b3)
 
 #Alternative method using a function can be used for the two above graphs 
 lm_eqn = function(m) {
