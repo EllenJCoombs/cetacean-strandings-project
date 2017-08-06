@@ -10,10 +10,6 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-#required download 
-install.packages("ncdf4", repos = NULL, type="source")
-ncname <- "cru10min30_tmp" 
-
 #Set path and filename 
 ncpath <- "Users/ellencoombs/Desktop/HadISST_sst.nc"
 ncname <- "HadISST_sst.nc"  
@@ -60,15 +56,23 @@ lon <- ncvar_get(ncin,"longitude")
 nlon <- dim(lon)
 head(lon)
 
+summary(lon)
+
 
 lat <- ncvar_get(ncin,"latitude")
 nlat <- dim(lat)
 head(lat)
 
+summary(lat)
+
 print(c(nlon,nlat))
 
 #Time variable from the dataset 
 # get time
+
+#Time since when? 
+ncin$dim$time$units
+
 time <- ncvar_get(ncin,"time")
 time
 
@@ -77,6 +81,10 @@ tunits <- ncatt_get(ncin,"time","units")
 nt <- dim(time)
 nt
 tunits 
+
+#What kind of calendar? 
+ncin$dim$time$calendar
+#Gregorian
 
 #Get the the variable (tmp) and its attributes, and verify the size of the array.
 # get temperature
@@ -151,13 +159,20 @@ sst_time[c(1:3, length(sst_time) - 2:0)]
 
 #Getting sst data 
 sst <- ncvar_get(ncin, "sst")
+
+#This variable is in a 3-dimensional array, with dimensions ordered as first longitude, then latitude, then time:
 dim(sst)
+
+
 length(sst_time)
 summary(sst_time)
 
 #Selecting a specific time point and place 
 #Answers are in celcius? CHECK
-
+lon_index <- which.min(abs(lon - 4.63))
+lat_index <- which.min(abs(lat - 53.31))
+time_index <- which(format(sst_time, "%Y-%m-%d") == "2011-09-16")
+sst[lon_index, lat_index, time_index]
 
 #Selecting a specific lat/long section 
 lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
@@ -178,8 +193,8 @@ sst[lon_index, lat_index, time_index]
 #Picking out specific of data - this is one lat/long from 1870-2017
 #Note that this code uses format and as.Date to convert the PCICt object 
 #to a date object, to allow use of a date axis when plotting with ggplot2.
-lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
-lat_index <- which(ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
+lon_index <- which.min(abs(lon - 4.65))
+lat_index <- which.min(abs(lat - 53.31))
 
 sst <- nc.get.var.subset.by.axes(ncin, "sst",
                                  axis.indices = list(X = lon_index,
@@ -190,18 +205,19 @@ sst <- nc.get.var.subset.by.axes(ncin, "sst",
 data_frame(time = sst_time,
            sst = as.vector(sst)) %>% 
   mutate(time = as.Date(format(sst_time, "%Y-%m-%d"))) %>%
-  write.csv(file = "UK_temp")
+  #write.csv(file = "UK_temp")
 
-read.csv("Out_stack.csv")
+#read.csv("Out_stack.csv")
   
   
   ggplot(aes(x = time, y = sst)) + 
   geom_line() + 
   xlab("Date") + ylab("Temperature (C)") + 
   ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",
-          subtitle = "At model grid point nearest Out Stack, Shetland, United Kingdom") + 
+          subtitle = "At model grid point nearest Holyhead, UK") + 
   theme_classic()
 
+lon
 
 #Modelling temperature for a single day - need to change the code as this currently 
 #gives a global picture 
