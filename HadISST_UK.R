@@ -178,18 +178,21 @@ sst[lon_index, lat_index, time_index]
 #Picking out specific of data - this is one lat/long from 1870-2017
 #Note that this code uses format and as.Date to convert the PCICt object 
 #to a date object, to allow use of a date axis when plotting with ggplot2.
-lon_index <- which.min(abs(lon - 0.5))
-lat_index <- which.min(abs(lat - 60.5))
+lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
+lat_index <- which(ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
+
 sst <- nc.get.var.subset.by.axes(ncin, "sst",
                                  axis.indices = list(X = lon_index,
                                                      Y = lat_index))
+
+
+
 data_frame(time = sst_time,
            sst = as.vector(sst)) %>% 
   mutate(time = as.Date(format(sst_time, "%Y-%m-%d"))) %>%
-  write.csv(file = "Out_stack.csv")
+  write.csv(file = "UK_temp")
 
 read.csv("Out_stack.csv")
-  
   
   
   ggplot(aes(x = time, y = sst)) + 
@@ -232,50 +235,3 @@ ts.bounds <- nc.make.time.bounds(ts, unit="month")
 
 ncin
 
-###################################################
-#Creating a dataframe 
-LonStartIdx <- which(ncin$dim$lon$vals == -3)
-LatStartIdx <- which( ncFile$dim$lat$vals == 49)
-
-LonIdx <- which( ncin$dim$lon$vals > -3 | ncin$dim$lon$vals < 11)
-LatIdx <- which( ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9) 
-#Don't know why this doesn't work 
-MyVariable <- ncvar_get(ncin, sst)[ LonIdx, LatIdx]
-
-
-#Made the nc file a csv file
-sst_csv <- read.csv("sst_tmp_1.csv")
-
-library(dplyr)
-library(tidyverse)
-
-tmp_df01 <- data.frame(cbind(lon, lat,tmp, new_time))
-names(tmp_df01) <- c("lon","lat", "tmp" , "time", paste(dname,as.character(m), sep="_"))
-head(na.omit(tmp_df01), 10)
-
-write.csv(tmp_df01, file = "tmp_sst.csv")
-sst_csv <- read.csv("tmp_sst.csv")
-
-write.csv(new_time, file = "new_time.csv")
-new_time <- read.csv("new_time.csv")
-
-sst_csv <- sst_csv %>%
-  rename(lat = Var2) %>%
-  rename(lon = Var1) 
-
-sst_csv %>%
-  filter(lat > 49.0) %>%
-  filter(lat < 62.0) %>%
-  filter(lon > -3) %>%
-  filter(lon < 11)
-
-sst_uk_csv
-sst_csv
-
-#Stripping out UK data 
-write.csv(tmp_df01, file = "tmp_df01.csv")
-test <- read.csv("tmp_df01.csv")
-
-
-
-ncin
