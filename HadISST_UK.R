@@ -194,7 +194,7 @@ sst[lon_index, lat_index, time_index]
 #Note that this code uses format and as.Date to convert the PCICt object 
 #to a date object, to allow use of a date axis when plotting with ggplot2.
 lon_index <- which.min(abs(lon - 4.65))
-lat_index <- which.min(abs(lat - 53.31))
+lat_index <- which.min(abs(lat - 75.0))
 
 sst <- nc.get.var.subset.by.axes(ncin, "sst",
                                  axis.indices = list(X = lon_index,
