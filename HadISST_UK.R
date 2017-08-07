@@ -1,24 +1,25 @@
 #Loading climate data into R 
 
 #Required packages 
+install.packages("chron")
 library(chron)
+install.packages("RColorBrewer")
 library(RColorBrewer)
+install.packages("lattice")
 library(lattice)
+install.packages("ncdf4")
 library(ncdf4)
+install.packages("readr")
 library(readr)
+install.packages("dplyr")
 library(dplyr)
+install.packages("tidyr")
 library(tidyr)
+install.packages("ggplot2")
 library(ggplot2)
-
-#Set path and filename 
-ncpath <- "Users/ellencoombs/Desktop/HadISST_sst.nc"
-ncname <- "HadISST_sst.nc"  
-ncfname <- paste(ncpath, ncname, ".nc", sep="")
-dname <- "tmp"  # note: tmp means temperature (not temporary)
 
 #Reading in .nc data 
 ncin <- nc_open("HadISST_sst.nc")
-
 
 #Having a look at what's in the files 
 attributes(ncin)$names
