@@ -56,14 +56,12 @@ Conventions <- ncatt_get(ncin,0,"Conventions")
 lon <- ncvar_get(ncin,"longitude")
 nlon <- dim(lon)
 head(lon)
-
 summary(lon)
 
 
 lat <- ncvar_get(ncin,"latitude")
 nlat <- dim(lat)
 head(lat)
-
 summary(lat)
 
 print(c(nlon,nlat))
@@ -73,14 +71,16 @@ print(c(nlon,nlat))
 
 #Time since when? 
 ncin$dim$time$units
-
+#Looking at the time units 
 time <- ncvar_get(ncin,"time")
 time
 
 
 tunits <- ncatt_get(ncin,"time","units")
 nt <- dim(time)
+#How many time units there are 
 nt
+#Days since...
 tunits 
 
 #What kind of calendar? 
@@ -94,44 +94,46 @@ tmp <- ncvar_get(ncin,"sst")
 st <- dim(tmp)
 
 tmp_array <- ncvar_get(ncin, "sst")
-dlname <- ncatt_get(ncin, "sst","long_name")
-dunits <- ncatt_get(ncin,"sst","units")
-fillvalue <- ncatt_get(ncin, "sst","_FillValue")
-dim(tmp_array)
+
+#This stuff was what I was playing around with 
+#dlname <- ncatt_get(ncin, "sst","long_name")
+#dunits <- ncatt_get(ncin,"sst","units")
+#fillvalue <- ncatt_get(ncin, "sst","_FillValue")
+#dim(tmp_array)
 
 
 # convert time -- split the time units string into fields
-tustr <- strsplit(tunits$value, " ")
-tdstr <- strsplit(unlist(tustr)[3], "-")
-tmonth <- as.integer(unlist(tdstr)[2])
-tday <- as.integer(unlist(tdstr)[3])
-tyear <- as.integer(unlist(tdstr)[1])
-new_time <- chron(time,origin=c(tmonth, tday, tyear))
+#tustr <- strsplit(tunits$value, " ")
+#tdstr <- strsplit(unlist(tustr)[3], "-")
+#tmonth <- as.integer(unlist(tdstr)[2])
+#tday <- as.integer(unlist(tdstr)[3])
+#tyear <- as.integer(unlist(tdstr)[1])
+#new_time <- chron(time,origin=c(tmonth, tday, tyear))
 
-new_time
+#new_time
 
 # replace netCDF fill values with NA's - no fill values found 
-tmp_array[tmp_array==fillvalue$value] <- NA
+#tmp_array[tmp_array==fillvalue$value] <- NA
 
 #How much of the data are land points? 
-length(na.omit(as.vector(tmp_array[,,1])))
+#length(na.omit(as.vector(tmp_array[,,1])))
 
 
 # get a single slice or layer (January)
 #Changed to temp1[m]
-m <- 1
-tmp_slice <- tmp[,,m]
-dim(tmp_slice)
+#m <- 1
+#tmp_slice <- tmp[,,m]
+#dim(tmp_slice)
 
 #Using the time slice above to look at January temps 
-image(lon,lat,tmp_slice, col=rev(brewer.pal(10,"RdBu")))
+#image(lon,lat,tmp_slice, col=rev(brewer.pal(10,"RdBu")))
 
 #All temps 
 # levelplot of the slice - doesn't look right 
-grid <- expand.grid(lon=lon, lat = lat)
-cutpts <- c(-20,-10,-5,-2,0,2,5,10,20,30)
-levelplot(tmp_slice ~ lon * lat, data=grid, at=cutpts, cuts=11, pretty=T, 
-          col.regions=(rev(brewer.pal(10,"RdBu"))))
+#grid <- expand.grid(lon=lon, lat = lat)
+#cutpts <- c(-20,-10,-5,-2,0,2,5,10,20,30)
+#levelplot(tmp_slice ~ lon * lat, data=grid, at=cutpts, cuts=11, pretty=T, 
+          #col.regions=(rev(brewer.pal(10,"RdBu"))))
 
 ###########################################################
 #Unsure why this doesn't work 
@@ -154,6 +156,7 @@ library(dplyr)
 #You can do this with the nc.get.time.series function from the ncdf4.helpers package
 #(you should also load the PCICt package to use this function):
 
+#This sets the date to a standard: YYYYMMDD and time as well
 sst_time <- nc.get.time.series(ncin, v = "sst",
                                time.dim.name = "time")
 sst_time[c(1:3, length(sst_time) - 2:0)]
@@ -162,6 +165,7 @@ sst_time[c(1:3, length(sst_time) - 2:0)]
 sst <- ncvar_get(ncin, "sst")
 
 #This variable is in a 3-dimensional array, with dimensions ordered as first longitude, then latitude, then time:
+#Checking on SST data 
 dim(sst)
 
 
@@ -170,8 +174,8 @@ summary(sst_time)
 
 #Selecting a specific time point and place 
 #Answers are in celcius? CHECK
-lon_index <- which.min(abs(lon - 4.63))
-lat_index <- which.min(abs(lat - 53.31))
+lon_index <- which.min(abs(lon - 1.80))
+lat_index <- which.min(abs(lat - 55.68))
 time_index <- which(format(sst_time, "%Y-%m-%d") == "2011-09-16")
 sst[lon_index, lat_index, time_index]
 
