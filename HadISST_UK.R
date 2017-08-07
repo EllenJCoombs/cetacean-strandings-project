@@ -282,15 +282,38 @@ plot(UK_Ireland_SST)
 #group = g no lines drawn
 #group = 2 lines are drawn for two seperate groups 
 
+#This code plots Ireland 
 ggplot() + 
-  geom_line(data = Ireland_BrowHead, aes(x = time, y = sst, group = 1, colour = "blue")) + 
-  geom_line(data = Ireland_Cleggan, aes(x = time, y = sst, group = 1, colour = "red")) + 
-  geom_line(data = Ireland_Wicklow, aes(x = time, y = sst, group = 1, colour = "green")) + 
-  xlab("Date") + ylab("Temperature (C)") + 
-  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017") + 
-          #subtitle = "At model grid point nearest to Holyhead, UK") + 
+  geom_line(data = Ireland_BrowHead, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = Ireland_Cleggan, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = Ireland_Wicklow, aes(x = time, y = sst, group = 1)) + 
+  labs(y = "SST",
+        x = "time") +
+  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
+          subtitle = "At model grid point nearest several Irish locations") + 
   theme_classic()
 
+
+#Want to plot the mean SST
+UK_mean_SST <- UK_Ireland_SST %>%
+  select(time, UK_mean) 
+
+
+
+UK_mean_SST
+
+ggplot() + 
+  geom_line(data = UK_mean_SST, aes(x = time, y = UK_mean, group = 1)) + 
+  labs(y = "SST",
+       x = "time") +
+  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
+          subtitle = "UK mean") + 
+  theme_classic()
+
+plot(UK_mean_SST)
+
+
+sapply(UK_mean_SST, class)
 
 labels(UK_Ireland_SST)
 sapply(UK_Ireland_SST, class)
