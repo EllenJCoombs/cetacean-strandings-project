@@ -294,24 +294,50 @@ ggplot() +
   theme_classic()
 
 
+#Plots of the UK and Ireland
+ggplot() + 
+  geom_line(data = UK_Ballyhillin, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Barrow, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Dover, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_GoreCliff, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Holyhead, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_JohnOGroats, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_LandsEnd, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Lindisfarne, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Lowerstoft, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Mull, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Shetland, aes(x = time, y = sst, group = 1)) +
+  geom_line(data = Ireland_BrowHead, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = Ireland_Cleggan, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = Ireland_Wicklow, aes(x = time, y = sst, group = 1)) + 
+  geom_smooth(span = 0.3) +
+  labs(y = "SST",
+       x = "time") +
+  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
+          subtitle = "At model grid points nearest to several UK and Ireland locations") + 
+  theme_classic() 
+
+
 #Want to plot the mean SST
 UK_mean_SST <- UK_Ireland_SST %>%
   select(time, UK_mean) 
 
-
-
-UK_mean_SST
-
-ggplot() + 
-  geom_line(data = UK_mean_SST, aes(x = time, y = UK_mean, group = 1)) + 
+#Plotting UK mean temperature 
+bb1 <- ggplot() + 
+  geom_point(data = UK_mean_SST, aes(x = time, y = UK_mean, group = 1)) + 
+  geom_smooth(se = FALSE) +
+  scale_colour_gradient(low='yellow', high='#de2d26') +
   labs(y = "SST",
        x = "time") +
   ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
           subtitle = "UK mean") + 
   theme_classic()
 
-plot(UK_mean_SST)
+#Trying to add a trend line 
+bb1<- bb1+ geom_smooth(span = 0.5) + 
+  scale_colour_gradient(low='yellow', high='#de2d26') 
 
+bb1
 
 sapply(UK_mean_SST, class)
 
