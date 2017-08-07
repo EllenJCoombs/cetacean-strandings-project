@@ -174,9 +174,10 @@ summary(sst_time)
 
 #Selecting a specific time point and place 
 #Answers are in celcius? CHECK
-lon_index <- which.min(abs(lon - 1.80))
-lat_index <- which.min(abs(lat - 55.68))
-time_index <- which(format(sst_time, "%Y-%m-%d") == "2011-09-16")
+#Looking at specific lat/long in September 2011 
+lon_index <- which.min(abs(lon - -5.72))
+lat_index <- which.min(abs(lat - 50.06))
+time_index <- which(format(sst_time, "%Y-%m-%d") == "2000-09-16")
 sst[lon_index, lat_index, time_index]
 
 #Selecting a specific lat/long section 
@@ -189,8 +190,8 @@ ts.bounds <- nc.make.time.bounds(ts, unit="month")
 #sst[lon_index, lat_index, time_index]
 
 #Selecting only one point 
-lon_index <- which.min(abs(lon - 0.3))
-lat_index <- which.min(abs(lat - 54.2))
+lon_index <- which.min(abs(lon - -5.72))
+lat_index <- which.min(abs(lat - 50.06))
 time_index <- as.PCICt(c("1913-01-01", "2016-01-01"), cal="360")
 sst[lon_index, lat_index, time_index]
 
@@ -198,8 +199,8 @@ sst[lon_index, lat_index, time_index]
 #Picking out specific of data - this is one lat/long from 1870-2017
 #Note that this code uses format and as.Date to convert the PCICt object 
 #to a date object, to allow use of a date axis when plotting with ggplot2.
-lon_index <- which.min(abs(lon - 4.65))
-lat_index <- which.min(abs(lat - 75.0))
+lon_index <- which.min(abs(lon - - 5.72))
+lat_index <- which.min(abs(lat - 50.06))
 
 sst <- nc.get.var.subset.by.axes(ncin, "sst",
                                  axis.indices = list(X = lon_index,
@@ -210,16 +211,17 @@ sst <- nc.get.var.subset.by.axes(ncin, "sst",
 data_frame(time = sst_time,
            sst = as.vector(sst)) %>% 
   mutate(time = as.Date(format(sst_time, "%Y-%m-%d"))) %>%
-  #write.csv(file = "UK_temp")
-
-#read.csv("Out_stack.csv")
+  #Write csv is for extracting csv data and compare each site 
+  write.csv(file = "Desktop/LandsEnd_temp.csv")
+#read csv 
+read.csv("LandEnd_temp.csv")
   
   
   ggplot(aes(x = time, y = sst)) + 
   geom_line() + 
   xlab("Date") + ylab("Temperature (C)") + 
   ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",
-          subtitle = "At model grid point nearest Holyhead, UK") + 
+          subtitle = "At model grid point nearest Land's End, UK") + 
   theme_classic()
 
 lon
