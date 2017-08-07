@@ -212,9 +212,9 @@ data_frame(time = sst_time,
            sst = as.vector(sst)) %>% 
   mutate(time = as.Date(format(sst_time, "%Y-%m-%d"))) %>%
   #Write csv is for extracting csv data and compare each site 
-  write.csv(file = "Desktop/LandsEnd_temp.csv")
+  write.csv(file = "LandsEnd_temp.csv")
 #read csv 
-read.csv("LandEnd_temp.csv")
+UK_LandsEnd <- read.csv("LandsEnd_temp.csv")
   
   
   ggplot(aes(x = time, y = sst)) + 
