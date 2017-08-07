@@ -190,8 +190,8 @@ ts.bounds <- nc.make.time.bounds(ts, unit="month")
 #sst[lon_index, lat_index, time_index]
 
 #Selecting only one point 
-lon_index <- which.min(abs(lon - -5.72))
-lat_index <- which.min(abs(lat - 50.06))
+lon_index <- which.min(abs(lon - 1.75))
+lat_index <- which.min(abs(lat - 52.48))
 time_index <- as.PCICt(c("1913-01-01", "2016-01-01"), cal="360")
 sst[lon_index, lat_index, time_index]
 
@@ -199,8 +199,8 @@ sst[lon_index, lat_index, time_index]
 #Picking out specific of data - this is one lat/long from 1870-2017
 #Note that this code uses format and as.Date to convert the PCICt object 
 #to a date object, to allow use of a date axis when plotting with ggplot2.
-lon_index <- which.min(abs(lon - - 5.72))
-lat_index <- which.min(abs(lat - 50.06))
+lon_index <- which.min(abs(lon - - 6.04))
+lat_index <- which.min(abs(lat - 52.98))
 
 sst <- nc.get.var.subset.by.axes(ncin, "sst",
                                  axis.indices = list(X = lon_index,
@@ -212,19 +212,89 @@ data_frame(time = sst_time,
            sst = as.vector(sst)) %>% 
   mutate(time = as.Date(format(sst_time, "%Y-%m-%d"))) %>%
   #Write csv is for extracting csv data and compare each site 
-  write.csv(file = "LandsEnd_temp.csv")
+  write.csv(file = "Wicklow_temp.csv")
 #read csv 
-UK_LandsEnd <- read.csv("LandsEnd_temp.csv")
-  
-  
+Ireland_Wicklow <- read.csv("Wicklow_temp.csv")
+
+
+#Add the below for graphing 
   ggplot(aes(x = time, y = sst)) + 
   geom_line() + 
   xlab("Date") + ylab("Temperature (C)") + 
   ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",
-          subtitle = "At model grid point nearest Land's End, UK") + 
+          subtitle = "At model grid point nearest Dover, UK") + 
   theme_classic()
 
-lon
+
+###########################
+#Pulling together all of the data 
+
+#Ireland data binding and cleaning 
+Ireland <- bind_cols(Ireland_BrowHead, Ireland_Cleggan, Ireland_Wicklow)
+  
+Ireland <- Ireland %>%
+    dplyr::rename(sst_Browhead_IR = sst) %>%
+    dplyr::rename(sst_Cleggan_IR = sst1) %>%
+    dplyr::rename(sst_Wicklow_IR = sst2) 
+
+Ireland <- Ireland %>%
+select(time, sst_Browhead_IR, sst_Cleggan_IR, sst_Wicklow_IR)
+  
+
+#UK data binding and cleaning 
+UK <- bind_cols(UK_Ballyhillin, UK_Barrow, UK_Dover, UK_GoreCliff, UK_Holyhead, UK_JohnOGroats, 
+                UK_LandsEnd, UK_Lindisfarne, UK_Lowerstoft, UK_Mull, UK_Shetland)
+
+  
+  UK <- UK %>%
+    dplyr::rename(sst_Ballyhillin_UK = sst) %>%
+    dplyr::rename(sst_Barrow_UK = sst1) %>%
+    dplyr::rename(sst_Dover_UK = sst2) %>%
+    dplyr::rename(sst_GoreCliff_UK = sst3) %>%
+    dplyr::rename(sst_Holyhead_UK = sst4) %>%
+    dplyr::rename(sst_JohnOGroats_UK = sst5) %>%
+    dplyr::rename(sst_LandsEnd_UK = sst6) %>%
+    dplyr::rename(sst_Lindisfarne_UK = sst7) %>%
+    dplyr::rename(sst_Lowerstoft_UK = sst8) %>%
+    dplyr::rename(sst_Mull_UK = sst9) %>%
+    dplyr::rename(sst_Shetland_UK = sst10) 
+  
+  UK <- UK %>%
+    select(time, sst_Ballyhillin_UK, sst_Barrow_UK, sst_Dover_UK, sst_GoreCliff_UK, sst_Holyhead_UK,
+           sst_JohnOGroats_UK, sst_LandsEnd_UK, sst_Lindisfarne_UK, sst_Lowerstoft_UK, sst_Mull_UK, 
+           sst_Shetland_UK)
+  
+#Binding the UK and Ireland 
+UK_Ireland <- bind_cols(UK, Ireland)
+#Removing the second time variable (from the Ireland dataset)
+UK_Ireland$time1 <- NULL
+
+write.csv(UK_Ireland, file = "UK_Ireland_SST.csv")
+#Have added the mean
+
+UK_Ireland_SST <- read.csv("UK_Ireland_SST.csv")
+
+
+#Plotting the temperature data 
+
+plot(UK_Ireland_SST)
+#group = 1 tells R that the points should be connected for one group 
+#group = g no lines drawn
+#group = 2 lines are drawn for two seperate groups 
+
+ggplot() + 
+  geom_line(data = Ireland_BrowHead, aes(x = time, y = sst, group = 1, colour = "blue")) + 
+  geom_line(data = Ireland_Cleggan, aes(x = time, y = sst, group = 1, colour = "red")) + 
+  geom_line(data = Ireland_Wicklow, aes(x = time, y = sst, group = 1, colour = "green")) + 
+  xlab("Date") + ylab("Temperature (C)") + 
+  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017") + 
+          #subtitle = "At model grid point nearest to Holyhead, UK") + 
+  theme_classic()
+
+
+labels(UK_Ireland_SST)
+sapply(UK_Ireland_SST, class)
+
 
 #Modelling temperature for a single day - need to change the code as this currently 
 #gives a global picture 
