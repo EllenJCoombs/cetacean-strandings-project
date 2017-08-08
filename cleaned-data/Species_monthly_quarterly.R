@@ -51,7 +51,8 @@ pp_quarter <- head(pp_window %>% group_by(quarterYear) %>% summarise(n = n()), 8
 pp_window$week <- as.Date("1913-01-01")+7*trunc((pp_window$joinTimestamp / 1000)/(3600*24*7))
 
 #Line plot of strandings per month (grouped)
-ggplot(data = pp_monthly, aes(x = monthYear, y = n, group=1)) +
+#Have changed monthYear to Date 
+ggplot(data = pp_monthly, aes(x = Date, y = n, group=1)) +
   geom_line()
 
 ggplot(pp_monthly, aes(n)) +
@@ -90,10 +91,11 @@ UK_mean_SST <- UK_mean_SST %>%
 #Need to play with the months!
 bb1 <- ggplot() + 
   geom_line(data = UK_mean_SST, aes(x = Date, y = UK_mean, group = 1)) + 
-  geom_smooth(se = FALSE) +
-  scale_colour_gradient(low='yellow', high='#de2d26') +
+  #geom_smooth(se = FALSE) +
+  #scale_colour_gradient(low='yellow', high='#de2d26') +
   labs(y = "SST",
        x = "time") +
+  ylim(0,17) +
   ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
           subtitle = "UK mean") + 
   theme_classic()
@@ -105,13 +107,12 @@ bb1
 #Changing "monthYear" to "Date" in PP data 
 pp_monthly <- pp_monthly %>%
   dplyr::rename(Date = monthYear)
-
-bb1 + 
-  geom_line(data = pp_monthly, aes(x = Date, y = n)) +
-  scale_y_continuous(sec.axis = sec_axis(~.*20, name = "Monthly stranded")) +
-  labs(y = "SST",
-       x = "Year")
-
-
-
-
+  
+  
+  #PPhocoena monthly strandings and monthly SST
+  ggplot() + 
+    geom_line(data = UK_mean_SST, aes(x = Date, y = UK_mean)) +
+    geom_line(data = pp_monthly, aes(x = Date, y = n/4)) +
+    scale_y_continuous(sec.axis = sec_axis(~.*4, name = "Monthly strandings")) +
+    labs(y = "SST ("~degree~"C)",
+         x = "Year")
