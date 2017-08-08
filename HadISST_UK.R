@@ -212,9 +212,9 @@ data_frame(time = sst_time,
            sst = as.vector(sst)) %>% 
   mutate(time = as.Date(format(sst_time, "%Y-%m-%d"))) %>%
   #Write csv is for extracting csv data and compare each site 
-  write.csv(file = "Wicklow_temp.csv")
+  #write.csv(file = "Wicklow_temp.csv")
 #read csv 
-Ireland_Wicklow <- read.csv("Wicklow_temp.csv")
+#Ireland_Wicklow <- read.csv("Wicklow_temp.csv")
 
 
 #Add the below for graphing 
