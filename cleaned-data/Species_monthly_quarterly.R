@@ -10,7 +10,6 @@ cleaneddata <- read.csv("cleandatesnames.csv")
 sapply(cleaneddata, class)
 
 #Having problems with the data format - need dates to be 'date' class
-
 cleaneddata <- mutate(cleaneddata, Date = dmy(Date))
 #Trying this instead - works by changing all 2000s to 1900s
 #cleaneddata <- mutate(cleaneddata, Date = format(as.Date(Date, "%d-%b-%y"), "19%y-%m-%d"))
@@ -59,8 +58,47 @@ ggplot(la_monthly, aes(n)) +
   geom_histogram(binwidth = 0.5)
   
 
+##########################################################################################
+#Plotting species against temperature 
+#Example here is Phocoena monthly strandings against STT monthly temps (UK averaged 
+#from 14 locations)
+
+#Monthly stranding data is from the above code 
+#SST is from the HadISST_Uk.R code 
+
+UK_Ireland_SST <- read.csv("UK_Ireland_SST.csv")
+
+#Renaming time to Date 
+UK_Ireland_SST <- UK_Ireland_SST %>%
+  dplyr::rename(Date = time)
+
+#Selecting only the UK_mean 
+UK_mean_SST <- UK_Ireland_SST %>%
+  select(Date, UK_mean) 
+
+#Selecting only 1913:2015
+#Need to make Data a date first 
+UK_mean_SST <- mutate(UK_mean_SST, Date = ymd(Date))
+sapply(UK_mean_SST, class)
+
+#Filteeing out specific dates 
+UK_mean_SST <- UK_mean_SST %>%
+  filter(Date >= "1912-12-16", Date <= "2016-01-16")
 
 
 
 
+#Plotting UK mean temperature 
+#Need to play with the months!
+bb1 <- ggplot() + 
+  geom_line(data = UK_mean_SST, aes(x = Date, y = UK_mean, group = 1)) + 
+  geom_smooth(se = FALSE) +
+  scale_colour_gradient(low='yellow', high='#de2d26') +
+  labs(y = "SST",
+       x = "time") +
+  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
+          subtitle = "UK mean") + 
+  theme_classic()
+
+bb1
 
