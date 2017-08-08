@@ -19,9 +19,10 @@ write.csv(cleaneddata, file = "cleandatesnames.csv")
 #Now Date should be 'Date' class 
 
 #Selecting the chosen area (if required)
-pphocoena <- cleaneddata %>% 
-  filter(Name.Current.Sci == "Phocoena phocoena") 
+L_acutus <- cleaneddata %>% 
+  filter(Name.Current.Sci == "Lagenorhynchus acutus") 
 
+sapply(L_acutus, class)
 #Use a variation of the following code if you want to select a specfic window 
 #nw_window <- nw_scotland_strandings %>% 
   #filter(Year %in% c(1989:2000))
@@ -30,7 +31,7 @@ pphocoena <- cleaneddata %>%
 #ggplot(nw_window, aes(x = Date)) + 
   #stat_count(width = 0.5) 
 
-pp_window <- pphocoena %>%
+la_window <- L_acutus %>%
   filter(Year %in% c(1913:2015))
 
 
@@ -39,11 +40,11 @@ library(zoo)
 library(dplyr)
 
 #Splitting my data into strandings per month 
-pp_window$monthYear <- as.Date(as.yearmon(pp_window$Date))
-pp_window$quarterYear <- as.Date(as.yearqtr(pp_window$Date))
-head(pp_window)
+la_window$monthYear <- as.Date(as.yearmon(la_window$Date))
+la_window$quarterYear <- as.Date(as.yearqtr(la_window$Date))
+head(la_window)
 #Strandings gathered into months 
-pp_monthly <- head(pp_window %>% group_by(monthYear) %>% summarise(n = n()), 7667)
+la_monthly <- head(la_window %>% group_by(monthYear) %>% summarise(n = n()), 424)
 #Strandings per quarter 
 pp_quarter <- head(pp_window %>% group_by(quarterYear) %>% summarise(n = n()), 818)
 
@@ -146,7 +147,15 @@ combined <- UK_mean_01_month %>%
   
 combined <- merge(combined, pp_monthly, all = TRUE, by = c('Date'))
 
+#Phocoena strandings (monthly) vs monthly SST
 ggplot(data = combined, aes(x = UK_mean, y = n)) +
   geom_point(size = 0.5) +
-  labs(x = "Sea Surface Temperature (~degrees~ (C))", y = "Monthly Phocoena phocoena strandings")
+  labs(x = "Sea Surface Temperature ("~degree~"(C))", y = "Monthly Phocoena phocoena strandings") +
+  #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+
+
+combined <- merge(combined, pp_monthly, all = TRUE, by = c('Date'))
+
 
