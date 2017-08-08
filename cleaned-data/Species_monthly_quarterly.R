@@ -54,7 +54,7 @@ pp_window$week <- as.Date("1913-01-01")+7*trunc((pp_window$joinTimestamp / 1000)
 ggplot(data = pp_monthly, aes(x = monthYear, y = n, group=1)) +
   geom_line()
 
-ggplot(la_monthly, aes(n)) +
+ggplot(pp_monthly, aes(n)) +
   geom_histogram(binwidth = 0.5)
   
 
@@ -86,8 +86,6 @@ UK_mean_SST <- UK_mean_SST %>%
   filter(Date >= "1912-12-16", Date <= "2016-01-16")
 
 
-
-
 #Plotting UK mean temperature 
 #Need to play with the months!
 bb1 <- ggplot() + 
@@ -101,4 +99,19 @@ bb1 <- ggplot() +
   theme_classic()
 
 bb1
+
+#Plotting strandings against temp 
+
+#Changing "monthYear" to "Date" in PP data 
+pp_monthly <- pp_monthly %>%
+  dplyr::rename(Date = monthYear)
+
+bb1 + 
+  geom_line(data = pp_monthly, aes(x = Date, y = n)) +
+  scale_y_continuous(sec.axis = sec_axis(~.*20, name = "Monthly stranded")) +
+  labs(y = "SST",
+       x = "Year")
+
+
+
 

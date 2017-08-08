@@ -244,7 +244,7 @@ plot(a3)
 
 
 ##############################################
-#After 1970 only 
+#After 1970 only with regression line 
 
 hunted_and_stranded1970 <- hunted_and_stranded %>% 
   filter(Year %in% c(1986:2015))
