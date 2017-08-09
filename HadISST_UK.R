@@ -336,6 +336,38 @@ bb1 <- ggplot() +
 bb1
 
 
+
+##########################################################################################
+#Extracting yearly max SST data 
+
+#Splitting SST into day, month, year 
+df <- data.frame(date = UK_mean_SST$Date,
+                 year = as.numeric(format(UK_mean_SST$Date, format = "%Y")),
+                 month = as.numeric(format(UK_mean_SST$Date, format = "%m")),
+                 day = as.numeric(format(UK_mean_SST$Date, format = "%d")))
+
+#Removing the extra 'date' 
+SST_day_month_year <- bind_cols(df, UK_mean_SST) 
+SST_day_month_year$Date <- NULL
+
+#Average SST for each of the months from 1912 - 2016
+aggregate(SST_day_month_year$UK_mean, by = list(SST_day_month_year$year), max)
+SST_yearly_max <- aggregate(UK_mean ~ year, data = SST_day_month_year, max)
+
+#Renaming the max_year temp and also selcting from 1913:2015 only (as my data starts
+#1912 and ends halfway through 2016)
+SST_yearly_max <- SST_yearly_max %>%
+  dplyr::rename(year_max = UK_mean) %>%
+  filter(year %in% c(1913:2015))
+
+ggplot(data = SST_yearly_max, aes(x = year, y = year_max)) +
+  geom_line() + 
+  xlab("Year") + ylab("Maximum recorded SST ("~degree~"C)") + 
+  ggtitle("Yearly maximum UK sea-surface-temperature (SST) (1913 - 2015)",
+          subtitle = "Average taken from 14 sites closest to chosen model grid points") + 
+  theme_classic()
+
+
 #Modelling temperature for a single day - need to change the code as this currently 
 #gives a global picture 
 library(ggmap)

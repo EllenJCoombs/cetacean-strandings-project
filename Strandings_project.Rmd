@@ -122,8 +122,10 @@ ggplot(speciesyear, aes(x = Year)) +
   facet_wrap(~ Name.Current.Sci)
 ```
 
+
 ```{r, include=FALSE}
 #Looking at species by year - a count of each species per year
+
 speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
 #Arranging species by year by count 
 speciesbyyear <- speciesyearcount %>%
