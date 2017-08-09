@@ -670,9 +670,386 @@ do.call(grid.arrange, plot.list)
 
 
 ##B. Link to sea surface temperature (SST)
-Still working on this - looking at HadISST1 data (UK SST 1870-present monthly) and EN4 data (UK water column and salinity 1900 - present)
+Still working on this - looking at HadISST1 data (UK SST 1870-present monthly recordings)
 
-Have written some of the code for this but can't get it working 
+I have selected 14 locations around the UK and Ireland. Locations were selected based on whethere they were the most 'northerly', "easterly" etc for the country, or whether they offered a general geographical location e.g. for the NW at "grid point nearest to X"
+
+The mean of all of these locations was taken. The following is code for extracting data for all 14 locations, as well as the mean UK SST (degrees celsius), for the time period 1912-2016. 
+
+```{r setup, include=FALSE}
+
+
+library(chron)
+library(RColorBrewer)
+library(lattice)
+library(ncdf4)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+#Reading in .nc data 
+ncin <- nc_open("HadISST_sst.nc")
+
+#Having a look at what's in the files 
+attributes(ncin)$names
+#[1] "filename"    "writable"    "id"          "safemode"    "format"      "is_GMT"     
+#[7] "groups"      "fqgn2Rindex" "ndims"       "natts"       "dim"         "unlimdimid" 
+#[13] "nvars"       "var"        
+
+
+#Variables 
+attributes(ncin$var)$names
+
+#[1] "time_bnds" "sst" 
+
+print(ncin)
+ncin
+
+#Taking a look at the data 
+ncin_data <- ncvar_get(ncin, attributes(ncin$var)$names[1])
+print(ncin_data)
+
+
+#Global attributes 
+# get global attributes
+title <- ncatt_get(ncin,0,"title")
+institution <- ncatt_get(ncin,0,"institution")
+datasource <- ncatt_get(ncin,0,"source")
+references <- ncatt_get(ncin,0,"references")
+history <- ncatt_get(ncin,0,"history")
+Conventions <- ncatt_get(ncin,0,"Conventions")
+
+
+
+# get longitude and latitude
+lon <- ncvar_get(ncin,"longitude")
+nlon <- dim(lon)
+head(lon)
+summary(lon)
+
+
+lat <- ncvar_get(ncin,"latitude")
+nlat <- dim(lat)
+head(lat)
+summary(lat)
+
+print(c(nlon,nlat))
+
+#Time variable from the dataset 
+# get time
+
+#Time since when? 
+ncin$dim$time$units
+#Looking at the time units 
+time <- ncvar_get(ncin,"time")
+time
+
+
+tunits <- ncatt_get(ncin,"time","units")
+nt <- dim(time)
+#How many time units there are 
+nt
+#Days since...
+tunits 
+
+#What kind of calendar? 
+ncin$dim$time$calendar
+#Gregorian
+
+#Get the the variable (tmp) and its attributes, and verify the size of the array.
+# get temperature
+
+tmp <- ncvar_get(ncin,"sst")
+st <- dim(tmp)
+
+tmp_array <- ncvar_get(ncin, "sst")
+
+#This stuff was what I was playing around with 
+#dlname <- ncatt_get(ncin, "sst","long_name")
+#dunits <- ncatt_get(ncin,"sst","units")
+#fillvalue <- ncatt_get(ncin, "sst","_FillValue")
+#dim(tmp_array)
+
+
+# convert time -- split the time units string into fields
+#tustr <- strsplit(tunits$value, " ")
+#tdstr <- strsplit(unlist(tustr)[3], "-")
+#tmonth <- as.integer(unlist(tdstr)[2])
+#tday <- as.integer(unlist(tdstr)[3])
+#tyear <- as.integer(unlist(tdstr)[1])
+#new_time <- chron(time,origin=c(tmonth, tday, tyear))
+
+#new_time
+
+# replace netCDF fill values with NA's - no fill values found 
+#tmp_array[tmp_array==fillvalue$value] <- NA
+
+#How much of the data are land points? 
+#length(na.omit(as.vector(tmp_array[,,1])))
+
+
+# get a single slice or layer (January)
+#Changed to temp1[m]
+#m <- 1
+#tmp_slice <- tmp[,,m]
+#dim(tmp_slice)
+
+#Using the time slice above to look at January temps 
+#image(lon,lat,tmp_slice, col=rev(brewer.pal(10,"RdBu")))
+
+#All temps 
+# levelplot of the slice - doesn't look right 
+#grid <- expand.grid(lon=lon, lat = lat)
+#cutpts <- c(-20,-10,-5,-2,0,2,5,10,20,30)
+#levelplot(tmp_slice ~ lon * lat, data=grid, at=cutpts, cuts=11, pretty=T, 
+          #col.regions=(rev(brewer.pal(10,"RdBu"))))
+
+###########################################################
+#Unsure why this doesn't work 
+LonIdx <- which( ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
+LatIdx <- which( ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
+MyVariable <- ncvar_get(ncin, "sst_time")[ LonIdx, LatIdx]
+
+
+ncin$dim$time$units
+
+library(ncdf4.helpers)
+library(PCICt)
+library(dplyr)
+
+#This use of non-standard calendars messes up the calculations of as.Date, 
+#so you must use a more specialized function to read in the time variable of the
+#climate model output and map it to standard calendar dates. 
+#You can do this with the nc.get.time.series function from the ncdf4.helpers package
+#(you should also load the PCICt package to use this function):
+
+#This sets the date to a standard: YYYYMMDD and time as well
+sst_time <- nc.get.time.series(ncin, v = "sst",
+                               time.dim.name = "time")
+sst_time[c(1:3, length(sst_time) - 2:0)]
+
+#Getting sst data 
+sst <- ncvar_get(ncin, "sst")
+
+#This variable is in a 3-dimensional array, with dimensions ordered as first longitude, then latitude, then time:
+#Checking on SST data 
+dim(sst)
+
+
+length(sst_time)
+summary(sst_time)
+
+#Selecting a specific time point and place 
+#Answers are in celcius? CHECK
+#Looking at specific lat/long in September 2011 
+lon_index <- which.min(abs(lon - -5.72))
+lat_index <- which.min(abs(lat - 50.06))
+time_index <- which(format(sst_time, "%Y-%m-%d") == "2000-09-16")
+sst[lon_index, lat_index, time_index]
+
+#Selecting a specific lat/long section 
+lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
+lat_index <-  which(ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
+
+ts.bounds <- nc.make.time.bounds(ts, unit="month")
+
+
+#sst[lon_index, lat_index, time_index]
+
+#Selecting only one point 
+lon_index <- which.min(abs(lon - 1.75))
+lat_index <- which.min(abs(lat - 52.48))
+time_index <- as.PCICt(c("1913-01-01", "2016-01-01"), cal="360")
+sst[lon_index, lat_index, time_index]
+
+
+#Picking out specific of data - this is one lat/long from 1870-2017
+#Note that this code uses format and as.Date to convert the PCICt object 
+#to a date object, to allow use of a date axis when plotting with ggplot2.
+lon_index <- which.min(abs(lon - - 6.04))
+lat_index <- which.min(abs(lat - 52.98))
+
+sst <- nc.get.var.subset.by.axes(ncin, "sst",
+                                 axis.indices = list(X = lon_index,
+                                                     Y = lat_index))
+
+data_frame(time = sst_time,
+           sst = as.vector(sst)) %>% 
+  mutate(time = as.Date(format(sst_time, "%Y-%m-%d"))) %>%
+  #Write csv is for extracting csv data and compare each site 
+  #write.csv(file = "Wicklow_temp.csv")
+#read csv 
+#Ireland_Wicklow <- read.csv("Wicklow_temp.csv")
+
+
+#Add the below for graphing 
+  ggplot(aes(x = time, y = sst)) + 
+  geom_line() + 
+  xlab("Date") + ylab("Temperature (C)") + 
+  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",
+          subtitle = "At model grid point nearest Dover, UK") + 
+  theme_classic()
+
+
+#########################################################################################
+#Pulling together all of the data 
+
+#Ireland data binding and cleaning 
+Ireland <- bind_cols(Ireland_BrowHead, Ireland_Cleggan, Ireland_Wicklow)
+  
+Ireland <- Ireland %>%
+    dplyr::rename(sst_Browhead_IR = sst) %>%
+    dplyr::rename(sst_Cleggan_IR = sst1) %>%
+    dplyr::rename(sst_Wicklow_IR = sst2) 
+
+Ireland <- Ireland %>%
+select(time, sst_Browhead_IR, sst_Cleggan_IR, sst_Wicklow_IR)
+  
+
+#UK data binding and cleaning 
+UK <- bind_cols(UK_Ballyhillin, UK_Barrow, UK_Dover, UK_GoreCliff, UK_Holyhead, UK_JohnOGroats, 
+                UK_LandsEnd, UK_Lindisfarne, UK_Lowerstoft, UK_Mull, UK_Shetland)
+
+  
+  UK <- UK %>%
+    dplyr::rename(sst_Ballyhillin_UK = sst) %>%
+    dplyr::rename(sst_Barrow_UK = sst1) %>%
+    dplyr::rename(sst_Dover_UK = sst2) %>%
+    dplyr::rename(sst_GoreCliff_UK = sst3) %>%
+    dplyr::rename(sst_Holyhead_UK = sst4) %>%
+    dplyr::rename(sst_JohnOGroats_UK = sst5) %>%
+    dplyr::rename(sst_LandsEnd_UK = sst6) %>%
+    dplyr::rename(sst_Lindisfarne_UK = sst7) %>%
+    dplyr::rename(sst_Lowerstoft_UK = sst8) %>%
+    dplyr::rename(sst_Mull_UK = sst9) %>%
+    dplyr::rename(sst_Shetland_UK = sst10) 
+  
+  UK <- UK %>%
+    select(time, sst_Ballyhillin_UK, sst_Barrow_UK, sst_Dover_UK, sst_GoreCliff_UK, sst_Holyhead_UK,
+           sst_JohnOGroats_UK, sst_LandsEnd_UK, sst_Lindisfarne_UK, sst_Lowerstoft_UK, sst_Mull_UK, 
+           sst_Shetland_UK)
+  
+#Binding the UK and Ireland 
+UK_Ireland <- bind_cols(UK, Ireland)
+#Removing the second time variable (from the Ireland dataset)
+UK_Ireland$time1 <- NULL
+
+write.csv(UK_Ireland, file = "UK_Ireland_SST.csv")
+#Have added the mean
+
+UK_Ireland_SST <- read.csv("UK_Ireland_SST.csv")
+
+
+#Plotting the temperature data 
+
+plot(UK_Ireland_SST)
+#group = 1 tells R that the points should be connected for one group 
+#group = g no lines drawn
+#group = 2 lines are drawn for two seperate groups 
+
+#This code plots Ireland 
+ggplot() + 
+  geom_line(data = Ireland_BrowHead, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = Ireland_Cleggan, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = Ireland_Wicklow, aes(x = time, y = sst, group = 1)) + 
+  labs(y = "SST",
+        x = "time") +
+  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
+          subtitle = "At model grid point nearest several Irish locations") + 
+  theme_classic()
+
+
+#Plots of the UK and Ireland
+ggplot() + 
+  geom_line(data = UK_Ballyhillin, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Barrow, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Dover, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_GoreCliff, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Holyhead, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_JohnOGroats, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_LandsEnd, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Lindisfarne, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Lowerstoft, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Mull, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = UK_Shetland, aes(x = time, y = sst, group = 1)) +
+  geom_line(data = Ireland_BrowHead, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = Ireland_Cleggan, aes(x = time, y = sst, group = 1)) + 
+  geom_line(data = Ireland_Wicklow, aes(x = time, y = sst, group = 1)) + 
+  geom_smooth(span = 0.3) +
+  labs(y = "SST",
+       x = "time") +
+  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
+          subtitle = "At model grid points nearest to several UK and Ireland locations") + 
+  theme_classic() 
+
+
+#Want to plot the mean SST
+UK_mean_SST <- UK_Ireland_SST %>%
+  select(time, UK_mean) 
+
+#Plotting UK mean temperature 
+bb1 <- ggplot() + 
+  geom_point(data = UK_mean_SST, aes(x = time, y = UK_mean, group = 1)) + 
+  geom_smooth(se = FALSE) +
+  scale_colour_gradient(low='yellow', high='#de2d26') +
+  labs(y = "SST",
+       x = "time") +
+  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
+          subtitle = "UK mean") + 
+  theme_classic()
+
+#Trying to add a trend line 
+bb1<- bb1+ geom_smooth(span = 0.5) + 
+  scale_colour_gradient(low='yellow', high='#de2d26') 
+
+bb1
+
+sapply(UK_mean_SST, class)
+
+labels(UK_Ireland_SST)
+sapply(UK_Ireland_SST, class)
+
+
+#Modelling temperature for a single day - need to change the code as this currently 
+#gives a global picture 
+library(ggmap)
+library(viridis)
+install.packages("weathermetrics")
+library(weathermetrics)
+
+#This code maps the temp data for the whole planet 
+time_index <- which(format(sst_time, "%Y-%m-%d") == "2016-07-16")
+sst <- nc.get.var.subset.by.axes(ncin, "sst",
+                                 axis.indices = list(T = time_index))
+expand.grid(lon, lat) %>%
+  rename(lon = Var1, lat = Var2) %>%
+  mutate(lon = ifelse(lon > 3, -(11 - lon), lon),
+         sst = as.vector(sst)) %>% 
+  mutate(sst = convert_temperature(sst, "c", "k")) %>%
+  ggplot() + 
+  geom_point(aes(x = lon, y = lat, color = sst),
+             size = 0.8) + 
+  borders("world", colour="black", fill=NA) + 
+  scale_color_viridis(name = "Temperature (C)") + 
+  theme_void() + 
+  coord_quickmap() + 
+  ggtitle("Measured temperature on 1977-07-16",
+          subtitle = "HadISST1") 
+
+
+ts <- as.PCICt(c("1913-01-01", "2016-01-01"), cal="360")
+ts.bounds <- nc.make.time.bounds(ts, unit="month")
+
+ncin
+
+```
+
+Plotting species abundance against SST
+
+
+
+
 
 ##C. Interesting side questions 
 ###i. Current seasonal changes in cetacean distributions 
@@ -1025,15 +1402,6 @@ plot(b3)
 
 ```
 
-
-
-
-
-
-
-
-
-
 - I want to be able to add bycatch data to the above plots but am having trouble finding the data 
 - Same with live sightings data - have spoken to Tom Webb and emailed Peter Evans 
   - OBIS-Seamap is static, have been told to use JCP but this is also static 
@@ -1263,6 +1631,35 @@ multiplot(d1, d2, d3, d4, cols = 2)
 ```
 
 
+```{r, include=FALSE}
+library(Rmisc)
+#Taking a look at full century data vs. total strandings
+
+#Bring in the data 
+pop_vs_strandings <- read.csv("Population_vs_stranding.csv")
+
+#Plot of UK population and UK strandings 
+p1 <- ggplot(data = pop_vs_strandings, aes(x = POPULATION, y = STRANDINGS)) +
+  geom_point(size = 0.5) +
+  labs(x = "UK population (millions)", y = "Stranding count") +
+  geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+#Adding a regression line 
+m <- lm(POPULATION ~ STRANDINGS, data = pop_vs_strandings)
+a <- signif(coef(m)[1])
+b <- signif(coef(m)[2])
+textlab <- paste("y = ",b,"x + ",a, sep="")
+
+p2 <- p1 + geom_smooth(method = lm, formula = y~x) 
+
+p3 <- p2 + geom_text(aes(x = 50, y = 700, label = textlab), color="black", size= 3, parse = FALSE)  
+
+plot(p3)
+
+```
+
+
 ###ii. Sampling bias - Basic plot (specific species/all species for that year)
 Taking a look at individual species/total number of strandings per year 
 
@@ -1317,17 +1714,18 @@ ggplot(yearoverview, aes(x = Year, y = sampling)) +
 
 
 #Other plots include: 
-- Bycatch heat maps 
-- Focusing on data from CSIP only
-- Military zone plots and beakers 
-- Heatmap of shipstrike incidents and physical trauma
+- Bycatch heat maps (supplementary)
+- Focusing on data from CSIP only: 1990 onwards 
+- Military zone plots and beakers (supplementary)
+- Heatmap of shipstrike incidents and physical trauma (supplementary)
 
 1. Excel spreadsheet: cross validation of data with OBIS:seamap data and JCP data for 'normal' cetacean ranges: Decision making on which species to include and which to omit
 - "Strandings analysis"
+- Want to look at one more range source e.g. Carwadine 
 
 #What I want to plot/look at: 
 1. Statistical analysis of cross validation, population data (regression line), analysis of variance between datasets etc. 
-2. Remove manky specimens and unknowns 
+2. Remove manky specimens and unknowns - sampling bias 
 3. Observers per county - sampling effort 
 4. SST - over the century - species abundance + GLM, all species and specifics 
 5. Split up the data into sites e.g. 1-7 as in the literature and then create a rarecurve
