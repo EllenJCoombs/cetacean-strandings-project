@@ -74,12 +74,6 @@ p <- p + annotate("segment", x = 1945, xend = 1950, y = 0, yend = -10, colour="b
 
 
 
-p
-
-dev.off()
-
-
-
 
 
 
