@@ -1,4 +1,10 @@
 ---
+
+
+
+Currently not knitting, but I will have this sorted! 
+
+
 title: "Strandings project"
 author: "Ellen Coombs"
 date: "24 July 2017"
@@ -51,7 +57,7 @@ options(device="x11")
 
 ```
 
-All analysis uses the data: "cleandatenames.csv"
+All analysis uses the data: "cleandatesnames.csv"
 Required packages are put in each section so that each section can be run seperately 
 
 ##A. Cetacean distributions across the UK through time 
@@ -441,9 +447,7 @@ library(ggplot2)
 library(tidyverse)
 library(mapdata)
 #Had to install this to get it running - no idea why - was running fine before without 
-#install.packages("mapproj")
 library(mapproj)
-#install.packages("grid")
 library(grid)
 
 cleaneddata <- read.csv("cleaned-data/cleandatesnames.csv")
@@ -825,6 +829,85 @@ Catch_and_strandings <- bind_cols(Total_hunted, Total_hunted_stranders) %>%
                 colour = "Parameter")
   p <- p + theme(legend.position = c(0.8, 0.9))
   p  
+  
+  
+  
+#This code attempts to add some key events to the above plot - ugly! Need to clean 
+#Attempting to add arrows to the stranding data and whaling graph 
+
+#Whaling and stranding plot data 
+
+#Using "Catch_and_strandings" dataset (see "Whaling_code.R" for details)
+
+library(ggplot2)
+library(grid)
+library(tidyverse)
+
+#This plot adds the two war periods
+p <- ggplot(Catch_and_strandings, aes(x = Year))
+p <- p + geom_line(aes(y = Strandings, colour = "Total strandings"))
+
+# adding the stranding data, transformed to match roughly the range of the total catch
+p <- p + geom_line(aes(y = Total.catch/20, colour = "Total catch"))
+
+# now adding the secondary axis, following the example in the help file ?scale_y_continuous
+# and, very important, reverting the above transformation
+p <- p + scale_y_continuous(sec.axis = sec_axis(~.*20, name = "Total catch"))
+
+# modifying colours and theme options
+p <- p + scale_colour_manual(values = c("blue", "red"))
+p <- p + labs(y = "Total stranding",
+              x = "Year",
+              colour = "Parameter")
+
+#p <- p + annotate("segment", x = 0, xend = -0, y = 0, yend = -20, colour="blue", size=2, arrow=arrow())
+
+#p <- p + geom_vline(xintercept = 1914, linetype="dotted", 
+                #color = "blue", size=1.5)
+
+#p <- p + theme(legend.position = c(0.9, 0.1)) 
+
+#Putting the legend outside the plot 
+p <- p + theme(legend.justification = "top")
+
+#This code adds shaded areas to the plot 
+#WWI
+p <- p + annotate("rect", xmin=1914, xmax=1918, ymin=0, ymax=60, alpha=.2, fill="gray44") +
+geom_text(
+  aes(x = 1916, y = 60, label = "WWI"), size = 3)
+
+#WWII
+p <- p + annotate("rect", xmin=1939, xmax=1945, ymin=0, ymax=60, alpha=.2, fill="gray44") +
+  geom_text(
+    aes(x = 1942, y = 60, label = "WWII"), size = 3)
+
+#Moratorium 1986
+p <- p + annotate("rect", xmin=1985, xmax=1986, ymin=0, ymax=60, alpha=.5, fill="gray44") +
+  geom_text(
+    aes(x = 1985, y = 60, label = "Moratorium comes into effect:
+1985/1986 season start"), size = 3)
+
+#Catches under objection 
+p <- p + annotate("rect", xmin=1986, xmax=2015, ymin=0, ymax=60, alpha=.2, fill="gray44") +
+  geom_text(
+    aes(x = 1997, y = 50, label = "Norway and Iceland 
+        continue to hunt
+        under objection "), size = 3)
+
+#This code adds arrows to the plot 
+#CSIP
+p <- p + annotate("segment", x = 1990, xend = 1990, y = 0, yend = -10, colour="black", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) + 
+  geom_text(
+    aes(x = 1985, y = -12, label = "CSIP programme starts"), size = 3)
+
+p <- p + annotate("segment", x = 1945, xend = 1950, y = 0, yend = -10, colour="black", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) + 
+  geom_text(
+    aes(x = 1945, y = -14, label = "Increase in post-war
+        fishing & whaling effort"), size = 3)
+
+
+  
+  
 ```
   
 Each species stranding and whaling on the same plot - split by facet_wrap species
@@ -865,6 +948,92 @@ ggplot() +
 
 ```
 
+
+Here, I am looking at whether there is a relationship between hunted and stranded species - with regression 
+
+```{r, include=FALSE}
+
+#Fitting a regression line to whaling and catch data
+#First, havingg to add a 'total per year' to each dataset 
+
+#'Total_hunted' = total hunted (blue, fin, sei, minke, humpback, sperm, bottlenose)
+#'Total-hunted_stranded' (of the abov species that were both hunted and stranded as well)
+
+library(devtools)
+library(dplyr)
+
+
+hunted_and_stranded <- bind_cols(Total_hunted, Total_hunted_stranders)
+
+#Renaming the columns 
+
+hunted_and_stranded <- hunted_and_stranded %>%
+  dplyr::rename("Catch" = Total.catch) %>%
+  dplyr::rename("Stranded" = n) %>%
+  select("Year", "Catch", "Stranded")
+
+#Plot both on the same graph
+#Have done log calc but not sure if it needed it (can also remove this and do non log
+#calculation)
+
+#Regression line 
+a1 <- ggplot(data = hunted_and_stranded, aes(x = Stranded, y = Catch)) +
+  geom_point(size = 0.5) +
+  geom_text(aes(label = Year), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) +
+  labs(x = "Total stranded", y = "Total catch (hunted)") #se=FALSE, colour = "grey70", size =0.7) 
+
+a1
+
+m <- lm(Stranded ~ Catch, data = hunted_and_stranded)
+a <- signif(coef(m)[1])
+b <- signif(coef(m)[2])
+textlab <- paste("y = ",b,"x + ",a, sep="")
+
+a2 <- a1 + geom_smooth(method = lm, formula = y~x) 
+
+a3 <- a2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
+
+plot(a3)
+
+
+##############################################
+#After 1970 only with regression line 
+
+hunted_and_stranded1970 <- hunted_and_stranded %>% 
+  filter(Year %in% c(1986:2015))
+
+b1 <- ggplot(data = hunted_and_stranded1970, aes(x = Stranded, y = Catch)) +
+  geom_point(size = 0.5) +
+  geom_text(aes(label = Year), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) +
+  labs(x = "Total stranded", y = "Total catch (hunted)") #se=FALSE, colour = "grey70", size =0.7) 
+
+
+#m <- lm(hunted_and_stranded1970$Stranded ~ hunted_and_stranded1970$Catch)
+m <- lm(Stranded ~ Catch, data = hunted_and_stranded1970)
+a <- signif(coef(m)[1])
+b <- signif(coef(m)[2])
+textlab <- paste("y = ",b,"x + ",a, sep="")
+
+b2 <- b1 + geom_smooth(method = lm, formula = y~x) 
+
+b3 <- b2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
+
+plot(b3)
+
+
+```
+
+
+
+
+
+
+
+
+
+
 - I want to be able to add bycatch data to the above plots but am having trouble finding the data 
 - Same with live sightings data - have spoken to Tom Webb and emailed Peter Evans 
   - OBIS-Seamap is static, have been told to use JCP but this is also static 
@@ -874,6 +1043,7 @@ ggplot() +
 
 UK population plots 
 Can I get an idea of regional population change by looking at the overall country population? 
+
 ```{r, include=FALSE}
 #Looking at UK population as a means of assessing sampling effort 
 #Step one is to see how regional data compares to total population data
