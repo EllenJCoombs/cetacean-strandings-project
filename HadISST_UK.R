@@ -137,9 +137,9 @@ tmp_array <- ncvar_get(ncin, "sst")
 
 ###########################################################
 #Unsure why this doesn't work 
-LonIdx <- which( ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
-LatIdx <- which( ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
-MyVariable <- ncvar_get(ncin, "sst_time")[ LonIdx, LatIdx]
+#LonIdx <- which( ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
+#LatIdx <- which( ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
+#MyVariable <- ncvar_get(ncin, "sst_time")[ LonIdx, LatIdx]
 
 
 ncin$dim$time$units
@@ -177,19 +177,17 @@ summary(sst_time)
 #Looking at specific lat/long in September 2011 
 lon_index <- which.min(abs(lon - -5.72))
 lat_index <- which.min(abs(lat - 50.06))
-time_index <- which(format(sst_time, "%Y-%m-%d") == "2000-09-16")
+time_index <- which(format(sst_time, "%Y-%m-%d") == "2011-09-16")
 sst[lon_index, lat_index, time_index]
 
 #Selecting a specific lat/long section 
-lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
-lat_index <-  which(ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
+#lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
+#lat_index <-  which(ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
 
 ts.bounds <- nc.make.time.bounds(ts, unit="month")
-
-
 #sst[lon_index, lat_index, time_index]
 
-#Selecting only one point 
+#Selecting only one location (lat/long)
 lon_index <- which.min(abs(lon - 1.75))
 lat_index <- which.min(abs(lat - 52.48))
 time_index <- as.PCICt(c("1913-01-01", "2016-01-01"), cal="360")
@@ -199,14 +197,12 @@ sst[lon_index, lat_index, time_index]
 #Picking out specific of data - this is one lat/long from 1870-2017
 #Note that this code uses format and as.Date to convert the PCICt object 
 #to a date object, to allow use of a date axis when plotting with ggplot2.
-lon_index <- which.min(abs(lon - - 6.04))
+lon_index <- which.min(abs(lon - - 6.04)) 
 lat_index <- which.min(abs(lat - 52.98))
 
 sst <- nc.get.var.subset.by.axes(ncin, "sst",
                                  axis.indices = list(X = lon_index,
                                                      Y = lat_index))
-
-
 
 data_frame(time = sst_time,
            sst = as.vector(sst)) %>% 
@@ -226,7 +222,7 @@ data_frame(time = sst_time,
   theme_classic()
 
 
-###########################
+########################################################################################
 #Pulling together all of the data 
 
 #Ireland data binding and cleaning 
@@ -318,7 +314,7 @@ ggplot() +
   theme_classic() 
 
 
-#Want to plot the mean SST
+#Plot the mean SST
 UK_mean_SST <- UK_Ireland_SST %>%
   select(time, UK_mean) 
 
@@ -333,16 +329,11 @@ bb1 <- ggplot() +
           subtitle = "UK mean") + 
   theme_classic()
 
-#Trying to add a trend line 
-bb1<- bb1+ geom_smooth(span = 0.5) + 
-  scale_colour_gradient(low='yellow', high='#de2d26') 
+#Trying to add a trend line - not sure how to get this to work 
+#bb1<- bb1+ geom_smooth(span = 0.5) + 
+  #scale_colour_gradient(low='yellow', high='#de2d26') 
 
 bb1
-
-sapply(UK_mean_SST, class)
-
-labels(UK_Ireland_SST)
-sapply(UK_Ireland_SST, class)
 
 
 #Modelling temperature for a single day - need to change the code as this currently 
@@ -358,7 +349,7 @@ sst <- nc.get.var.subset.by.axes(ncin, "sst",
                                  axis.indices = list(T = time_index))
 expand.grid(lon, lat) %>%
   rename(lon = Var1, lat = Var2) %>%
-  mutate(lon = ifelse(lon > 3, -(11 - lon), lon),
+  mutate(lon = ifelse(lon > 180, -(360 - lon), lon),
          sst = as.vector(sst)) %>% 
   mutate(sst = convert_temperature(sst, "c", "k")) %>%
   ggplot() + 

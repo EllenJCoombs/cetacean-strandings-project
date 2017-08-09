@@ -672,12 +672,11 @@ do.call(grid.arrange, plot.list)
 ##B. Link to sea surface temperature (SST)
 Still working on this - looking at HadISST1 data (UK SST 1870-present monthly recordings)
 
-I have selected 14 locations around the UK and Ireland. Locations were selected based on whethere they were the most 'northerly', "easterly" etc for the country, or whether they offered a general geographical location e.g. for the NW at "grid point nearest to X"
+I have selected 14 locations around the UK and Ireland. Locations were selected based on whether they were the most 'northerly', "easterly" etc for the country, or whether they offered a general geographical location e.g. for the NW and were at "grid point nearest to [chosen geographical location]"
 
 The mean of all of these locations was taken. The following is code for extracting data for all 14 locations, as well as the mean UK SST (degrees celsius), for the time period 1912-2016. 
 
 ```{r setup, include=FALSE}
-
 
 library(chron)
 library(RColorBrewer)
@@ -688,7 +687,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-#Reading in .nc data 
+#Reading in .nc data - this is a huge dataset of 111,000,000 datapoints 
 ncin <- nc_open("HadISST_sst.nc")
 
 #Having a look at what's in the files 
@@ -696,7 +695,6 @@ attributes(ncin)$names
 #[1] "filename"    "writable"    "id"          "safemode"    "format"      "is_GMT"     
 #[7] "groups"      "fqgn2Rindex" "ndims"       "natts"       "dim"         "unlimdimid" 
 #[13] "nvars"       "var"        
-
 
 #Variables 
 attributes(ncin$var)$names
@@ -721,13 +719,11 @@ history <- ncatt_get(ncin,0,"history")
 Conventions <- ncatt_get(ncin,0,"Conventions")
 
 
-
 # get longitude and latitude
 lon <- ncvar_get(ncin,"longitude")
 nlon <- dim(lon)
 head(lon)
 summary(lon)
-
 
 lat <- ncvar_get(ncin,"latitude")
 nlat <- dim(lat)
@@ -744,7 +740,6 @@ ncin$dim$time$units
 #Looking at the time units 
 time <- ncvar_get(ncin,"time")
 time
-
 
 tunits <- ncatt_get(ncin,"time","units")
 nt <- dim(time)
@@ -765,12 +760,11 @@ st <- dim(tmp)
 
 tmp_array <- ncvar_get(ncin, "sst")
 
-#This stuff was what I was playing around with 
+
 #dlname <- ncatt_get(ncin, "sst","long_name")
 #dunits <- ncatt_get(ncin,"sst","units")
 #fillvalue <- ncatt_get(ncin, "sst","_FillValue")
 #dim(tmp_array)
-
 
 # convert time -- split the time units string into fields
 #tustr <- strsplit(tunits$value, " ")
@@ -787,7 +781,6 @@ tmp_array <- ncvar_get(ncin, "sst")
 
 #How much of the data are land points? 
 #length(na.omit(as.vector(tmp_array[,,1])))
-
 
 # get a single slice or layer (January)
 #Changed to temp1[m]
@@ -807,10 +800,9 @@ tmp_array <- ncvar_get(ncin, "sst")
 
 ###########################################################
 #Unsure why this doesn't work 
-LonIdx <- which( ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
-LatIdx <- which( ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
-MyVariable <- ncvar_get(ncin, "sst_time")[ LonIdx, LatIdx]
-
+#LonIdx <- which( ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
+#LatIdx <- which( ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
+#MyVariable <- ncvar_get(ncin, "sst_time")[ LonIdx, LatIdx]
 
 ncin$dim$time$units
 
@@ -849,8 +841,8 @@ time_index <- which(format(sst_time, "%Y-%m-%d") == "2000-09-16")
 sst[lon_index, lat_index, time_index]
 
 #Selecting a specific lat/long section 
-lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
-lat_index <-  which(ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
+#lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
+#lat_index <-  which(ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
 
 ts.bounds <- nc.make.time.bounds(ts, unit="month")
 
@@ -932,7 +924,9 @@ UK <- bind_cols(UK_Ballyhillin, UK_Barrow, UK_Dover, UK_GoreCliff, UK_Holyhead, 
   
 #Binding the UK and Ireland 
 UK_Ireland <- bind_cols(UK, Ireland)
-#Removing the second time variable (from the Ireland dataset)
+#Removing the second time variable (from the Ireland datsset) as it is the same as the UK time 
+#column and a duplicate is not needed 
+
 UK_Ireland$time1 <- NULL
 
 write.csv(UK_Ireland, file = "UK_Ireland_SST.csv")
@@ -1000,15 +994,10 @@ bb1 <- ggplot() +
   theme_classic()
 
 #Trying to add a trend line 
-bb1<- bb1+ geom_smooth(span = 0.5) + 
-  scale_colour_gradient(low='yellow', high='#de2d26') 
+#bb1<- bb1+ geom_smooth(span = 0.5) + 
+  #scale_colour_gradient(low='yellow', high='#de2d26') 
 
 bb1
-
-sapply(UK_mean_SST, class)
-
-labels(UK_Ireland_SST)
-sapply(UK_Ireland_SST, class)
 
 
 #Modelling temperature for a single day - need to change the code as this currently 
@@ -1024,7 +1013,7 @@ sst <- nc.get.var.subset.by.axes(ncin, "sst",
                                  axis.indices = list(T = time_index))
 expand.grid(lon, lat) %>%
   rename(lon = Var1, lat = Var2) %>%
-  mutate(lon = ifelse(lon > 3, -(11 - lon), lon),
+  mutate(lon = ifelse(lon > 180, -(360 - lon), lon),
          sst = as.vector(sst)) %>% 
   mutate(sst = convert_temperature(sst, "c", "k")) %>%
   ggplot() + 
@@ -1034,7 +1023,7 @@ expand.grid(lon, lat) %>%
   scale_color_viridis(name = "Temperature (C)") + 
   theme_void() + 
   coord_quickmap() + 
-  ggtitle("Measured temperature on 1977-07-16",
+  ggtitle("Measured temperature on 2016-07-16",
           subtitle = "HadISST1") 
 
 
