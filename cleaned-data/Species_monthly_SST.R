@@ -202,34 +202,12 @@ lm_eqn = function(m) {
 f4 = f1 + annotate("text", x = 15, y = 700, label = lm_eqn(lm(strandings ~ year_max, SST_total_strandings)), colour="black", size = 5, parse=TRUE)
 f4
 
+#
+lm(year_max ~ strandings, data = SST_total_strandings)
+strandings <- SST_total_strandings$strandings
+year_max <- SST_total_strandings$year_max
+fit <- lm(strandings ~ year_max)
+fit
+summary(fit)
 
-
-
-lm_eqn <- function(df){
-  m <- lm(strandings ~ year_max, SST_total_strandings);
-  eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2, 
-                   list(a = format(coef(m)[1], digits = 2), 
-                        b = format(coef(m)[2], digits = 2), 
-                        r2 = format(summary(m)$r.squared, digits = 3)))
-  as.character(as.expression(eq));                 
-}
-
-f4 <- f1 + geom_text(x = 15, y = 700, label = lm_eqn(SST_total_strandings), parse = TRUE)
-f4
-
-
-ggplotRegression <- function (fit) {
-  
-  require(ggplot2)
-  
-  ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) + 
-    geom_point() +
-    stat_smooth(method = "lm", col = "red") +
-    labs(title = paste("Adj R2 = ",signif(summary(fit)$adj.r.squared, 5),
-                       "Intercept =",signif(fit$coef[[1]],5 ),
-                       " Slope =",signif(fit$coef[[2]], 5),
-                       " P =",signif(summary(fit)$coef[2,4], 5)))
-}
-
-ggplotRegression(lm(strandings ~ year_max, data = SST_total_strandings))
 

@@ -286,5 +286,4 @@ lm_eqn = function(m) {
 
 a4 = a1 + geom_text(aes(x = 35, y = 150, label = lm_eqn(lm(y ~ x, df))), parse = TRUE)
 
-b4
-a4
+
