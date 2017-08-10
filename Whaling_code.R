@@ -243,6 +243,11 @@ a3 <- a2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=
 plot(a3)
 
 
+#Data analysis - Yearly strandings vs. yearly catch data  
+model_hunted <- lm(log(Catch) ~ log(Stranded), data = hunted_and_stranded)
+summary(model_hunted)
+
+
 ##############################################
 #After 1970 only with regression line 
 
@@ -285,5 +290,10 @@ lm_eqn = function(m) {
 }
 
 a4 = a1 + geom_text(aes(x = 35, y = 150, label = lm_eqn(lm(y ~ x, df))), parse = TRUE)
+
+
+#Data analysis - Yearly strandings vs. yearly catch data after 1970  
+model_hunted1970 <- lm(log(Catch) ~ log(Stranded), data = hunted_and_stranded1970)
+summary(model_hunted1970)
 
 

@@ -62,7 +62,6 @@ ggplot() +
        x = "Year",
        colour = "Parameter") 
 
-
 ########################################################################################
 library(ggplot2)
 library(dplyr)
@@ -240,8 +239,9 @@ p4 = p1 + geom_text(aes(x = 50, y = 700, label = lm_eqn(lm(y ~ x, df))), parse =
 
 p4
 
-
-
+#Data analysis - UK total population vs. yearly strandings 
+model_pop <- lm(log(STRANDINGS) ~ log(POPULATION), data = pop_vs_strandings)
+summary(model_pop)
 
 
 
