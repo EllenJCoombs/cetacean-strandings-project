@@ -10,19 +10,19 @@ cleaneddata <- read.csv("cleandatesnames.csv")
 sapply(cleaneddata, class)
 
 #Having problems with the data format - need dates to be 'date' class
-cleaneddata <- mutate(cleaneddata, Date = dmy(Date))
+#cleaneddata <- mutate(cleaneddata, Date = dmy(Date))
 #Trying this instead - works by changing all 2000s to 1900s
 #cleaneddata <- mutate(cleaneddata, Date = format(as.Date(Date, "%d-%b-%y"), "19%y-%m-%d"))
 
-write.csv(cleaneddata, file = "cleandatesnames.csv")
+#write.csv(cleaneddata, file = "cleandatesnames.csv")
 
 #Now Date should be 'Date' class 
 
 #Selecting the chosen area (if required)
-L_acutus <- cleaneddata %>% 
-  filter(Name.Current.Sci == "Lagenorhynchus acutus") 
+bactorostrata <- cleaneddata %>% 
+  filter(Name.Current.Sci == "Balaenoptera acutorostrata") 
 
-sapply(L_acutus, class)
+sapply(bactorostrata, class)
 #Use a variation of the following code if you want to select a specfic window 
 #nw_window <- nw_scotland_strandings %>% 
   #filter(Year %in% c(1989:2000))
@@ -31,32 +31,30 @@ sapply(L_acutus, class)
 #ggplot(nw_window, aes(x = Date)) + 
   #stat_count(width = 0.5) 
 
-la_window <- L_acutus %>%
+ba_window <- bactorostrata %>%
   filter(Year %in% c(1913:2015))
 
-
-install.packages("zoo")
 library(zoo)
 library(dplyr)
 
 #Splitting my data into strandings per month 
-la_window$monthYear <- as.Date(as.yearmon(la_window$Date))
-la_window$quarterYear <- as.Date(as.yearqtr(la_window$Date))
-head(la_window)
+ba_window$monthYear <- as.Date(as.yearmon(ba_window$Date))
+ba_window$quarterYear <- as.Date(as.yearqtr(ba_window$Date))
+head(ba_window)
 #Strandings gathered into months 
-la_monthly <- head(la_window %>% group_by(monthYear) %>% summarise(n = n()), 424)
+ba_monthly <- head(ba_window %>% group_by(monthYear) %>% summarise(n = n()), 516)
 #Strandings per quarter 
-pp_quarter <- head(pp_window %>% group_by(quarterYear) %>% summarise(n = n()), 818)
+ba_quarter <- head(ba_window %>% group_by(quarterYear) %>% summarise(n = n()), 324)
 
 #Grouping by week number - not really needed - not running properly
-pp_window$week <- as.Date("1913-01-01")+7*trunc((pp_window$joinTimestamp / 1000)/(3600*24*7))
+#pp_window$week <- as.Date("1913-01-01")+7*trunc((pp_window$joinTimestamp / 1000)/(3600*24*7))
 
 #Line plot of strandings per month (grouped)
 #Have changed monthYear to Date 
-ggplot(data = pp_monthly, aes(x = Date, y = n, group=1)) +
+ggplot(data = ba_monthly, aes(x = monthYear, y = n, group=1)) +
   geom_line()
 
-ggplot(pp_monthly, aes(n)) +
+ggplot(ba_monthly, aes(n)) +
   geom_histogram(binwidth = 0.5)
   
 
@@ -85,7 +83,7 @@ sapply(UK_mean_SST, class)
 
 write.csv(UK_mean_SST, file = "UK_mean_SST.csv")
 
-#Filteeing out specific dates 
+#Filtering out specific dates 
 UK_mean_SST <- UK_mean_SST %>%
   filter(Date >= "1912-12-16", Date <= "2016-01-16")
 
@@ -107,16 +105,16 @@ bb1
 
 #Plotting strandings against temp 
 
-#Changing "monthYear" to "Date" in PP data 
-pp_monthly <- pp_monthly %>%
+#Changing "monthYear" to "Date" in species data 
+ba_monthly <- ba_monthly %>%
   dplyr::rename(Date = monthYear)
   
   
-  #PPhocoena monthly strandings and monthly SST
+#PPhocoena monthly strandings and monthly SST
   ggplot() + 
     geom_line(data = UK_mean_SST, aes(x = Date, y = UK_mean)) + 
-    geom_line(data = pp_monthly, aes(x = Date, y = n/4)) +
-    scale_y_continuous(sec.axis = sec_axis(~.*4, name = "Monthly strandings")) +
+    geom_line(data = ba_monthly, aes(x = Date, y = n*10)) +
+    scale_y_continuous(sec.axis = sec_axis(~./10, name = "Monthly strandings")) +
     labs(y = "SST ("~degree~"C)",
          x = "Year")
 
@@ -145,17 +143,93 @@ combined <- UK_mean_01_month %>%
   dplyr::rename(Date = monthYear)
   
   
-combined <- merge(combined, pp_monthly, all = TRUE, by = c('Date'))
+combined <- merge(combined, ba_monthly, all = TRUE, by = c('Date'))
 
 #Phocoena strandings (monthly) vs monthly SST
 ggplot(data = combined, aes(x = UK_mean, y = n)) +
   geom_point(size = 0.5) +
-  labs(x = "Sea Surface Temperature ("~degree~"(C))", y = "Monthly Phocoena phocoena strandings") +
+  labs(x = "Sea Surface Temperature ("~degree~"(C))", y = "Monthly Balaenoptera acutorostrata strandings") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
+##########################################################################################
+#Want to plot yearly max temp against yearly strandings 
+#This is total_count 
+
+#Bind STT_yearly max and totalcount 
+SST_total_strandings <- bind_cols(SST_yearly_max, totalcount)
+#remove duplicate 'Year' 
+SST_total_strandings$Year <- NULL
+#rename freq to strandings 
+SST_total_strandings <- SST_total_strandings %>%
+  dplyr::rename(strandings = freq)
+
+#write.csv(SST_total_strandings, file = "SST_strandings_UK.csv")
+
+f1 <- ggplot(data = SST_total_strandings, aes(x = year_max, y = strandings)) +
+  geom_point(size = 0.5) +
+  labs(x = "Yearly max. sea surface temperature ("~degree~"C)", y = "Yearly total strandings") +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+#m <- lm(year_max ~ freq, data = SST_total_strandings)
+#a <- signif(coef(m)[1])
+#b <- signif(coef(m)[2])
+#textlab <- paste("y = ",b,"x + ",a, sep="")
+
+#f2 <- f1 + geom_smooth(method = lm, formula = y~x) 
+
+#f3 <- f2 + geom_text(aes(x = 15, y = 700, label = textlab), color="black", size=5, parse = FALSE)  
+
+#plot(f3)
+
+#f1
+
+lm_eqn = function(m) {
+  
+  l <- list(a = format(coef(m)[1], digits = 2),
+            b = format(abs(coef(m)[2]), digits = 2),
+            r2 = format(summary(m)$r.squared, digits = 3));
+  
+  if (coef(m)[2] >= 0)  {
+    eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2,l)
+  } else {
+    eq <- substitute(italic(y) == a - b %.% italic(x)*","~~italic(r)^2~"="~r2,l)    
+  }
+  
+  as.character(as.expression(eq));                 
+}
+
+f4 = f1 + annotate("text", x = 15, y = 700, label = lm_eqn(lm(strandings ~ year_max, SST_total_strandings)), colour="black", size = 5, parse=TRUE)
+f4
 
 
-combined <- merge(combined, pp_monthly, all = TRUE, by = c('Date'))
 
+
+lm_eqn <- function(df){
+  m <- lm(strandings ~ year_max, SST_total_strandings);
+  eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2, 
+                   list(a = format(coef(m)[1], digits = 2), 
+                        b = format(coef(m)[2], digits = 2), 
+                        r2 = format(summary(m)$r.squared, digits = 3)))
+  as.character(as.expression(eq));                 
+}
+
+f4 <- f1 + geom_text(x = 15, y = 700, label = lm_eqn(SST_total_strandings), parse = TRUE)
+f4
+
+
+ggplotRegression <- function (fit) {
+  
+  require(ggplot2)
+  
+  ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) + 
+    geom_point() +
+    stat_smooth(method = "lm", col = "red") +
+    labs(title = paste("Adj R2 = ",signif(summary(fit)$adj.r.squared, 5),
+                       "Intercept =",signif(fit$coef[[1]],5 ),
+                       " Slope =",signif(fit$coef[[2]], 5),
+                       " P =",signif(summary(fit)$coef[2,4], 5)))
+}
+
+ggplotRegression(lm(strandings ~ year_max, data = SST_total_strandings))
 
