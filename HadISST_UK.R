@@ -1,21 +1,13 @@
 #Loading climate data into R 
 
 #Required packages 
-install.packages("chron")
 library(chron)
-install.packages("RColorBrewer")
 library(RColorBrewer)
-install.packages("lattice")
 library(lattice)
-install.packages("ncdf4")
 library(ncdf4)
-install.packages("readr")
 library(readr)
-install.packages("dplyr")
 library(dplyr)
-install.packages("tidyr")
 library(tidyr)
-install.packages("ggplot2")
 library(ggplot2)
 
 #Reading in .nc data 
