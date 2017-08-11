@@ -278,21 +278,44 @@ species_monthly <- species_monthly %>%
   dplyr::rename(Date = monthYear)
 
 #Monthly strandings 
-ggplot(data = species_monthly, aes(x = Date, y = n, group=1)) +
-  geom_line()
+ggplot(data = species_monthly, aes(x = Date, y = log(n), group=1)) +
+  geom_line() +
+  labs(y = "Monthly strandings")
 
 ggplot(species_monthly, aes(n)) +
   geom_histogram(binwidth = 0.5)
+
+#After 1970 only
+#Can play around with the dates 
+species_monthly_1970 <- species_monthly %>%
+  filter(Date >= "1970-01-01", Date <= "2016-01-01")
+#Plot
+ggplot(data = species_monthly_1970, aes(x = Date, y = log(n), group=1)) +
+  geom_line() +
+  labs(y = "Monthly strandings since 1970") 
 
 #Quarterley strandings - split into Jan, April, July and October 
 #Firstly making date 'Date' 
 species_quarter <- species_quarter %>%
   dplyr::rename(Date = quarterYear)
 
-ggplot(data = species_quarter, aes(x = Date, y = n, group=1)) +
-  geom_line()
+ggplot(data = species_quarter, aes(x = Date, y = log(n), group=1)) +
+  geom_line() +
+  labs(y = "Quarterly strandings")
 
-#Monthly SST against monthly strandings 
+#After 1970 only
+#Can play around with the dates 
+species_quarter_1970 <- species_quarter %>%
+  filter(Date >= "2011-01-01", Date <= "2016-01-01")
+
+#Plot
+ggplot(data = species_quarter_1970, aes(x = Date, y = log(n), group=1)) +
+  geom_line() +
+  labs(y = "Quarterly strandings since 1970") 
+
+
+
+#Monthly mean SST against monthly strandings 
 ggplot() +
   geom_line(data = species_monthly, aes(x = Date, y = n/5)) +
   geom_line(data = UK_mean_SST, aes(x = Date, y = UK_mean)) +
@@ -300,7 +323,30 @@ ggplot() +
   labs(x = "Date", y = "Monthly mean SST ("~degree~"C)")
  
 #UK monthly max 
+#Change time to date 
 
+UK_Ireland_SST_max <- UK_Ireland_SST_max %>%
+  dplyr::rename(Date = time)
+
+#Specific columns 
+UK_monthly_SST <- UK_Ireland_SST_max %>%
+  select(Date, Monthly_max)
+
+sapply(UK_monthly_SST, class)
+
+tail(UK_monthly_SST)
+
+#Filter out the dates 
+UK_monthly_SST <- mutate(UK_monthly_SST, Date = dmy(Date))
+UK_monthly_SST <- UK_monthly_SST %>%
+  filter(Date >= "1912-12-16", Date <= "2016-01-16")
+
+
+ggplot() +
+  geom_line(data = species_monthly, aes(x = Date, y = n/5)) +
+  geom_line(data = UK_Ireland_SST_max, aes(x = Date, y = Monthly_max)) +
+  scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Monthly stranded species")) +
+  labs(x = "Date", y = "Monthly maximum SST ("~degree~"C)")
 
 
 

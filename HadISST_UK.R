@@ -346,7 +346,7 @@ df <- data.frame(date = UK_mean_SST$Date,
                  month = as.numeric(format(UK_mean_SST$Date, format = "%m")),
                  day = as.numeric(format(UK_mean_SST$Date, format = "%d")))
 
-#Removing the extra 'date' 
+#Binding SST and dates/months/years and removing the extra 'date' 
 SST_day_month_year <- bind_cols(df, UK_mean_SST) 
 SST_day_month_year$Date <- NULL
 
@@ -370,13 +370,26 @@ ggplot(data = SST_yearly_max, aes(x = year, y = year_max)) +
 
 #####################################################
 #Extracting monthly maximum.... 
+#Need to go back to the original dataset as the above uses the mean 
+
+#CAN'T GET THIS TO WORK 
+#UK_Ireland_SST <- UK_Ireland_SST %>%
+  #dplyr::rename(Date = time)
+
+#UK_Ireland_SST <- mutate(UK_Ireland_SST, Date = ymd(Date))
+
+#ef <- data.frame(date = UK_Ireland_SST$Date,
+                 #year = as.numeric(format(UK_Ireland_SST$Date, format = "%Y")),
+                 #month = as.numeric(format(UK_Ireland_SST$Date, format = "%m")),
+                 #day = as.numeric(format(UK_Ireland_SST$Date, format = "%d")))
 
 
+#max(UK_Ireland_SST_dates[1,5:19])
+#UK_Ireland_SST$max <- apply(UK_Ireland_SST[,5:19], max)
+#head(UK_Ireland_SST, 10)
 
 
-
-
-
+UK_Ireland_SST_max <- read.csv("UK_Ireland_SST.csv")
 
 
 
