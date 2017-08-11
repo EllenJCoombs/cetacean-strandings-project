@@ -368,6 +368,20 @@ ggplot(data = SST_yearly_max, aes(x = year, y = year_max)) +
   theme_classic()
 
 
+#####################################################
+#Extracting monthly maximum.... 
+
+
+
+
+
+
+
+
+
+
+
+
 #Modelling temperature for a single day - need to change the code as this currently 
 #gives a global picture 
 library(ggmap)

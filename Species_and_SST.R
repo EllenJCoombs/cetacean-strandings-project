@@ -243,6 +243,9 @@ summary(modelSST)
 #Monthly species strandings (only have yearly at the moment)
 library(dplyr)
 library(plyr)
+library(lubridate)
+library(zoo)
+library(ggplot2)
 
 cleaneddata <- read.csv("cleandatesnames.csv")
 #I want all species 
@@ -251,7 +254,10 @@ species_window <- cleaneddata %>%
   filter(Year %in% c(1913:2015))
 
 sapply(species_window, class)
-species_window <- mutate(species_window, Date = ymd(Date))
+#Be cautious of the format: dmy, ymd
+species_window <- mutate(species_window, Date = dmy(Date))
+
+sapply(species_window, class)
 
 #Splitting my data into strandings per month 
 species_window$monthYear <- as.Date(as.yearmon(species_window$Date))
@@ -271,20 +277,30 @@ species_quarter <- head(species_window %>% group_by(quarterYear) %>% dplyr::summ
 species_monthly <- species_monthly %>%
   dplyr::rename(Date = monthYear)
 
+#Monthly strandings 
 ggplot(data = species_monthly, aes(x = Date, y = n, group=1)) +
   geom_line()
 
 ggplot(species_monthly, aes(n)) +
   geom_histogram(binwidth = 0.5)
 
+#Quarterley strandings - split into Jan, April, July and October 
+#Firstly making date 'Date' 
+species_quarter <- species_quarter %>%
+  dplyr::rename(Date = quarterYear)
+
+ggplot(data = species_quarter, aes(x = Date, y = n, group=1)) +
+  geom_line()
 
 #Monthly SST against monthly strandings 
 ggplot() +
-  geom_line(data = species_monthly, aes(x = Date, y = n)) +
+  geom_line(data = species_monthly, aes(x = Date, y = n/5)) +
   geom_line(data = UK_mean_SST, aes(x = Date, y = UK_mean)) +
-  labs(x = "Date", y = "TO CHANGE")
-    #ADD ANOTHER Y AXIS
-#MONTHLY MAX?
+  scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Monthly stranded species")) +
+  labs(x = "Date", y = "Monthly mean SST ("~degree~"C)")
+ 
+#UK monthly max 
+
 
 
 
