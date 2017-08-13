@@ -701,7 +701,11 @@ ggplot() +
   geom_line(data = UK_mean_SST, aes(x = Date, y = UK_mean)) +
   scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Monthly stranded species")) +
   labs(x = "Date", y = "Monthly mean SST ("~degree~"C)")
- 
+```
+
+
+###Playing around with monthly data and different time scales, with different species 
+```{r setup, include=FALSE}
 #UK monthly max 
 #Change time to date 
 
@@ -729,7 +733,7 @@ ggplot() +
   scale_y_continuous(sec.axis = sec_axis(~.*10, name = "Monthly stranded species")) +
   labs(x = "Date", y = "Monthly maximum SST ("~degree~"C)")
 
-#binding monthly max temp and monthly strandings 
+#Binding monthly max temp and monthly strandings 
 #Not happy with this as this is only one temp from one location which happens to have the highest 
 #value :( 
 #Also changing dates to 01 of the month 
@@ -767,6 +771,15 @@ model_all_species <- lm(log(strandings) ~ log(Monthly_max), data = monthly_max_s
 summary(modelSST)
 ```
 
+
+###Remove Phocoena phocoena 
+
+
+
+
+
+
+
 ###Plotting specific species against monthly max SST 
 ```{r setup, include=FALSE}
 
@@ -792,7 +805,8 @@ ggplot(data = monthly_m_novaengliae, aes(x = Monthly_max, y = n)) +
 ```
 
 
-
+To do: 
+Strandings and monthly STT max/mean without porpoises 
 
 
 This is as far as I've got with mapping/sense checking the data on a map
