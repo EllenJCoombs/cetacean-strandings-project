@@ -1035,8 +1035,7 @@ plot(b3)
 ###i.Sampling effort - county data - need to work out how to get this on the hex plots 
 
 UK population plots 
-Can I get an idea of regional population change by looking at the overall country population? 
-
+Can I get an idea of regional population change by looking at the overall country population?                                                                                                                                                                                                                                                                                                                           
 ```{r, include=FALSE}
 #Looking at UK population as a means of assessing sampling effort 
 #Step one is to see how regional data compares to total population data
