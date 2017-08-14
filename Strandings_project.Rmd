@@ -50,13 +50,6 @@ This is an R markdown document for the cetacean strandings project. It includes:
 NB. This doucment does not contain details on the data clean-up of the strandings data that occurred earlier in the project.
 Code for cleaning data is ![(available on my GitHub page)](https://github.com/EllenJCoombs/strandings-project)
 
-To open plots in MAC OS X 
-```{r, include=FALSE}
-options(device="quartz")
-options(device="x11")
-
-```
-
 All analysis uses the data: "cleandatesnames.csv"
 Required packages are put in each section so that each section can be run seperately 
 
@@ -688,7 +681,43 @@ Code is below, but I am still working on it....
 library(zoo)
 library(dplyr)
 
-#To add 
+library(zoo)
+library(ggplot2)
+
+cleaneddata <- read.csv("cleandatesnames.csv")
+#I want all species 
+
+strandings_window <- cleaneddata %>%
+  filter(Year %in% c(1913:2015))
+
+sapply(strandings_window, class)
+#Be cautious of the format: dmy, ymd
+strandings_window <- mutate(strandings_window, Date = dmy(Date))
+
+sapply(strandings_window, class)
+
+#Splitting my data into strandings per month 
+strandings_window$monthYear <- as.Date(as.yearmon(strandings_window$Date))
+strandings_window$quarterYear <- as.Date(as.yearqtr(strandings_window$Date))
+head(strandings_window)
+
+#Strandings gathered into months 
+strandings_monthly <- head(strandings_window %>% group_by(monthYear) %>% dplyr::summarise(n = n()), 17402)
+#Strandings per quarter 
+strandings_quarter <- head(strandings_window %>% group_by(quarterYear) %>% dplyr::summarise(n = n()), 1133)
+
+#Grouping by week number - not really needed - not running properly
+#pp_window$week <- as.Date("1913-01-01")+7*trunc((pp_window$joinTimestamp / 1000)/(3600*24*7))
+
+#Line plot of strandings per month (grouped)
+#Have changed monthYear to Date 
+strandings_monthly <- strandings_monthly %>%
+  dplyr::rename(Date = monthYear)
+
+#Monthly strandings 
+ggplot(data = strandings_monthly, aes(x = Date, y = log(n), group=1)) +
+  geom_line() +
+  labs(y = "Monthly strandings") 
 
 ```
 
@@ -906,13 +935,9 @@ p <- p + annotate("segment", x = 1945, xend = 1950, y = 0, yend = -10, colour="b
   geom_text(
     aes(x = 1945, y = -14, label = "Increase in post-war
         fishing & whaling effort"), size = 3)
-
-
-  
-  
 ```
   
-Each species stranding and whaling on the same plot - split by facet_wrap species
+Each seperate species stranding and whaling on the same plot - split by facet_wrap species
 - This is for cross-validation of data 
 ```{r, include=FALSE}
 
@@ -984,20 +1009,22 @@ a1 <- ggplot(data = hunted_and_stranded, aes(x = Stranded, y = Catch)) +
   geom_text(aes(label = Year), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) +
   labs(x = "Total stranded", y = "Total catch (hunted)") #se=FALSE, colour = "grey70", size =0.7) 
+a1 
+#a1
 
-a1
+#m <- lm(Stranded ~ Catch, data = hunted_and_stranded)
+#a <- signif(coef(m)[1])
+#b <- signif(coef(m)[2])
+#textlab <- paste("y = ",b,"x + ",a, sep="")
 
-m <- lm(Stranded ~ Catch, data = hunted_and_stranded)
-a <- signif(coef(m)[1])
-b <- signif(coef(m)[2])
-textlab <- paste("y = ",b,"x + ",a, sep="")
+#a2 <- a1 + geom_smooth(method = lm, formula = y~x) 
 
-a2 <- a1 + geom_smooth(method = lm, formula = y~x) 
+#a3 <- a2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
+#plot(a3)
 
-a3 <- a2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
-
-plot(a3)
-
+#Data analysis - Yearly strandings vs. yearly catch data  
+model_hunted <- lm(log(Catch) ~ log(Stranded), data = hunted_and_stranded)
+summary(model_hunted)
 
 ##############################################
 #After 1970 only with regression line 
@@ -1010,19 +1037,21 @@ b1 <- ggplot(data = hunted_and_stranded1970, aes(x = Stranded, y = Catch)) +
   geom_text(aes(label = Year), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) +
   labs(x = "Total stranded", y = "Total catch (hunted)") #se=FALSE, colour = "grey70", size =0.7) 
-
-
+b1
 #m <- lm(hunted_and_stranded1970$Stranded ~ hunted_and_stranded1970$Catch)
-m <- lm(Stranded ~ Catch, data = hunted_and_stranded1970)
-a <- signif(coef(m)[1])
-b <- signif(coef(m)[2])
-textlab <- paste("y = ",b,"x + ",a, sep="")
+#m <- lm(Stranded ~ Catch, data = hunted_and_stranded1970)
+#a <- signif(coef(m)[1])
+#b <- signif(coef(m)[2])
+#textlab <- paste("y = ",b,"x + ",a, sep="")
 
-b2 <- b1 + geom_smooth(method = lm, formula = y~x) 
+#b2 <- b1 + geom_smooth(method = lm, formula = y~x) 
 
-b3 <- b2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
+#b3 <- b2 + geom_text(aes(x = 35, y = 150, label = textlab), color="black", size=5, parse = FALSE)  
+#plot(b3)
 
-plot(b3)
+#Data analysis - Yearly strandings vs. yearly catch data after 1970  
+model_hunted1970 <- lm(log(Catch) ~ log(Stranded), data = hunted_and_stranded1970)
+summary(model_hunted1970)
 
 
 ```
