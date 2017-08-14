@@ -168,6 +168,7 @@ for(i in seq_along(decades)){
   # Add the points to the base map
   # Create a different map for each decade with a different name
   # placed into map.list
+  #A few additions for hex plots 
   map.list[[i]] <- 
     base.map + 
     geom_hex(data = one.decade, aes(y = Latitude, x= Longitude), bins = 100, alpha = 0.5) +
