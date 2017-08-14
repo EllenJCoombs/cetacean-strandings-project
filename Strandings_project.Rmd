@@ -771,7 +771,7 @@ whaling_species <- rename(whaling_species, "Balaenoptera physalus" = "Balaenopte
        "Balaenoptera acutorostrata" = "Balaenoptera.acutorostrata")
 
 #Plotting species and year 
-library("reshape2")
+library(reshape2)
 library(RColorBrewer)
 
 whaling_plot <- melt(whaling_species, id="Year")  # convert to long format
@@ -955,6 +955,8 @@ p <- p + annotate("segment", x = 1945, xend = 1950, y = 0, yend = -10, colour="b
   geom_text(
     aes(x = 1945, y = -14, label = "Increase in post-war
         fishing & whaling effort"), size = 3)
+
+p
 ```
   
 Each seperate species stranding and whaling on the same plot - split by facet_wrap species
@@ -967,7 +969,6 @@ Each seperate species stranding and whaling on the same plot - split by facet_wr
 iwc <- whaling_species_no_total
   
 library(reshape2)
-install.packages("mvbutils")
 library(mvbutils)
   
 #Arranging by species for catch data 
@@ -1044,7 +1045,10 @@ a1
 #Data analysis - Yearly strandings vs. yearly catch data  
 model_hunted <- lm(log(Catch) ~ log(Stranded), data = hunted_and_stranded)
 summary(model_hunted)
+```
 
+Hunted - stranded 1970s 
+```{r, include=FALSE}
 ##############################################
 #After 1970 only with regression line 
 
@@ -1091,11 +1095,11 @@ Can I get an idea of regional population change by looking at the overall countr
 #I.e. can I used total population data, or would that not reflect regional changes? 
 
 library(dplyr)
-
 #Read in the proto-population data (need to make this more detailed e.g. by county, see below)
 library(reshape2)
 library(mvbutils)
 library(ggplot2)
+
 #Check.names removes the X that randomly appeared (not sure what that was)
 population_data <- read.csv("cleaned-data/Population_data.csv", check.names = FALSE)
 
@@ -1104,19 +1108,19 @@ population_data$X <- NULL
 population_data <- melt(population_data, measure.vars=names(population_data)%except%"Name")
 
 population_data <- population_data %>% 
-  rename(Year = variable) %>%
-  rename(Population = value) 
+  dplyr::rename(Year = variable) %>%
+  dplyr::rename(Population = value) 
 
 population <- population_data$Population 
 
 #Transforming population to numeric (was in "")
-population <- gsub(",","", population)
-population_data <- mutate(population_data, Population = as.numeric(Population))
+#population <- gsub(",","", population)
+#population_data <- mutate(population_data, Population = as.numeric(Population))
 
-as.numeric <- population
+#as.numeric <- population
 
 #Checking that it's numeric 
-sapply(population_data, class)
+#sapply(population_data, class)
 #Log transformation 
 
 #plotting population data 
@@ -1167,7 +1171,6 @@ These regions were selected at random from all counties that were not land-locke
 library(dplyr)
 library(reshape2)
 library(mvbutils)
-library(ggplot2)
 library(ggplot2)
 library(dplyr)
 #Comparing UK population with UK county data 
@@ -1269,7 +1272,7 @@ library(Rmisc)
 
 #Ireland, Scotland and Wales (more)
 
-extra_counties <- read.csv("Ireland_Scot_Wales.csv")
+extra_counties <- read.csv("cleaned-data/Ireland_Scot_Wales.csv")
 
 d1 <- ggplot(data = extra_counties, aes(x = KERRY, y = UK)) +
   geom_point(size = 0.5) +
@@ -1309,7 +1312,7 @@ library(Rmisc)
 #Taking a look at full century data vs. total strandings
 
 #Bring in the data 
-pop_vs_strandings <- read.csv("Population_vs_stranding.csv")
+pop_vs_strandings <- read.csv("cleaned-data/Population_vs_stranding.csv")
 
 #Plot of UK population and UK strandings 
 p1 <- ggplot(data = pop_vs_strandings, aes(x = POPULATION, y = STRANDINGS)) +
