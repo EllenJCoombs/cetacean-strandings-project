@@ -22,203 +22,7 @@ Files are netCDF (.nc format) and were read in using the ncdf package
 A lot of the code was used to test the data were correct and is put in here as comments 
 
 ##Working with HadISST1 data 
-```{r setup, include=FALSE}
-
-library(chron)
-library(RColorBrewer)
-library(lattice)
-library(ncdf4)
-library(readr)
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-
-#Reading in .nc data - this is a huge dataset of 111,000,000 datapoints 
-ncin <- nc_open("HadISST_sst.nc")
-
-#Having a look at what's in the files 
-attributes(ncin)$names
-#[1] "filename"    "writable"    "id"          "safemode"    "format"      "is_GMT"     
-#[7] "groups"      "fqgn2Rindex" "ndims"       "natts"       "dim"         "unlimdimid" 
-#[13] "nvars"       "var"        
-
-#Variables 
-attributes(ncin$var)$names
-#[1] "time_bnds" "sst" 
-
-#Taking a look at the data 
-ncin_data <- ncvar_get(ncin, attributes(ncin$var)$names[1])
-print(ncin_data)
-
-#Global attributes 
-# get global attributes
-title <- ncatt_get(ncin,0,"title")
-institution <- ncatt_get(ncin,0,"institution")
-datasource <- ncatt_get(ncin,0,"source")
-references <- ncatt_get(ncin,0,"references")
-history <- ncatt_get(ncin,0,"history")
-Conventions <- ncatt_get(ncin,0,"Conventions")
-
-# get longitude and latitude
-lon <- ncvar_get(ncin,"longitude")
-nlon <- dim(lon)
-head(lon)
-summary(lon)
-
-lat <- ncvar_get(ncin,"latitude")
-nlat <- dim(lat)
-head(lat)
-summary(lat)
-
-print(c(nlon,nlat))
-
-#Time variable from the dataset 
-# get time
-
-#Time since when? 
-ncin$dim$time$units
-#Looking at the time units 
-time <- ncvar_get(ncin,"time")
-time
-
-tunits <- ncatt_get(ncin,"time","units")
-nt <- dim(time)
-#How many time units there are 
-nt
-#Days since...
-tunits 
-
-#What kind of calendar? 
-ncin$dim$time$calendar
-#Gregorian
-
-#Get the the variable (tmp) and its attributes, and verify the size of the array.
-# get temperature
-
-tmp <- ncvar_get(ncin,"sst")
-st <- dim(tmp)
-
-tmp_array <- ncvar_get(ncin, "sst")
-
-
-#dlname <- ncatt_get(ncin, "sst","long_name")
-#dunits <- ncatt_get(ncin,"sst","units")
-#fillvalue <- ncatt_get(ncin, "sst","_FillValue")
-#dim(tmp_array)
-
-# convert time -- split the time units string into fields
-#tustr <- strsplit(tunits$value, " ")
-#tdstr <- strsplit(unlist(tustr)[3], "-")
-#tmonth <- as.integer(unlist(tdstr)[2])
-#tday <- as.integer(unlist(tdstr)[3])
-#tyear <- as.integer(unlist(tdstr)[1])
-#new_time <- chron(time,origin=c(tmonth, tday, tyear))
-
-#new_time
-
-# replace netCDF fill values with NA's - no fill values found 
-#tmp_array[tmp_array==fillvalue$value] <- NA
-
-#How much of the data are land points? 
-#length(na.omit(as.vector(tmp_array[,,1])))
-
-# get a single slice or layer (January)
-#Changed to temp1[m]
-#m <- 1
-#tmp_slice <- tmp[,,m]
-#dim(tmp_slice)
-
-#Using the time slice above to look at January temps 
-#image(lon,lat,tmp_slice, col=rev(brewer.pal(10,"RdBu")))
-
-#All temps 
-# levelplot of the slice - doesn't look right 
-#grid <- expand.grid(lon=lon, lat = lat)
-#cutpts <- c(-20,-10,-5,-2,0,2,5,10,20,30)
-#levelplot(tmp_slice ~ lon * lat, data=grid, at=cutpts, cuts=11, pretty=T, 
-          #col.regions=(rev(brewer.pal(10,"RdBu"))))
-
-ncin$dim$time$units
-
-library(ncdf4.helpers)
-library(PCICt)
-library(dplyr)
-
-#This use of non-standard calendars messes up the calculations of as.Date, 
-#so you must use a more specialized function to read in the time variable of the
-#climate model output and map it to standard calendar dates. 
-#You can do this with the nc.get.time.series function from the ncdf4.helpers package
-#(you should also load the PCICt package to use this function):
-
-#This sets the date to a standard: YYYYMMDD and time as well
-sst_time <- nc.get.time.series(ncin, v = "sst",
-                               time.dim.name = "time")
-sst_time[c(1:3, length(sst_time) - 2:0)]
-
-#Getting sst data 
-sst <- ncvar_get(ncin, "sst")
-
-#This variable is in a 3-dimensional array, with dimensions ordered as first longitude, then latitude, then time:
-#Checking on SST data 
-dim(sst)
-
-
-length(sst_time)
-summary(sst_time)
-
-#Selecting a specific time point and place 
-#Answers are in celcius? CHECK
-#Looking at specific lat/long in September 2011 
-#lon_index <- which.min(abs(lon - -5.72))
-#lat_index <- which.min(abs(lat - 50.06))
-#time_index <- which(format(sst_time, "%Y-%m-%d") == "2000-09-16")
-#sst[lon_index, lat_index, time_index]
-
-#Selecting a specific lat/long section 
-#lon_index <- which(ncin$dim$lon$vals > -11 | ncin$dim$lon$vals < 3)
-#lat_index <-  which(ncin$dim$lat$vals > 49 & ncin$dim$lat$vals < 60.9)
-
-#ts.bounds <- nc.make.time.bounds(ts, unit="month")
-
-
-#sst[lon_index, lat_index, time_index]
-
-#Selecting only one point 
-#lon_index <- which.min(abs(lon - 1.75))
-#lat_index <- which.min(abs(lat - 52.48))
-#time_index <- as.PCICt(c("1913-01-01", "2016-01-01"), cal="360")
-#sst[lon_index, lat_index, time_index]
-
-
-#Picking out specific of data - this is one lat/long from 1870-2017
-#Note that this code uses format and as.Date to convert the PCICt object 
-#to a date object, to allow use of a date axis when plotting with ggplot2.
-lon_index <- which.min(abs(lon - - 6.04))
-lat_index <- which.min(abs(lat - 52.98))
-
-sst <- nc.get.var.subset.by.axes(ncin, "sst",
-                                 axis.indices = list(X = lon_index,
-                                                     Y = lat_index))
-
-data_frame(time = sst_time,
-           sst = as.vector(sst)) %>% 
-  mutate(time = as.Date(format(sst_time, "%Y-%m-%d"))) %>%
-#Write csv is for extracting csv data and compare each site 
-#write.csv(file = "Wicklow_temp.csv")
-#read csv 
-#Ireland_Wicklow <- read.csv("Wicklow_temp.csv")
-
-
-#Add the below for graphing 
-  ggplot(aes(x = time, y = sst)) + 
-  geom_line() + 
-  xlab("Date") + ylab("Temperature (C)") + 
-  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",
-          subtitle = "At model grid point nearest Dover, UK") + 
-  theme_classic()
-```
-
-##Pulling together the temperature data for Ireland and the UK
+###Pulling together the temperature data for Ireland and the UK
 ```{r setup, include=FALSE}
 
 #Pulling together all of the data 
@@ -265,15 +69,12 @@ UK_Ireland <- bind_cols(UK, Ireland)
 
 UK_Ireland$time1 <- NULL
 
-write.csv(UK_Ireland, file = "UK_Ireland_SST.csv")
+#write.csv(UK_Ireland, file = "UK_Ireland_SST.csv")
 #Have added the mean
 
-UK_Ireland_SST <- read.csv("UK_Ireland_SST.csv")
+#UK_Ireland_SST <- read.csv("UK_Ireland_SST.csv")
 
 
-#Plotting the temperature data 
-
-plot(UK_Ireland_SST)
 #group = 1 tells R that the points should be connected for one group 
 #group = g no lines drawn
 #group = 2 lines are drawn for two seperate groups 
@@ -288,9 +89,10 @@ ggplot() +
   ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
           subtitle = "At model grid point nearest several Irish locations") + 
   theme_classic()
-
+```
 
 #Plots of the UK and Ireland
+```{r setup, include=FALSE}
 ggplot() + 
   geom_line(data = UK_Ballyhillin, aes(x = time, y = sst, group = 1)) + 
   geom_line(data = UK_Barrow, aes(x = time, y = sst, group = 1)) + 
@@ -310,18 +112,19 @@ ggplot() +
   labs(y = "SST",
        x = "time") +
   ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
-          subtitle = "At model grid points nearest to several UK and Ireland locations") + 
+          subtitle = "At model grid points nearest to several UK and Irish locations") + 
   theme_classic() 
+```
 
+```{r setup, include=FALSE}
+###Want to plot the mean SST
 
-#Want to plot the mean SST
 UK_mean_SST <- UK_Ireland_SST %>%
-  select(time, UK_mean) 
+  select(Date, UK_mean) 
 
 #Plotting UK mean temperature 
-bb1 <- ggplot() + 
-  geom_point(data = UK_mean_SST, aes(x = time, y = UK_mean, group = 1)) + 
-  geom_smooth(se = FALSE) +
+ggplot() + 
+  geom_line(data = UK_mean_SST, aes(x = Date, y = UK_mean, group = 1)) + 
   scale_colour_gradient(low='yellow', high='#de2d26') +
   labs(y = "SST",
        x = "time") +
@@ -329,11 +132,7 @@ bb1 <- ggplot() +
           subtitle = "UK mean") + 
   theme_classic()
 
-#Trying to add a trend line 
-#bb1<- bb1+ geom_smooth(span = 0.5) + 
-  #scale_colour_gradient(low='yellow', high='#de2d26') 
 
-bb1
 ```
 
 
@@ -421,7 +220,6 @@ cleaneddata <- mutate(cleaneddata, Date = dmy(Date))
 M_novaengliae <- cleaneddata %>% 
   filter(Name.Current.Sci == "Megaptera novaeangliae") 
 
-sapply(M_novaengliae, class)
 #Use a variation of the following code if you want to select a specfic window 
 #nw_window <- nw_scotland_strandings %>% 
   #filter(Year %in% c(1989:2000))
@@ -498,9 +296,9 @@ bb1 <- ggplot() +
   #scale_colour_gradient(low='yellow', high='#de2d26') +
   labs(y = "SST",
        x = "time") +
-  ylim(0,17) +
-  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
-          subtitle = "UK mean") + 
+  ylim(5,17) +
+  ggtitle("Monthly mean sea-surface-temperature (1870 - 2017)",   
+          subtitle = "UK monthly mean") + 
   theme_classic()
 
 bb1
@@ -511,8 +309,127 @@ bb1
 ```
 
 
-#Plotting strandings against temp 
+This code splits strandings monthly so that they can be plotted against monthly SST
 ```{r setup, include=FALSE}
+#Splitting species data into monthly/quarterly time slots 
+
+#Using the cleaneddata dataset 
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+
+
+cleaneddata <- read.csv("cleandatesnames.csv")
+sapply(cleaneddata, class)
+
+#Having problems with the data format - need dates to be 'date' class
+cleaneddata <- mutate(cleaneddata, Date = dmy(Date))
+#Trying this instead - works by changing all 2000s to 1900s
+#cleaneddata <- mutate(cleaneddata, Date = format(as.Date(Date, "%d-%b-%y"), "19%y-%m-%d"))
+
+#write.csv(cleaneddata, file = "cleandatesnames.csv")
+
+#Now Date should be 'Date' class 
+
+#Selecting the chosen area (if required)
+P_phocoena <- cleaneddata %>% 
+  filter(Name.Current.Sci == "Phocoena phocoena") 
+
+sapply(P_phocoena, class)
+#Use a variation of the following code if you want to select a specfic window 
+#nw_window <- nw_scotland_strandings %>% 
+  #filter(Year %in% c(1989:2000))
+
+#Shows this datset by year but I need it by month.....
+#ggplot(nw_window, aes(x = Date)) + 
+  #stat_count(width = 0.5) 
+
+pp_window <- P_phocoena %>%
+  filter(Year %in% c(1913:2015))
+
+library(zoo)
+library(dplyr)
+
+#Splitting my data into strandings per month 
+pp_window$monthYear <- as.Date(as.yearmon(pp_window$Date))
+pp_window$quarterYear <- as.Date(as.yearqtr(pp_window$Date))
+head(pp_window)
+#Strandings gathered into months 
+pp_monthly <- head(pp_window %>% group_by(monthYear) %>% dplyr::summarise(n = n()), 7667)
+#Strandings per quarter 
+pp_quarter <- head(pp_window %>% group_by(quarterYear) %>% dplyr::summarise(n = n()), 818)
+
+#Grouping by week number - not really needed - not running properly
+#pp_window$week <- as.Date("1913-01-01")+7*trunc((pp_window$joinTimestamp / 1000)/(3600*24*7))
+
+#Line plot of strandings per month (grouped)
+#Have changed monthYear to Date 
+ggplot(data = pp_monthly, aes(x = monthYear, y = n, group=1)) +
+  geom_line()
+
+ggplot(ba_monthly, aes(n)) +
+  geom_histogram(binwidth = 0.5)
+
+```
+
+
+```{r setup, include=FALSE}
+
+##########################################################################################
+#Plotting species against temperature 
+#Example here is Phocoena monthly strandings against STT monthly temps (UK averaged 
+#from 14 locations)
+
+#Monthly stranding data is from the above code 
+#SST is from the HadISST_Uk.R code 
+
+UK_Ireland_SST <- read.csv("UK_Ireland_SST.csv")
+
+#Renaming time to Date 
+UK_Ireland_SST <- UK_Ireland_SST %>%
+  dplyr::rename(Date = time)
+
+#Selecting only the UK_mean 
+UK_mean_SST <- UK_Ireland_SST %>%
+  select(Date, UK_mean) 
+
+#Selecting only 1913:2015
+#Need to make Data a date first 
+UK_mean_SST <- mutate(UK_mean_SST, Date = ymd(Date))
+sapply(UK_mean_SST, class)
+
+write.csv(UK_mean_SST, file = "UK_mean_SST.csv")
+
+#Filtering out specific dates 
+UK_mean_SST <- UK_mean_SST %>%
+  filter(Date >= "1912-12-16", Date <= "2016-01-16")
+
+
+#Plotting UK mean temperature 
+#Need to play with the months!
+bb1 <- ggplot() + 
+  geom_line(data = UK_mean_SST, aes(x = Date, y = UK_mean, group = 1)) + 
+  #geom_smooth(se = FALSE) +
+  #scale_colour_gradient(low='yellow', high='#de2d26') +
+  labs(y = "SST",
+       x = "time") +
+  ylim(5,17) +
+  ggtitle("Monthly mean sea-surface-temperature, 1870 - 2017",   
+          subtitle = "UK mean") + 
+  theme_classic()
+
+bb1
+
+
+```
+
+
+Taking a quick look at monthly strandings and monthly mean SST
+```{r setup, include=FALSE}
+
+#Plotting strandings against temp 
+
+
 #Changing "monthYear" to "Date" in species data 
 ba_monthly <- ba_monthly %>%
   dplyr::rename(Date = monthYear)
@@ -521,37 +438,40 @@ ba_monthly <- ba_monthly %>%
 #PPhocoena monthly strandings and monthly SST
   ggplot() + 
     geom_line(data = UK_mean_SST, aes(x = Date, y = UK_mean)) + 
-    geom_line(data = ba_monthly, aes(x = Date, y = n*10)) +
-    scale_y_continuous(sec.axis = sec_axis(~./10, name = "Monthly strandings")) +
+    geom_line(data = strandings_monthly, aes(x = Date, y = n/10)) +
+    scale_y_continuous(sec.axis = sec_axis(~.*10, name = "Monthly strandings")) +
     labs(y = "SST ("~degree~"C)",
          x = "Year")
 
-#Any way of binding the two datasets? 
-#library(plyr)
-#combined <- rbind.fill(UK_mean_SST[c("Date", "UK_mean")], pp_monthly[c("Date", "n")])
+```
 
+
+```{r setup, include=FALSE}
+
+library(zoo)
 #Making the date for temperature the first of the month (for that whole month) 
-#UK_mean_01_month <- UK_mean_SST
+UK_mean_01_month <- UK_mean_SST
 
 #Make the SST yearly 
-#UK_mean_01_month$monthYear <- as.Date(as.yearmon(UK_mean_01_month$Date))
-#UK_mean_01_month$quarterYear <- as.Date(as.yearqtr(UK_mean_01_month$Date))
+UK_mean_01_month$monthYear <- as.Date(as.yearmon(UK_mean_01_month$Date))
+UK_mean_01_month$quarterYear <- as.Date(as.yearqtr(UK_mean_01_month$Date))
 #head(UK_mean_01_month)
 
 #Line plot of strandings per month (grouped)
 #Have changed monthYear to Date 
-#ggplot(data = UK_mean_01_month, aes(x = monthYear, y = UK_mean, group=1)) +
-  #geom_line()
+ggplot(data = UK_mean_01_month, aes(x = monthYear, y = UK_mean, group=1)) +
+  geom_line()
+```
 
 
-#library(plyr)
-#combined <- rbind.fill(UK_mean_01_month[c("monthYear", "UK_mean")], pp_monthly[c("Date", "n")])
+Plotting UK mean SST against a specific species (or all species)
+```{r setup, include=FALSE}
 combined <- UK_mean_01_month %>% 
   select(UK_mean, monthYear) %>%
   dplyr::rename(Date = monthYear)
   
 #Combining uk_mean temp with species data 
-combined <- merge(combined, ba_monthly, all = TRUE, by = c('Date'))
+combined <- merge(combined, species_monthly, all = TRUE, by = c('Date'))
 #Replacing NA with 0 
 combined <- combined %>%
   mutate(n = ifelse(is.na(n),0, n))
@@ -562,12 +482,11 @@ ggplot(data = combined, aes(x = UK_mean, y = n)) +
   labs(x = "Sea Surface Temperature ("~degree~"(C))", y = "Monthly Balaenoptera acutorostrata strandings") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
 ```
 
-##Yearly max temp and yearly strandings 
 ```{r setup, include=FALSE}
-
-#Want to plot yearly max temp against yearly strandings 
+#Yearly max temp against yearly strandings 
 #This is total_count 
 
 #Bind STT_yearly max and totalcount 
@@ -589,8 +508,13 @@ f1 <- ggplot(data = SST_total_strandings, aes(x = year_max, y = strandings)) +
 
 f1
 
+#Data analysis 
+modelSST <- lm(log(strandings) ~ log(year_max), data = SST_total_strandings)
+summary(modelSST)
+
 ```
 
+Total species per year and yearly max SST 
 ```{r setup, include=FALSE}
 #Total number of species per year, and maximum temp 
 #Using total_speciesbyyear 
@@ -605,7 +529,7 @@ SST_total_strandings <- SST_total_strandings %>%
 SST_total_strandings <- SST_total_strandings %>%
   select(Year, year_max, species, strandings_total)
 
-#Plotting yearly total species against max yearly SST
+#Plotting yearly total species number against max yearly SST
 ggplot(data = SST_total_strandings, aes(x = year_max, y = species)) +
   geom_point(size = 0.5) +
   geom_text(aes(label = Year), size = 3, vjust = -0.5) +
@@ -617,9 +541,7 @@ modelSST <- lm(log(species) ~ log(year_max), data = SST_total_strandings)
 summary(modelSST)
 ```
 
-
-##Monthly max temp and monthly strandings
-###Extracting monthly strandings 
+Monthly strandings
 ```{r setup, include=FALSE}
 #Monthly species strandings (only have yearly at the moment)
 library(dplyr)
@@ -631,80 +553,86 @@ library(ggplot2)
 cleaneddata <- read.csv("cleandatesnames.csv")
 #I want all species 
 
-species_window <- cleaneddata %>%
+strandings_window <- cleaneddata %>%
   filter(Year %in% c(1913:2015))
 
-sapply(species_window, class)
+sapply(strandings_window, class)
 #Be cautious of the format: dmy, ymd
-species_window <- mutate(species_window, Date = dmy(Date))
+strandings_window <- mutate(strandings_window, Date = dmy(Date))
 
-sapply(species_window, class)
+sapply(strandings_window, class)
 
 #Splitting my data into strandings per month 
-species_window$monthYear <- as.Date(as.yearmon(species_window$Date))
-species_window$quarterYear <- as.Date(as.yearqtr(species_window$Date))
-head(species_window)
+strandings_window$monthYear <- as.Date(as.yearmon(strandings_window$Date))
+strandings_window$quarterYear <- as.Date(as.yearqtr(strandings_window$Date))
+head(strandings_window)
 
 #Strandings gathered into months 
-species_monthly <- head(species_window %>% group_by(monthYear) %>% dplyr::summarise(n = n()), 17402)
+strandings_monthly <- head(strandings_window %>% group_by(monthYear) %>% dplyr::summarise(n = n()), 17402)
 #Strandings per quarter 
-species_quarter <- head(species_window %>% group_by(quarterYear) %>% dplyr::summarise(n = n()), 1133)
+strandings_quarter <- head(strandings_window %>% group_by(quarterYear) %>% dplyr::summarise(n = n()), 1133)
 
 #Grouping by week number - not really needed - not running properly
 #pp_window$week <- as.Date("1913-01-01")+7*trunc((pp_window$joinTimestamp / 1000)/(3600*24*7))
 
 #Line plot of strandings per month (grouped)
 #Have changed monthYear to Date 
-species_monthly <- species_monthly %>%
+strandings_monthly <- strandings_monthly %>%
   dplyr::rename(Date = monthYear)
 
 #Monthly strandings 
-ggplot(data = species_monthly, aes(x = Date, y = log(n), group=1)) +
+ggplot(data = strandings_monthly, aes(x = Date, y = log(n), group=1)) +
   geom_line() +
-  labs(y = "Monthly strandings")
+  labs(y = "Monthly strandings") 
 
-ggplot(species_monthly, aes(n)) +
+ggplot(strandings_monthly, aes(n)) +
   geom_histogram(binwidth = 0.5)
 
-#After 1970 only
+```
+
+
+After 1970 but can play with any dates 
+```{r setup, include=FALSE}
 #Can play around with the dates 
-species_monthly_1970 <- species_monthly %>%
+strandings_monthly_1970 <- strandings_monthly %>%
   filter(Date >= "1970-01-01", Date <= "2016-01-01")
 #Plot
-ggplot(data = species_monthly_1970, aes(x = Date, y = log(n), group=1)) +
+ggplot(data = strandings_monthly_1970, aes(x = Date, y = log(n), group=1)) +
   geom_line() +
   labs(y = "Monthly strandings since 1970") 
 
 #Quarterley strandings - split into Jan, April, July and October 
 #Firstly making date 'Date' 
-species_quarter <- species_quarter %>%
+strandings_quarter <- strandings_quarter %>%
   dplyr::rename(Date = quarterYear)
 
-ggplot(data = species_quarter, aes(x = Date, y = log(n), group=1)) +
+ggplot(data = strandings_quarter, aes(x = Date, y = log(n), group=1)) +
   geom_line() +
   labs(y = "Quarterly strandings")
 
 #After 1970 only
 #Can play around with the dates 
-species_quarter_1970 <- species_quarter %>%
+strandings_quarter_1970 <- strandings_quarter %>%
   filter(Date >= "1970-01-01", Date <= "2016-01-01")
 
 #Plot
-ggplot(data = species_quarter_1970, aes(x = Date, y = log(n), group=1)) +
+ggplot(data = strandings_quarter_1970, aes(x = Date, y = log(n), group=1)) +
   geom_line() +
   labs(y = "Quarterly strandings since 1970") 
+```
 
-
+Monthly mean SST against monthly strandings 
+```{r setup, include=FALSE}
 #Monthly mean SST against monthly strandings 
 ggplot() +
-  geom_line(data = species_monthly, aes(x = Date, y = n/5)) +
+  geom_line(data = strandings_monthly, aes(x = Date, y = n/5)) +
   geom_line(data = UK_mean_SST, aes(x = Date, y = UK_mean)) +
   scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Monthly stranded species")) +
   labs(x = "Date", y = "Monthly mean SST ("~degree~"C)")
 ```
-
-
-###Playing around with monthly data and different time scales, with different species 
+ 
+ 
+###Playing around with monthly MAX SST
 ```{r setup, include=FALSE}
 #UK monthly max 
 #Change time to date 
@@ -728,12 +656,17 @@ UK_monthly_SST <- mutate(UK_monthly_SST, Date = ymd(Date))
   
 #Monthly max temp and monthly strandings 
 ggplot() +
-  geom_line(data = species_monthly_1970, aes(x = Date, y = n/10)) +
+  geom_line(data = strandings_monthly, aes(x = Date, y = n/10)) +
   geom_line(data = UK_monthly_SST, aes(x = Date, y = Monthly_max)) +
   scale_y_continuous(sec.axis = sec_axis(~.*10, name = "Monthly stranded species")) +
   labs(x = "Date", y = "Monthly maximum SST ("~degree~"C)")
+ 
+```
 
-#Binding monthly max temp and monthly strandings 
+
+###Monthly max SST and monthly strandings 
+```{r setup, include=FALSE}
+#binding monthly max temp and monthly strandings 
 #Not happy with this as this is only one temp from one location which happens to have the highest 
 #value :( 
 #Also changing dates to 01 of the month 
@@ -751,30 +684,30 @@ UK_01_month_max <- UK_01_month_max %>%
   dplyr::rename(Date = monthYear)
 
 #Merging the two datasets 
-monthly_max_species <- merge(UK_01_month_max, species_monthly, all = TRUE, by = c('Date'))
+monthly_max_strandings <- merge(UK_01_month_max, strandings_monthly, all = TRUE, by = c('Date'))
 #Replacing NA with 0 
-monthly_max_species <- monthly_max_species %>%
+monthly_max_strandings <- monthly_max_strandings %>%
   mutate(n = ifelse(is.na(n),0, n))
 
-monthly_max_species <- monthly_max_species %>%
+monthly_max_strandings <- monthly_max_strandings %>%
   dplyr::rename(strandings = n)
 
 #Plot of monthly max temp from one single point - yuck and all monthly strandings 
-ggplot(data = monthly_max_species, aes(x = Monthly_max, y = strandings)) +
+ggplot(data = monthly_max_strandings, aes(x = Monthly_max, y = strandings)) +
   geom_point(size = 0.5) +
-  labs(x = "Monthly max sea surface temperature ("~degree~"(C))", y = "Monthly strandings") +
+  labs(x = "Monthly max sea surface temperature ("~degree~"C)", y = "Monthly strandings") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
 #This doesn't work because of the NAs in my dataset, I think 
-model_all_species <- lm(log(strandings) ~ log(Monthly_max), data = monthly_max_species)
+model_all_species <- lm(log(strandings) ~ log(Monthly_max), data = monthly_max_strandings)
 summary(modelSST)
+
 ```
 
 
+As before, but removing Phocoena phocoena 
 ```{r setup, include=FALSE}
-###Remove Phocoena phocoena 
-###############################################################################################
 #As above but removing Phocoena phocoena  
 #Using UK_01_month_max
 
@@ -783,56 +716,59 @@ summary(modelSST)
 cleaneddata <- read.csv("cleandatesnames.csv")
 #I want all species 
 
-species_window_no_phocoena <- cleaneddata %>%
+strandings_window_no_phocoena <- cleaneddata %>%
   filter(Year %in% c(1913:2015)) %>%
   filter(!Name.Current.Sci %in% c("Phocoena phocoena"))
 
-sapply(species_window_no_phocoena, class)
+sapply(strandings_window_no_phocoena, class)
 #Changing date to "Date". Be cautious of the format: dmy, ymd
-species_window_no_phocoena <- mutate(species_window_no_phocoena, Date = dmy(Date))
+strandings_window_no_phocoena <- mutate(strandings_window_no_phocoena, Date = dmy(Date))
 
 #Splitting my data into strandings per month 
-species_window_no_phocoena$monthYear <- as.Date(as.yearmon(species_window_no_phocoena$Date))
-species_window_no_phocoena$quarterYear <- as.Date(as.yearqtr(species_window_no_phocoena$Date))
-head(species_window_no_phocoena)
+strandings_window_no_phocoena$monthYear <- as.Date(as.yearmon(strandings_window_no_phocoena$Date))
+strandings_window_no_phocoena$quarterYear <- as.Date(as.yearqtr(strandings_window_no_phocoena$Date))
+head(strandings_window_no_phocoena)
 
 #Strandings gathered into months 
-species_monthly_no_phocoena <- head(species_window_no_phocoena %>% group_by(monthYear) %>% dplyr::summarise(n = n()), 9735)
+strandings_monthly_no_phocoena <- head(strandings_window_no_phocoena %>% group_by(monthYear) %>% dplyr::summarise(n = n()), 9735)
 #Strandings per quarter 
-species_quarter_no_phocoena <- head(species_window_no_phocoena %>% group_by(quarterYear) %>% dplyr::summarise(n = n()), 1057)
+strandings_quarter_no_phocoena <- head(strandings_window_no_phocoena %>% group_by(quarterYear) %>% dplyr::summarise(n = n()), 1057)
 
 #Grouping by week number - not really needed - not running properly
 #pp_window$week <- as.Date("1913-01-01")+7*trunc((pp_window$joinTimestamp / 1000)/(3600*24*7))
 
 #Line plot of strandings per month (grouped)
 #Have changed monthYear to Date 
-species_monthly_no_phocoena <- species_monthly_no_phocoena %>%
+strandings_monthly_no_phocoena <- strandings_monthly_no_phocoena %>%
   dplyr::rename(Date = monthYear)
 
 #Monthly strandings 
-ggplot(data = species_monthly_no_phocoena, aes(x = Date, y = log(n), group=1)) +
+ggplot(data = strandings_monthly_no_phocoena, aes(x = Date, y = log(n), group=1)) +
   geom_line() +
   labs(y = "Monthly strandings of Phocoena phocoena")
 
 #Plotting monthly strandings of Phocoena phocoena against monthly max temperatures 
 
-monthly_max_species_no_phocoena <- merge(UK_01_month_max, species_monthly_no_phocoena, all = TRUE, by = c('Date'))
+monthly_max_strandings_no_phocoena <- merge(UK_01_month_max, strandings_monthly_no_phocoena, all = TRUE, by = c('Date'))
 #Replacing NA with 0 
-monthly_max_species_no_phocoena <- monthly_max_species_no_phocoena %>%
+monthly_max_strandings_no_phocoena <- monthly_max_strandings_no_phocoena %>%
   mutate(n = ifelse(is.na(n),0, n))
 
 #Renaming "n" strandings
-monthly_max_species_no_phocoena <- monthly_max_species_no_phocoena %>%
+monthly_max_strandings_no_phocoena <- monthly_max_strandings_no_phocoena %>%
   dplyr::rename(strandings = n)
 
 #Plot of monthly max temp from one single point - yuck and all monthly strandings 
-ggplot(data = monthly_max_species_no_phocoena, aes(x = Monthly_max, y = strandings)) +
+ggplot(data = monthly_max_strandings_no_phocoena, aes(x = Monthly_max, y = strandings)) +
   geom_point(size = 0.5) +
-  labs(x = "Monthly max sea surface temperature ("~degree~"(C))", y = "Monthly strandings (Phocoena phocoena removed)") +
+  labs(x = "Monthly max sea surface temperature ("~degree~"C)", y = "Monthly strandings (Phocoena phocoena removed)") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+```
 
 
+##Plotting all species and then Phocoena seperately
+```{r setup, include=FALSE}
 #Plotting all species and then Phocoena seperately 
 pp_monthly <- pp_monthly %>%
   dplyr::rename(Date = monthYear)
@@ -847,19 +783,43 @@ monthly_max_phocoena <- monthly_max_phocoena %>%
   dplyr::rename(strandings = n)
 
 #Plot of monthly max temp from one single point - yuck and all monthly strandings 
-ggplot(data = monthly_max_species_no_phocoena, aes(x = Monthly_max, y = strandings)) +
+ggplot(data = monthly_max_strandings_no_phocoena, aes(x = Monthly_max, y = strandings)) +
   geom_point(data = monthly_max_phocoena, aes(x = Monthly_max, y = strandings, color = "red")) +
   geom_point(size = 0.5) +
-  labs(x = "Monthly max sea surface temperature ("~degree~"(C))", y = "Monthly strandings", 
+  labs(x = "Monthly max sea surface temperature ("~degree~"C)", y = "Monthly strandings", 
        colour = "Phocoena phocoena") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 ```
 
 
-###Plotting specific species against monthly max SST 
+##Monthly max temp from one location against monthly strandings 
 ```{r setup, include=FALSE}
+#All strandings - monthly max SST 
+#Merging the two datasets 
+monthly_max_strandings <- merge(UK_01_month_max, strandings_monthly, all = TRUE, by = c('Date'))
+#Replacing NA with 0 
+monthly_max_strandings <- monthly_max_strandings %>%
+  mutate(n = ifelse(is.na(n),0, n))
 
+monthly_max_strandings <- monthly_max_strandings %>%
+  dplyr::rename(strandings = n)
+
+#Plot of monthly max temp from one single point - yuck and all monthly strandings 
+ggplot(data = monthly_max_strandings, aes(x = Monthly_max, y = strandings)) +
+  geom_point(size = 0.5) +
+  labs(x = "Monthly max sea surface temperature ("~degree~"(C))", y = "Monthly strandings") +
+  #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
+  geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+#This doesn't work because of the NAs in my dataset, I think 
+model_all_species <- lm(log(strandings) ~ log(Monthly_max), data = monthly_max_species)
+summary(modelSST)
+```
+
+
+Plotting specific species against monthly max SST 
+```{r setup, include=FALSE}
 #Plotting specific species against monthly max SST 
 #Merging the two datasets 
 #Have to get Date into species data too 
@@ -875,71 +835,7 @@ monthly_m_novaengliae <- monthly_m_novaengliae %>%
 #Plot species and max monthly temp 
 ggplot(data = monthly_m_novaengliae, aes(x = Monthly_max, y = n)) +
   geom_point(size = 0.5) +
-  labs(x = "Monthly max sea surface temperature ("~degree~"(C))", y = "Monthly Megaptera novaeangliae strandings") +
+  labs(x = "Monthly max sea surface temperature ("~degree~"C)", y = "Monthly Megaptera novaeangliae strandings") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
-
 ```
-
-
-To do: 
-Strandings and monthly STT max/mean without porpoises 
-
-
-This is as far as I've got with mapping/sense checking the data on a map
-Need to extract all of the UK data to get this working correctly 
-```{r setup, include=FALSE}
-#Modelling temperature for a single day - need to change the code as this currently 
-#gives a global picture 
-library(ggmap)
-library(viridis)
-install.packages("weathermetrics")
-library(weathermetrics)
-
-#This code maps the temp data for the whole planet 
-time_index <- which(format(sst_time, "%Y-%m-%d") == "2016-07-16")
-sst <- nc.get.var.subset.by.axes(ncin, "sst",
-                                 axis.indices = list(T = time_index))
-expand.grid(lon, lat) %>%
-  rename(lon = Var1, lat = Var2) %>%
-  mutate(lon = ifelse(lon > 180, -(360 - lon), lon),
-         sst = as.vector(sst)) %>% 
-  mutate(sst = convert_temperature(sst, "c", "k")) %>%
-  ggplot() + 
-  geom_point(aes(x = lon, y = lat, color = sst),
-             size = 0.8) + 
-  borders("world", colour="black", fill=NA) + 
-  scale_color_viridis(name = "Temperature (C)") + 
-  theme_void() + 
-  coord_quickmap() + 
-  ggtitle("Measured temperature on 2016-07-16",
-          subtitle = "HadISST1") 
-
-
-ts <- as.PCICt(c("1913-01-01", "2016-01-01"), cal="360")
-ts.bounds <- nc.make.time.bounds(ts, unit="month")
-
-ncin
-
-```
-
-
-
-
-
-
-
-
-
-
-
-```
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

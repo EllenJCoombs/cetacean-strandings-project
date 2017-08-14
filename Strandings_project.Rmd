@@ -466,6 +466,52 @@ for(i in seq_along(decades)){
 do.call(grid.arrange, map.list)
 ```
 
+###Species decadal hex maps
+I will use this to show spatial and temporal change for all and each species 
+```{r, include=FALSE}
+
+
+#base.map as before 
+
+map.list <- list()
+# Loop through each of the starting years in "decades"
+for(i in seq_along(decades)){
+  
+  # Define the start and end year of the decade
+  start.year <- decades[i]
+  end.year <- decades[i] + 9
+  # Add a short if statement so that you don't go into the future!
+  if(end.year > 2017){
+    end.year <- 2017
+  }
+  
+  
+  # Use filter to select just the records for that decade
+  one.decade <- filter(ds, Year >= start.year & Year <= end.year)
+  
+  
+  # Add the points to the base map
+  # Create a different map for each decade with a different name
+  # placed into map.list
+  #A few additions for hex plots 
+  map.list[[i]] <- 
+    base.map + 
+    geom_hex(data = one.decade, aes(y = Latitude, x= Longitude), bins = 100, alpha = 0.5) +
+    coord_equal() + 
+    stat_binhex() +
+    scale_fill_gradientn(colours = c("blue", "red")) +
+    theme(axis.line  = element_blank(),
+          axis.text  = element_blank(),
+          axis.ticks = element_blank(),
+          axis.title = element_blank()) +
+    guides(fill = guide_colorbar(title = NULL, ticks = FALSE)) +
+    # Add title with years covered
+    labs(title = paste(start.year, "-", end.year))
+} # end loop
+# Plot all the plots in map.list
+do.call(grid.arrange, map.list)
+```
+
 ###ii. Species richness 
 i.e. Number of species present 
 Species richness increases with sample size, and differences in richness actually may be caused by differences in sample size. To solve this problem, we may try to rarefy species richness to the same number of individuals.
@@ -950,8 +996,7 @@ ggplot() +
 ```
 
 
-Here, I am looking at whether there is a relationship between hunted and stranded species - with regression 
-
+Here, I am looking at whether there is a relationship between hunted and stranded species - just looking at the regression 
 ```{r, include=FALSE}
 
 #Fitting a regression line to whaling and catch data
@@ -1032,13 +1077,14 @@ summary(model_hunted1970)
 
 - I want to be able to add bycatch data to the above plots but am having trouble finding the data 
 - Same with live sightings data - have spoken to Tom Webb and emailed Peter Evans 
-  - OBIS-Seamap is static, have been told to use JCP but this is also static 
+- OBIS-Seamap is static, have been told to use JCP data but this is also static - have looked at both: see "Strandings analysis" Excel doc  
 
 ##D. The 'boring' questions 
 ###i.Sampling effort - county data - need to work out how to get this on the hex plots 
 
+
 UK population plots 
-Can I get an idea of regional population change by looking at the overall country population?                                                                                                                                                                                                                                                                                                                           
+Can I get an idea of regional population change by looking at the overall country population?                                                 
 ```{r, include=FALSE}
 #Looking at UK population as a means of assessing sampling effort 
 #Step one is to see how regional data compares to total population data
@@ -1272,17 +1318,22 @@ p1 <- ggplot(data = pop_vs_strandings, aes(x = POPULATION, y = STRANDINGS)) +
   geom_text(aes(label = YEAR), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
+p1
 #Adding a regression line 
-m <- lm(POPULATION ~ STRANDINGS, data = pop_vs_strandings)
-a <- signif(coef(m)[1])
-b <- signif(coef(m)[2])
-textlab <- paste("y = ",b,"x + ",a, sep="")
+#m <- lm(POPULATION ~ STRANDINGS, data = pop_vs_strandings)
+#a <- signif(coef(m)[1])
+#b <- signif(coef(m)[2])
+#textlab <- paste("y = ",b,"x + ",a, sep="")
 
-p2 <- p1 + geom_smooth(method = lm, formula = y~x) 
+#p2 <- p1 + geom_smooth(method = lm, formula = y~x) 
 
-p3 <- p2 + geom_text(aes(x = 50, y = 700, label = textlab), color="black", size= 3, parse = FALSE)  
+#p3 <- p2 + geom_text(aes(x = 50, y = 700, label = textlab), color="black", size= 3, parse = FALSE)  
 
-plot(p3)
+#plot(p3)
+
+#Data analysis - UK total population vs. yearly strandings 
+model_pop <- lm(log(STRANDINGS) ~ log(POPULATION), data = pop_vs_strandings)
+summary(model_pop)
 
 ```
 
@@ -1292,19 +1343,20 @@ Taking a look at individual species/total number of strandings per year
 
 Need to analyse the data 
 ```{r, include=FALSE}
+library(dplyr)
 #Using the cleaned dataset 
 data <- read.csv("cleaned-data/cleandatesnames.csv") 
 
 #Looking at species by year - a count of each species per year
 speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
-View(speciesbyyear)
+
 #Arranging species by year by count 
 speciesbyyear <- speciesyearcount %>%
   group_by(n, Year, Name.Current.Sci) %>%
   arrange(Year)
 
 #Total each of the years - this is using the totalcount dataset 
-totalcount <- speciesyear %>% count("Year") 
+totalcount <- speciesyear %>% count(Year) 
 
 ggplot(data = speciesyear, aes(x = Year)) +
          geom_histogram(binwidth = 0.5) +
@@ -1312,13 +1364,11 @@ ggplot(data = speciesyear, aes(x = Year)) +
 
 
 #Creating a data table of species, total per year and basic sampling effort 
-library(dplyr)
-yearoverview <- speciesyearcount %>% left_join(totalcount, by="Year") %>%
+yearoverview <- speciesyearcount %>% left_join(totalcount, by = "Year") %>%
   arrange(Year) %>%
-  mutate(sampling = n/freq)
-
-library(readr)
-library(ggplot2) 
+  dplyr::rename(species_stranding = n.x) %>%
+  dplyr::rename(all_strandings = n.y) %>%
+  mutate(sampling = species_stranding/all_strandings)
 
 #ugly graph of sampling effort for all species 
 ggplot(data = yearoverview, aes(x = Year, y = sampling, color = Name.Current.Sci)) +
@@ -1327,6 +1377,7 @@ ggplot(data = yearoverview, aes(x = Year, y = sampling, color = Name.Current.Sci
   theme_bw() +
   labs(title = "sampling effort")
 ```
+
 
 ```{r, include=FALSE}
 sampling_list <- select(yearoverview, Name.Current.Sci, sampling) 

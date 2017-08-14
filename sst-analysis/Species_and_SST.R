@@ -127,14 +127,14 @@ ba_monthly <- ba_monthly %>%
 #UK_mean_01_month <- UK_mean_SST
 
 #Make the SST yearly 
-#UK_mean_01_month$monthYear <- as.Date(as.yearmon(UK_mean_01_month$Date))
-#UK_mean_01_month$quarterYear <- as.Date(as.yearqtr(UK_mean_01_month$Date))
+UK_mean_01_month$monthYear <- as.Date(as.yearmon(UK_mean_01_month$Date))
+UK_mean_01_month$quarterYear <- as.Date(as.yearqtr(UK_mean_01_month$Date))
 #head(UK_mean_01_month)
 
 #Line plot of strandings per month (grouped)
 #Have changed monthYear to Date 
-#ggplot(data = UK_mean_01_month, aes(x = monthYear, y = UK_mean, group=1)) +
-  #geom_line()
+ggplot(data = UK_mean_01_month, aes(x = monthYear, y = UK_mean, group=1)) +
+  geom_line()
 
 
 #library(plyr)
@@ -157,7 +157,7 @@ ggplot(data = combined, aes(x = UK_mean, y = n)) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
 ##########################################################################################
-#Want to plot yearly max temp against yearly strandings 
+#Yearly max temp against yearly strandings 
 #This is total_count 
 
 #Bind STT_yearly max and totalcount 
@@ -487,19 +487,6 @@ ggplot(data = monthly_max_strandings, aes(x = Monthly_max, y = strandings)) +
   labs(x = "Monthly max sea surface temperature ("~degree~"(C))", y = "Monthly strandings") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #This doesn't work because of the NAs in my dataset, I think 
 model_all_species <- lm(log(strandings) ~ log(Monthly_max), data = monthly_max_species)

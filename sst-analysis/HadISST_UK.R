@@ -313,11 +313,9 @@ UK_mean_SST <- UK_Ireland_SST %>%
 #Plotting UK mean temperature 
 bb1 <- ggplot() + 
   geom_point(data = UK_mean_SST, aes(x = time, y = UK_mean, group = 1)) + 
-  geom_smooth(se = FALSE) +
-  scale_colour_gradient(low='yellow', high='#de2d26') +
   labs(y = "SST",
        x = "time") +
-  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
+  ggtitle("Monthly mean sea-surface-temperature, 1870 - 2017",   
           subtitle = "UK mean") + 
   theme_classic()
 
