@@ -78,6 +78,7 @@ names(data)
 
 #Getting rid of the extra X1 column - not sure where this comes from 
 cleaneddata <- select(data, Name.Current.Sci, Name.Common, Latitude, Longitude, County, Year, Date) 
+
 levels(cleaneddata$Name.Current.Sci)
 
 #SPECIES ABUNDANCE 
@@ -197,6 +198,8 @@ pg$data[[2]]$count
 
 ###Abundance - temporal 
 Simple plots of each of the species abundance through time 
+Can be done for any chosen species - this is an example here 
+
 ```{r, include =FALSE}
 library(readr)
 library(ggplot2) 
@@ -315,7 +318,7 @@ plot_all_whale_years(ds, species.col = "Name.Current.Sci", unknowns,
 
 ```{r, include =FALSE}
 #Beaked and bottlenose whales ########################################################
-beakers <- c("Hyperoodon ampullatus", "Mesoplodon densirostris", "Mesoplodon europaeus", "Mesoplodon mirus")
+beakers <- c("Hyperoodon ampullatus", "Mesoplodon densirostris", "Mesoplodon europaeus", "Mesoplodon mirus", "Ziphius cavirostris")
 plot_all_whale_years(ds, species.col = "Name.Current.Sci", beakers,
                      binwidth = 0.5, start.date = 1913, end.date = 2017) 
 ```
@@ -399,36 +402,6 @@ for(i in seq_along(decades)){
 do.call(grid.arrange, map.list)
 ```
 
-###Heat map of all species 
-Individual species can easily be plotted using a modification of the below code 
-This code plots heatmaps of species diversity through time and currently incorporates indiviudal species 
-```{r, include=FALSE}
-library(rgdal)         # for readOGR(...)
-
-sample <- data.frame(Longitude=c(-1+rnorm(50,0,.5),-2+rnorm(50,0,0.5),-4.5+rnorm(50,0,.5)),
-                     Latitude =c(52+rnorm(50,0,.5),54+rnorm(50,0,0.5),56+rnorm(50,0,.5)))
-UKmap <- readRDS("cleaned-data/GBR_adm.rds")
-IRmap <- readRDS("cleaned-data/IRL_adm.rds")
-map.df <- fortify(UKmap)
-ir.df <- fortify(IRmap)
-
-#Adds long and lat points 
-points <- data.frame(
-  long = counts$Longitude,
-  lat = counts$Latitude,
-  count = counts$n)
-
-ggplot(points, aes(x = long, y = lat)) + 
-  stat_density2d(aes(fill = ..level..), alpha = 1, geom ="polygon") +
-  geom_point(colour = "black", size = 0.5)+
-  geom_path(data = map.df, aes(x = long, y = lat, group = group), colour ="grey50") +
-  geom_path(data = ir.df, aes(x = long, y = lat, group = group), colour ="grey50") +
-  scale_fill_gradient2(low = "blue", mid = "yellow", high = "red", space = "Lab", 
-  na.value = "grey50", guide = "colourbar") +
-  xlim(-10,+2.5) +
-  coord_map(xlim = c(-11,3), ylim = c(49,60.9))
-
-```
 
 ###Species heatmaps - example: Lagenorynchus acutus (White-sided dolphin)
 I have produced decadal heatmaps to look at temporal changes over time 
@@ -443,7 +416,7 @@ library(tidyverse)
 library(mapdata)
 #Had to install this to get it running - no idea why - was running fine before without 
 library(mapproj)
-library(grid)
+
 
 cleaneddata <- read.csv("cleaned-data/cleandatesnames.csv")
 
@@ -451,19 +424,9 @@ cleaneddata <- read.csv("cleaned-data/cleandatesnames.csv")
 L_acutus <- cleaneddata %>%
   filter(Name.Current.Sci == "Lagenorhynchus acutus")
 
-# Extract map data
-uk <- map_data("world", regions = c('UK', 'Ireland'))
-# Create base map
-base.map <- 
-  ggplot() +
-  # Add country polygons
-  geom_polygon(data = uk, aes(x = long, y = lat, group = group), 
-               fill = "white", color = "black") + 
 
-# Create a list for the start years of each decade
-decades <- c(seq(from = 1913, to = 2003, by = 10), 2013)
-# Make an empty list that you're going to put all your
-# ggplot maps into
+#base.map is as ab
+
 map.list <- list()
 # Loop through each of the starting years in "decades"
 for(i in seq_along(decades)){
@@ -528,8 +491,11 @@ total_speciesbyyear <- aggregate(speciesbyyear$n, by = speciesbyyear[c('Year')],
 ```{r, include=FALSE}
 #Histogram of species richness 
 ggplot(data = speciesbyyear, aes(x = Year)) +
-  geom_histogram(binwidth = 0.5)
+  geom_histogram(binwidth = 0.5) +
+  ylab("Number of species")
 ```
+
+Playing around with species richness plots 
 
 ```{r, include=FALSE}
 #plot of total species per year 
@@ -545,7 +511,9 @@ ggplot(data = total_speciesbyyear, aes(x = Year, y = x)) +
 #Simpson's diversity index 
 simpson <- diversity(whale.matrix, index = "simpson")
 plot(simpson)
+```
 
+```{r, include=FALSE}
 #Simpson's Diversity Index is a measure of diversity which takes into account the number of species present, as well as the relative abundance of each species. As species richness and evenness increase, so diversity increases.
 #The value of D ranges between 0 and 1. With this index, 1 represents infinite diversity and 0, no diversity.
 #Yearly: 0.5-0.8 for the stranding data 
@@ -554,16 +522,19 @@ plot(simpson)
 shannon <- diversity(whale.matrix, index = "shannon")
 plot(shannon)
 
+
 #Shannon's index accounts for both abundance and evenness of the species present. Typical values are generally between 1.5 and 3.5 in most ecological studies, and the index is rarely greater than 4. The Shannon index increases as both the richness and the evenness of the community increase.
 #Yearly: 1.5-2.5, drops slightly over the decade
+```
 
+```{r, include=FALSE}
 #Beta diversity
 betadiver(help=TRUE)
 betadiver(whale.matrix, method = "j")
 betadiver(whale.matrix, method = "sor")
 betadiver(whale.matrix, method = "w")
 
-#Gamma diversity 
+#Gamma diversity - all species 
 length(unique(speciesbyyear$Name.Current.Sci))
 
 #This adds up species where abundance is not NA
@@ -595,8 +566,6 @@ Chao2
 ```{r, include=FALSE}
 specpool(whale.matrix)
 ```
-Species     chao  chao.se    jack1 jack1.se    jack2     boot  boot.se   n
-All            33 35.64078 3.455292 36.96117 2.429669 37.97059 35.00546 1.346503 103
 
 Chao2 - 35/36?? Number of species 
 
@@ -674,9 +643,9 @@ Seperate Rmd - [Strandings_project.Rmd](Strandings_project.Rmd)
 I have been playing with code to split up data into monthly strandings (total, all species, or for individual species) and also quarterly counts which could be used for looking at seasonal changes 
 
 I used the 'zoo' package to do this 
-This example looks at miltary testing and beaker strandings, but can easily be manipulated to look at any species strandings for any time period 
+I used this code to look at military testing and beaker strandings i.e. split into military testing months/periods to see if there was a link between activity and strandings 
 
-Code is below, but I am still working on it....
+
 ```{r, include=FALSE}
 library(zoo)
 library(dplyr)
@@ -766,6 +735,8 @@ whaling_plot <- rename(whaling_plot, Count = value,
        Name.Current.Sci = variable)
 ```
 
+
+Plotting all catch 
 ```{r, include=FALSE}
 library(ggplot2)
 library(dplyr)
@@ -805,7 +776,7 @@ hunted_stranders_total <- hunted_strandersyear %>%
   arrange(Year)
 ```
 
-Plotting total stranded whales of species that are hunted 
+Plotting total stranded whales of the species that were/are hunted 
 ```{r, include=FALSE}
 
 library(ggplot2)
@@ -860,9 +831,12 @@ Catch_and_strandings <- bind_cols(Total_hunted, Total_hunted_stranders) %>%
                 colour = "Parameter")
   p <- p + theme(legend.position = c(0.8, 0.9))
   p  
+
+```
   
-  
-  
+###Adding some key events to the whaling/catch data plot 
+Ugly plot but this is the general idea! 
+```{r, include=FALSE}
 #This code attempts to add some key events to the above plot - ugly! Need to clean 
 #Attempting to add arrows to the stranding data and whaling graph 
 
@@ -1367,7 +1341,6 @@ ggplot(yearoverview, aes(x = Year, y = sampling)) +
 
 
 #Other plots include: 
-- Bycatch heat maps (supplementary)
 - Focusing on data from CSIP only: 1990 onwards 
 - Military zone plots and beakers (supplementary)
 - Heatmap of shipstrike incidents and physical trauma (supplementary)
