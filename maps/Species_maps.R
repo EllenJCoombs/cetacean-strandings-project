@@ -17,7 +17,7 @@ install.packages("mapproj")
 library(mapproj)
 
 
-nhmcsip <- read.csv("cleaned.data.300517.csv")
+nhmcsip <- read.csv("cleandatesnames.csv")
 # Extract map data
 uk <- map_data("world", regions = c('UK', 'Ireland'))
 # Create base map
