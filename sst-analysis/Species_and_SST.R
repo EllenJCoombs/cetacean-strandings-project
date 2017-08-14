@@ -228,7 +228,7 @@ SST_total_strandings <- SST_total_strandings %>%
 SST_total_strandings <- SST_total_strandings %>%
   select(Year, year_max, species, strandings_total)
 
-#Plotting yearly total species against max yearly SST
+#Plotting yearly total species number against max yearly SST
 ggplot(data = SST_total_strandings, aes(x = year_max, y = species)) +
   geom_point(size = 0.5) +
   geom_text(aes(label = Year), size = 3, vjust = -0.5) +
@@ -250,66 +250,66 @@ library(ggplot2)
 cleaneddata <- read.csv("cleandatesnames.csv")
 #I want all species 
 
-species_window <- cleaneddata %>%
+strandings_window <- cleaneddata %>%
   filter(Year %in% c(1913:2015))
 
-sapply(species_window, class)
+sapply(strandings_window, class)
 #Be cautious of the format: dmy, ymd
-species_window <- mutate(species_window, Date = dmy(Date))
+strandings_window <- mutate(strandings_window, Date = dmy(Date))
 
-sapply(species_window, class)
+sapply(strandings_window, class)
 
 #Splitting my data into strandings per month 
-species_window$monthYear <- as.Date(as.yearmon(species_window$Date))
-species_window$quarterYear <- as.Date(as.yearqtr(species_window$Date))
-head(species_window)
+strandings_window$monthYear <- as.Date(as.yearmon(strandings_window$Date))
+strandings_window$quarterYear <- as.Date(as.yearqtr(strandings_window$Date))
+head(strandings_window)
 
 #Strandings gathered into months 
-species_monthly <- head(species_window %>% group_by(monthYear) %>% dplyr::summarise(n = n()), 17402)
+strandings_monthly <- head(strandings_window %>% group_by(monthYear) %>% dplyr::summarise(n = n()), 17402)
 #Strandings per quarter 
-species_quarter <- head(species_window %>% group_by(quarterYear) %>% dplyr::summarise(n = n()), 1133)
+strandings_quarter <- head(strandings_window %>% group_by(quarterYear) %>% dplyr::summarise(n = n()), 1133)
 
 #Grouping by week number - not really needed - not running properly
 #pp_window$week <- as.Date("1913-01-01")+7*trunc((pp_window$joinTimestamp / 1000)/(3600*24*7))
 
 #Line plot of strandings per month (grouped)
 #Have changed monthYear to Date 
-species_monthly <- species_monthly %>%
+strandings_monthly <- strandings_monthly %>%
   dplyr::rename(Date = monthYear)
 
 #Monthly strandings 
-ggplot(data = species_monthly, aes(x = Date, y = log(n), group=1)) +
+ggplot(data = strandings_monthly, aes(x = Date, y = log(n), group=1)) +
   geom_line() +
   labs(y = "Monthly strandings")
 
-ggplot(species_monthly, aes(n)) +
+ggplot(strandings_monthly, aes(n)) +
   geom_histogram(binwidth = 0.5)
 
 #After 1970 only
 #Can play around with the dates 
-species_monthly_1970 <- species_monthly %>%
+strandings_monthly_1970 <- strandings_monthly %>%
   filter(Date >= "1970-01-01", Date <= "2016-01-01")
 #Plot
-ggplot(data = species_monthly_1970, aes(x = Date, y = log(n), group=1)) +
+ggplot(data = strandings_monthly_1970, aes(x = Date, y = log(n), group=1)) +
   geom_line() +
   labs(y = "Monthly strandings since 1970") 
 
 #Quarterley strandings - split into Jan, April, July and October 
 #Firstly making date 'Date' 
-species_quarter <- species_quarter %>%
+strandings_quarter <- strandings_quarter %>%
   dplyr::rename(Date = quarterYear)
 
-ggplot(data = species_quarter, aes(x = Date, y = log(n), group=1)) +
+ggplot(data = strandings_quarter, aes(x = Date, y = log(n), group=1)) +
   geom_line() +
   labs(y = "Quarterly strandings")
 
 #After 1970 only
 #Can play around with the dates 
-species_quarter_1970 <- species_quarter %>%
+strandings_quarter_1970 <- strandings_quarter %>%
   filter(Date >= "1970-01-01", Date <= "2016-01-01")
 
 #Plot
-ggplot(data = species_quarter_1970, aes(x = Date, y = log(n), group=1)) +
+ggplot(data = strandings_quarter_1970, aes(x = Date, y = log(n), group=1)) +
   geom_line() +
   labs(y = "Quarterly strandings since 1970") 
 
@@ -317,7 +317,7 @@ ggplot(data = species_quarter_1970, aes(x = Date, y = log(n), group=1)) +
 
 #Monthly mean SST against monthly strandings 
 ggplot() +
-  geom_line(data = species_monthly, aes(x = Date, y = n/5)) +
+  geom_line(data = strandings_monthly, aes(x = Date, y = n/5)) +
   geom_line(data = UK_mean_SST, aes(x = Date, y = UK_mean)) +
   scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Monthly stranded species")) +
   labs(x = "Date", y = "Monthly mean SST ("~degree~"C)")
@@ -344,7 +344,7 @@ UK_monthly_SST <- mutate(UK_monthly_SST, Date = ymd(Date))
   
 #Monthly max temp and monthly strandings 
 ggplot() +
-  geom_line(data = species_monthly_1970, aes(x = Date, y = n/10)) +
+  geom_line(data = strandings_monthly_1970, aes(x = Date, y = n/10)) +
   geom_line(data = UK_monthly_SST, aes(x = Date, y = Monthly_max)) +
   scale_y_continuous(sec.axis = sec_axis(~.*10, name = "Monthly stranded species")) +
   labs(x = "Date", y = "Monthly maximum SST ("~degree~"C)")
@@ -367,23 +367,23 @@ UK_01_month_max <- UK_01_month_max %>%
   dplyr::rename(Date = monthYear)
 
 #Merging the two datasets 
-monthly_max_species <- merge(UK_01_month_max, species_monthly, all = TRUE, by = c('Date'))
+monthly_max_strandings <- merge(UK_01_month_max, strandings_monthly, all = TRUE, by = c('Date'))
 #Replacing NA with 0 
-monthly_max_species <- monthly_max_species %>%
+monthly_max_strandings <- monthly_max_strandings %>%
   mutate(n = ifelse(is.na(n),0, n))
 
-monthly_max_species <- monthly_max_species %>%
+monthly_max_strandings <- monthly_max_strandings %>%
   dplyr::rename(strandings = n)
 
 #Plot of monthly max temp from one single point - yuck and all monthly strandings 
-ggplot(data = monthly_max_species, aes(x = Monthly_max, y = strandings)) +
+ggplot(data = monthly_max_strandings, aes(x = Monthly_max, y = strandings)) +
   geom_point(size = 0.5) +
-  labs(x = "Monthly max sea surface temperature ("~degree~"(C))", y = "Monthly strandings") +
+  labs(x = "Monthly max sea surface temperature ("~degree~"C)", y = "Monthly strandings") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
 #This doesn't work because of the NAs in my dataset, I think 
-model_all_species <- lm(log(strandings) ~ log(Monthly_max), data = monthly_max_species)
+model_all_species <- lm(log(strandings) ~ log(Monthly_max), data = monthly_max_strandings)
 summary(modelSST)
 
 
@@ -396,52 +396,52 @@ summary(modelSST)
 cleaneddata <- read.csv("cleandatesnames.csv")
 #I want all species 
 
-species_window_no_phocoena <- cleaneddata %>%
+strandings_window_no_phocoena <- cleaneddata %>%
   filter(Year %in% c(1913:2015)) %>%
   filter(!Name.Current.Sci %in% c("Phocoena phocoena"))
 
-sapply(species_window_no_phocoena, class)
+sapply(strandings_window_no_phocoena, class)
 #Changing date to "Date". Be cautious of the format: dmy, ymd
-species_window_no_phocoena <- mutate(species_window_no_phocoena, Date = dmy(Date))
+strandings_window_no_phocoena <- mutate(strandings_window_no_phocoena, Date = dmy(Date))
 
 #Splitting my data into strandings per month 
-species_window_no_phocoena$monthYear <- as.Date(as.yearmon(species_window_no_phocoena$Date))
-species_window_no_phocoena$quarterYear <- as.Date(as.yearqtr(species_window_no_phocoena$Date))
-head(species_window_no_phocoena)
+strandings_window_no_phocoena$monthYear <- as.Date(as.yearmon(strandings_window_no_phocoena$Date))
+strandings_window_no_phocoena$quarterYear <- as.Date(as.yearqtr(strandings_window_no_phocoena$Date))
+head(strandings_window_no_phocoena)
 
 #Strandings gathered into months 
-species_monthly_no_phocoena <- head(species_window_no_phocoena %>% group_by(monthYear) %>% dplyr::summarise(n = n()), 9735)
+strandings_monthly_no_phocoena <- head(strandings_window_no_phocoena %>% group_by(monthYear) %>% dplyr::summarise(n = n()), 9735)
 #Strandings per quarter 
-species_quarter_no_phocoena <- head(species_window_no_phocoena %>% group_by(quarterYear) %>% dplyr::summarise(n = n()), 1057)
+strandings_quarter_no_phocoena <- head(strandings_window_no_phocoena %>% group_by(quarterYear) %>% dplyr::summarise(n = n()), 1057)
 
 #Grouping by week number - not really needed - not running properly
 #pp_window$week <- as.Date("1913-01-01")+7*trunc((pp_window$joinTimestamp / 1000)/(3600*24*7))
 
 #Line plot of strandings per month (grouped)
 #Have changed monthYear to Date 
-species_monthly_no_phocoena <- species_monthly_no_phocoena %>%
+strandings_monthly_no_phocoena <- strandings_monthly_no_phocoena %>%
   dplyr::rename(Date = monthYear)
 
 #Monthly strandings 
-ggplot(data = species_monthly_no_phocoena, aes(x = Date, y = log(n), group=1)) +
+ggplot(data = strandings_monthly_no_phocoena, aes(x = Date, y = log(n), group=1)) +
   geom_line() +
   labs(y = "Monthly strandings of Phocoena phocoena")
 
 #Plotting monthly strandings of Phocoena phocoena against monthly max temperatures 
 
-monthly_max_species_no_phocoena <- merge(UK_01_month_max, species_monthly_no_phocoena, all = TRUE, by = c('Date'))
+monthly_max_strandings_no_phocoena <- merge(UK_01_month_max, strandings_monthly_no_phocoena, all = TRUE, by = c('Date'))
 #Replacing NA with 0 
-monthly_max_species_no_phocoena <- monthly_max_species_no_phocoena %>%
+monthly_max_strandings_no_phocoena <- monthly_max_strandings_no_phocoena %>%
   mutate(n = ifelse(is.na(n),0, n))
 
 #Renaming "n" strandings
-monthly_max_species_no_phocoena <- monthly_max_species_no_phocoena %>%
+monthly_max_strandings_no_phocoena <- monthly_max_strandings_no_phocoena %>%
   dplyr::rename(strandings = n)
 
 #Plot of monthly max temp from one single point - yuck and all monthly strandings 
-ggplot(data = monthly_max_species_no_phocoena, aes(x = Monthly_max, y = strandings)) +
+ggplot(data = monthly_max_strandings_no_phocoena, aes(x = Monthly_max, y = strandings)) +
   geom_point(size = 0.5) +
-  labs(x = "Monthly max sea surface temperature ("~degree~"(C))", y = "Monthly strandings (Phocoena phocoena removed)") +
+  labs(x = "Monthly max sea surface temperature ("~degree~"C)", y = "Monthly strandings (Phocoena phocoena removed)") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
@@ -460,10 +460,10 @@ monthly_max_phocoena <- monthly_max_phocoena %>%
   dplyr::rename(strandings = n)
 
 #Plot of monthly max temp from one single point - yuck and all monthly strandings 
-ggplot(data = monthly_max_species_no_phocoena, aes(x = Monthly_max, y = strandings)) +
+ggplot(data = monthly_max_strandings_no_phocoena, aes(x = Monthly_max, y = strandings)) +
   geom_point(data = monthly_max_phocoena, aes(x = Monthly_max, y = strandings, color = "red")) +
   geom_point(size = 0.5) +
-  labs(x = "Monthly max sea surface temperature ("~degree~"(C))", y = "Monthly strandings", 
+  labs(x = "Monthly max sea surface temperature ("~degree~"C)", y = "Monthly strandings", 
        colour = "Phocoena phocoena") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
@@ -472,20 +472,33 @@ ggplot(data = monthly_max_species_no_phocoena, aes(x = Monthly_max, y = strandin
 
 #All strandings - monthly max SST 
 #Merging the two datasets 
-monthly_max_species <- merge(UK_01_month_max, species_monthly, all = TRUE, by = c('Date'))
+monthly_max_strandings <- merge(UK_01_month_max, strandings_monthly, all = TRUE, by = c('Date'))
 #Replacing NA with 0 
-monthly_max_species <- monthly_max_species %>%
+monthly_max_strandings <- monthly_max_strandings %>%
   mutate(n = ifelse(is.na(n),0, n))
 
-monthly_max_species <- monthly_max_species %>%
+monthly_max_strandings <- monthly_max_strandings %>%
   dplyr::rename(strandings = n)
 
 #Plot of monthly max temp from one single point - yuck and all monthly strandings 
-ggplot(data = monthly_max_species, aes(x = Monthly_max, y = strandings)) +
+ggplot(data = monthly_max_strandings, aes(x = Monthly_max, y = strandings)) +
   geom_point(size = 0.5) +
   labs(x = "Monthly max sea surface temperature ("~degree~"(C))", y = "Monthly strandings") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #This doesn't work because of the NAs in my dataset, I think 
 model_all_species <- lm(log(strandings) ~ log(Monthly_max), data = monthly_max_species)
@@ -515,7 +528,7 @@ monthly_m_novaengliae <- monthly_m_novaengliae %>%
 #Plot species and max monthly temp 
 ggplot(data = monthly_m_novaengliae, aes(x = Monthly_max, y = n)) +
   geom_point(size = 0.5) +
-  labs(x = "Monthly max sea surface temperature ("~degree~"(C))", y = "Monthly Megaptera novaeangliae strandings") +
+  labs(x = "Monthly max sea surface temperature ("~degree~"C)", y = "Monthly Megaptera novaeangliae strandings") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
