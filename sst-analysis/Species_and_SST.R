@@ -281,7 +281,7 @@ strandings_monthly <- strandings_monthly %>%
 #Monthly strandings 
 ggplot(data = strandings_monthly, aes(x = Date, y = log(n), group=1)) +
   geom_line() +
-  labs(y = "Monthly strandings")
+  labs(y = "Monthly strandings") 
 
 ggplot(strandings_monthly, aes(n)) +
   geom_histogram(binwidth = 0.5)
