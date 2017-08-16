@@ -86,10 +86,10 @@ levels(cleaneddata$Name.Current.Sci)
 #Having a look at how many of each species 
 select(cleaneddata, Name.Current.Sci)
 #'Species' just looking at Name.Current.Sci
-species <- count(cleaneddata, Name.Current.Sci)
+species <- dplyr::count(cleaneddata, Name.Current.Sci)
 #'Speciesyearcount' cleaned data: a count of current scientific name and year 
-speciesyearcount <- count(cleaneddata, Name.Current.Sci, Year)
-species_lat <- count(cleaneddata, Name.Current.Sci, Latitude)
+speciesyearcount <- dplyr::count(cleaneddata, Name.Current.Sci, Year)
+species_lat <- dplyr::count(cleaneddata, Name.Current.Sci, Latitude)
 
 #This is just species and the year - no counting or sorting 
 speciesyear <- select(cleaneddata, Year, Name.Current.Sci)
@@ -524,14 +524,16 @@ library(picante)
 cleaneddata <- read.csv("cleaned-data/cleandatesnames.csv")
 
 #Need to reorder the data
-reordering <- speciesbyyear[c("Year", "n", "Name.Current.Sci")]
+reordering <- speciesyearcount[c("Year", "n", "Name.Current.Sci")]
+
 whale.matrix <- sample2matrix(reordering)
 
 #Number of species per year (prints out values)
 specnumber(whale.matrix)
 
 #Species per year (this incorporates NAs)
-total_speciesbyyear <- aggregate(speciesbyyear$n, by = speciesbyyear[c('Year')], length)
+total_speciesbyyear <- aggregate(speciesyearcount$n, by = speciesyearcount[c('Year')], length)
+
 ```
 
 ```{r, include=FALSE}

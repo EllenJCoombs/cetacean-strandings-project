@@ -3,34 +3,36 @@
 #Splitting data into years and species and then attempting to look at mysticetes seperately 
 #Messy variable names - need to clean 
 
-install.packages("reshape")
 library(dplyr)
 library(tidyverse)
 library(ggplot2)
 library(reshape) 
 
 
-data <- read.csv("cleaned-data/cleandatesnames.csv")
+data <- read.csv("cleandatesnames.csv")
 names(data)
 
 #Getting rid of the extra X1 column - not sure where this comes from 
 cleaneddata <- select(data, Name.Current.Sci, Name.Common, Latitude, Longitude, County, Year, Date) 
 levels(cleaneddata$Name.Current.Sci)
 
-write.csv(cleaneddata, file = "cleaneddata.csv")
+#write.csv(cleaneddata, file = "cleaneddata.csv")
 
 #Having a look at how many of each species 
 select(cleaneddata, Name.Current.Sci)
 #'Species' just looking at Name.Current.Sci
-species <- count(cleaneddata, Name.Current.Sci)
+species <- dplyr::count(cleaneddata, Name.Current.Sci)
 #'Speciesyearcount' cleaned data: a count of current scientific name and year 
-speciesyearcount <- count(cleaneddata, Name.Current.Sci, Year)
-species_lat <- count(cleaneddata, Name.Current.Sci, Latitude)
+speciesyearcount <- dplyr::count(cleaneddata, Name.Current.Sci, Year) %>%
+  na.omit()
+
+species_lat <- dplyr::count(cleaneddata, Name.Current.Sci, Latitude)
 
 
 View(species)
 #This is just species and the year - no counting or sorting 
-speciesyear <- select(cleaneddata, Year, Name.Current.Sci)
+speciesyear <- select(cleaneddata, Year, Name.Current.Sci) %>%
+  na.omit()
 
 
 #Geom_line of all species for every year 
@@ -60,7 +62,9 @@ View(speciesyear)
 
 
 #Looking at species by year - a count of each species per year
-speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum)
+speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum) %>%
+  na.omit()
+
 View(speciesbyyear)
 #Arranging species by year by count 
 speciesbyyear <- speciesyearcount %>%

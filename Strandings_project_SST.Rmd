@@ -479,7 +479,7 @@ combined <- combined %>%
 #Phocoena strandings (monthly) vs monthly SST
 ggplot(data = combined, aes(x = UK_mean, y = n)) +
   geom_point(size = 0.5) +
-  labs(x = "Sea Surface Temperature ("~degree~"(C))", y = "Monthly Balaenoptera acutorostrata strandings") +
+  labs(x = "Sea Surface Temperature ("~degree~"C)", y = "Monthly strandings") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
@@ -495,14 +495,14 @@ SST_total_strandings <- bind_cols(SST_yearly_max, totalcount)
 SST_total_strandings$Year <- NULL
 #rename freq to strandings 
 SST_total_strandings <- SST_total_strandings %>%
-  dplyr::rename(strandings = freq)
+  dplyr::rename(strandings = n)
 
 #write.csv(SST_total_strandings, file = "SST_strandings_UK.csv")
 
 #Yearly strandings total and yearly max temps 
 f1 <- ggplot(data = SST_total_strandings, aes(x = year_max, y = strandings)) +
   geom_point(size = 0.5) +
-  geom_text(aes(label = Year), size = 3, vjust = -0.5) +
+  geom_text(aes(label = year), size = 3, vjust = -0.5) +
   labs(x = "Yearly max. sea surface temperature ("~degree~"C)", y = "Yearly total strandings") +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
@@ -550,7 +550,7 @@ library(lubridate)
 library(zoo)
 library(ggplot2)
 
-cleaneddata <- read.csv("cleandatesnames.csv")
+cleaneddata <- read.csv("cleaned-data/cleandatesnames.csv")
 #I want all species 
 
 strandings_window <- cleaneddata %>%
@@ -637,7 +637,7 @@ ggplot() +
 #UK monthly max 
 #Change time to date 
 
-UK_Ireland_SST_max <- read.csv("UK_Ireland_SST.csv")
+UK_Ireland_SST_max <- read.csv("cleaned-data/UK_Ireland_SST.csv")
 UK_Ireland_SST_max <- UK_Ireland_SST_max %>%
   dplyr::rename(Date = time)
 
@@ -658,7 +658,7 @@ UK_monthly_SST <- mutate(UK_monthly_SST, Date = ymd(Date))
 ggplot() +
   geom_line(data = strandings_monthly, aes(x = Date, y = n/10)) +
   geom_line(data = UK_monthly_SST, aes(x = Date, y = Monthly_max)) +
-  scale_y_continuous(sec.axis = sec_axis(~.*10, name = "Monthly stranded species")) +
+  scale_y_continuous(sec.axis = sec_axis(~.*10, name = "Monthly strandings")) +
   labs(x = "Date", y = "Monthly maximum SST ("~degree~"C)")
  
 ```
@@ -713,7 +713,7 @@ As before, but removing Phocoena phocoena
 
 #Need to remove Phocoena Phocoena from the original dataset 
 
-cleaneddata <- read.csv("cleandatesnames.csv")
+cleaneddata <- read.csv("cleaned-data/cleandatesnames.csv")
 #I want all species 
 
 strandings_window_no_phocoena <- cleaneddata %>%

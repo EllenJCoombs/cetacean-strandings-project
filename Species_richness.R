@@ -64,7 +64,7 @@ plot(whale.curve, ci.type = "poly", col = "blue", ci.col = "lightblue",
 #par(mfrow = c(1,1))
 
 
-#Species per year (this incorporates NAs)
+#Species per year (this no longer incorporates NAs)
 total_speciesbyyear <- aggregate(speciesbyyear$n, by = speciesbyyear[c('Year')], length)
 rarecurve(total_speciesbyyear)
 
