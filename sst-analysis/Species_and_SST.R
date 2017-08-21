@@ -484,7 +484,7 @@ monthly_max_strandings <- monthly_max_strandings %>%
 #Plot of monthly max temp from one single point - yuck and all monthly strandings 
 ggplot(data = monthly_max_strandings, aes(x = Monthly_max, y = strandings)) +
   geom_point(size = 0.5) +
-  labs(x = "Monthly max sea surface temperature ("~degree~"(C))", y = "Monthly strandings") +
+  labs(x = "Monthly max sea surface temperature ("~degree~"C)", y = "Monthly strandings") +
   #geom_text(aes(label = Date), size = 3, vjust = -0.5) +
   geom_smooth(method = lm, se=FALSE, colour = "grey70", size =0.7) 
 
