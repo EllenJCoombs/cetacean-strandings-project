@@ -9,7 +9,7 @@ library(hexbin)
 
 # Extract UK map
 #Added Ireland 
-uk <- map_data("world", regions = c('UK', 'Ireland'))
+uk <- map_data("world", regions = c('UK', 'Ireland', 'Guernsey', 'Jersey', 'Isle of Man'))
 
 # Create base map
 gg1 <- 
@@ -37,7 +37,7 @@ gg1+
 
 # More complex plot, with axes removed, smaller bins, defined colours, and simpler legend
 gg1+
-  geom_hex(data = ds, aes(y = Latitude, x= Longitude), bins = 50, alpha = 0.5) +
+  geom_hex(data = ds, aes(y = Latitude, x= Longitude), bins = 200, alpha = 0.5) +
   scale_fill_gradientn(colours = c("blue", "red")) +
   theme(axis.line  = element_blank(),
         axis.text  = element_blank(),
@@ -60,6 +60,11 @@ pg
 
 # Hex values are in pg$data[[2]]$count
 pg$data[[2]]$count
+
+#Looking at longs 
+pg$data[[2]]$x
+#Looking at lats 
+pg$data[[2]]$y
 
 ###############################################################################################
 #Map as above 
