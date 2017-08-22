@@ -5,20 +5,21 @@
 #Code for renaming columns so that both datsets have the same variables 
 #Code for binding the two datasets together 
 
-
-rm(list = ls())
 #Load libraries/packages
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-
+library(readr)
 
 #read.csv("EDITNHMdata.csv")
-nhm <- read.csv("EDITNHMdata.csv", header = TRUE)
+nhm <- read_csv("EDITNHMdata.csv")
 #read.csv("EDITCSIPdata.csv")
-csip <- read.csv("EDITCSIPdata.csv", header = TRUE)
+csip <- read_csv("EDITCSIPdata.csv")
 names(csip)
 names(nhm)
+
+sapply(csip, class)
+sapply(nhm, class)
 
 str(nhm)#returns the structure of the dataset
 str(csip)
@@ -36,12 +37,15 @@ str(csip)
 
 names(csip)
 names(nhm)
-csip <- rename(csip, County = Local.Authority)
-csip <- rename(csip, Name.Common = Name.common)
-nhm <- rename(nhm, Grid.Ref = Grid.ref)
+csip <- dplyr::rename(csip, County = "Local Authority")
+csip <- rename(csip, Name.Common = "Name common")
+nhm <- rename(nhm, Grid.Ref = "Grid ref")
 nhm <-rename(nhm, Year = year)
 csip <- rename(csip, Year = year)
-csip <- rename(csip, Date = Date.Found)
+csip <- rename(csip, S.W.No. = "National Reference")
+nhm <- rename(nhm, Name.Current.Sci = "Name Current Sci")
+nhm <- rename(nhm, Name.Common = "Name Common")
+csip <- rename(csip, Name.Current.Sci = "Name Current Sci")
 
 
 
@@ -52,7 +56,6 @@ names(csip)
 
 csip$Date #all dates appear in the same format...
 nhm$Date #some dates appear as August 1929 or Summer 1929, code below to clean
-levels(nhm$Date)
 View(nhm)
 
 
@@ -111,8 +114,8 @@ nhm$Date
 
 
 #Select specific coloumns
-selectnhm <- select(nhm, Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
-selectcsip <- select(csip, Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
+selectnhm <- select(nhm, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
+selectcsip <- select(csip, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
 
 #Checking that the above has worked 
 View(selectnhm)
@@ -138,13 +141,11 @@ sapply(selectnhm, class)
 
 #Double checking
 View(selectnhm)
-sapply(selectnhm, class)
-
 
 #Adding the mutated date column 
 #Changing the Latitudes to 'numeric' 
-nhmnew <- select(nhm, Name.Current.Sci, Name.Common, Latitude, Longitude, County, Year)
-nhmnew <- mutate(nhmnew, Latitude = as.numeric(Latitude))
+nhmnew <- select(nhm, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Year)
+#nhmnew <- mutate(nhmnew, Latitude = as.numeric(Latitude))
 nhmfinal <- bind_cols(nhmnew, selectnhm, .id = NULL)
 nhmfinal$Date
 
@@ -155,8 +156,8 @@ nhmfinal
 csip$Date
 csip <- mutate(csip, Date = dmy(Date))
 
-
-csipfinal <- select(csip, Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
+#Selecting all of the variables 
+csipfinal <- select(csip, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
 csipfinal
 
 
@@ -170,12 +171,11 @@ sapply(csipfinal, class)
 nhmcsip <- bind_rows(nhmfinal, csipfinal)
 View(nhmcsip)
 
-nhmfinal$Latitude
 
 
 #Saving the new dataset 
 
-write.csv(nhmcsip, file = "cleandates.csv") 
+write.csv(nhmcsip, file = "cleandatesnames.csv") 
 
 
 #Notes to think about 
