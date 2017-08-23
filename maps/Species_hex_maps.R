@@ -34,8 +34,7 @@ ds <- ds %>%
 # Note that you can change bins and transparency 
 gg1+
   geom_hex(data = ds, aes(y = Latitude, x= Longitude), bins = 25, alpha = 0.5) +
-  scale_fill_gradientn(colours = viridis(4)) +
-  geom_text(data=ds, aes(y = Latitude, x = Longitude, label = S.W.No.), size=2)
+  scale_fill_gradientn(colours = viridis(4))
 
 # More complex plot, with axes removed, smaller bins, defined colours, and simpler legend
 #The lat longs and species S.W.No. were put in for extra detail so that I can remove errorneous values 
