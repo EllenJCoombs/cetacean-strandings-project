@@ -77,7 +77,7 @@ pg$data[[2]]$x
 pg$data[[2]]$y
 
 ###############################################################################################
-#Map as above 
+#Map as above - and then add indicual species 
 
 # Remove NAs from coordinates
 # And restrict to things in UK waters
@@ -127,15 +127,11 @@ pg$data[[2]]$count
 
 ################################################################################################
 #Decadal hex plots 
-install.packages("maps")
-install.packages("mapdata")
 library(maps)
 library(mapdata)
 #Install gridExtra if using grid arrange - if not, use facet_wrap
-install.packages("gridExtra")
 library(gridExtra)
 #Had to install this to get it running - no idea why - was running fine before without 
-install.packages("mapproj")
 library(mapproj)
 library(lubridate)
 
