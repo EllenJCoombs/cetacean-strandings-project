@@ -25,7 +25,7 @@ geomag_monthly_mean <- aggregate(k ~ Year + Month, FUN=mean, data=geomag) %>%
 
 #Plot monthly kp-values 
 ggplot(data = geomag_monthly_mean, aes(x = Year, y = k)) +
-  geom_point() +
+  geom_point() +   
   labs(y = "Kp value")
 
 #Yearly max Kp values 
