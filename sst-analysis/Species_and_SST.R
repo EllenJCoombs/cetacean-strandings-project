@@ -493,13 +493,6 @@ model_all_species <- lm(log(strandings) ~ log(Monthly_max), data = monthly_max_s
 summary(modelSST)
 
 
-
-
-
-
-
-
-
 ###############################################################################################
 #Plotting specific species against monthly max SST 
 #Merging the two datasets 
