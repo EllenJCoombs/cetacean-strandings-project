@@ -77,7 +77,7 @@ pg$data[[2]]$x
 pg$data[[2]]$y
 
 ###############################################################################################
-#Map as above - and then add indicual species 
+#Map as above - and then add individual species 
 
 # Remove NAs from coordinates
 # And restrict to things in UK waters
@@ -136,9 +136,9 @@ library(mapproj)
 library(lubridate)
 
 
-ds <- read.csv("cleandatesnames")
+ds <- read.csv("cleandatesnames.csv")
 # Extract map data
-uk <- map_data("world", regions = c('UK', 'Ireland'))
+uk <- map_data("world", regions = c('UK', 'Ireland', 'Guernsey', 'Jersey', 'Isle of Man'))
 # Create base map
 base.map <- 
   ggplot() + 
