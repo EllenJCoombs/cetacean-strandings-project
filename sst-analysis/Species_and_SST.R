@@ -330,7 +330,7 @@ UK_Ireland_SST_max <- read.csv("UK_Ireland_SST.csv")
 UK_Ireland_SST_max <- UK_Ireland_SST_max %>%
   dplyr::rename(Date = time)
 
-#Specific columns 
+#Specific columns
 UK_monthly_SST <- UK_Ireland_SST_max %>%
   select(Date, Monthly_max)
 
