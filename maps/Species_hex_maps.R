@@ -144,7 +144,7 @@ base.map <-
   ggplot() + 
   # Add country polygons
   geom_polygon(data = uk, aes(x = long, y = lat, group = group), 
-               fill = "white", color = "black") + 
+               fill = "lemonchiffon3", color = "black", size = 0.25, alpha = 0.3) + 
   coord_fixed(1.3) 
   # Remove grey background
   theme_bw() +
@@ -189,10 +189,16 @@ for(i in seq_along(decades)){
     theme(axis.line  = element_blank(),
           axis.text  = element_blank(),
           axis.ticks = element_blank(),
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(),
+          plot.background=element_rect(fill = "white"),
+          panel.background=element_rect(fill= "white"),
+          panel.border = element_rect(colour = "black", fill = NA, size = 0.25),
           axis.title = element_blank()) +
     guides(fill = guide_colorbar(title = NULL, ticks = FALSE)) +
     # Add title with years covered
-    labs(title = paste(start.year, "-", end.year))
+    labs(title = paste(start.year, "-", end.year)) +
+    theme(plot.title = element_text(hjust = 0.5))
 } # end loop
 # Plot all the plots in map.list
 do.call(grid.arrange, map.list)
