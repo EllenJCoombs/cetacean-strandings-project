@@ -144,7 +144,7 @@ base.map <-
   ggplot() + 
   # Add country polygons
   geom_polygon(data = uk, aes(x = long, y = lat, group = group), 
-               fill = "lemonchiffon3", color = "black", size = 0.25, alpha = 0.3) + 
+               fill = "lemonchiffon3", color = "black", size = 0.1, alpha = 0.3) + 
   coord_fixed(1.3) 
   # Remove grey background
   theme_bw() +
