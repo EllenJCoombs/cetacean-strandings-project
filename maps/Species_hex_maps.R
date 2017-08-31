@@ -195,7 +195,7 @@ for(i in seq_along(decades)){
           panel.background=element_rect(fill= "white"),
           panel.border = element_rect(colour = "black", fill = NA, size = 0.25),
           axis.title = element_blank()) +
-    guides(fill = guide_colorbar(title = NULL, ticks = FALSE)) +
+    guides(fill = guide_colorbar(title = "Stranding intensity", ticks = TRUE)) +
     # Add title with years covered
     labs(title = paste(start.year, "-", end.year)) +
     theme(plot.title = element_text(hjust = 0.5))
