@@ -144,8 +144,8 @@ base.map <-
   ggplot() + 
   # Add country polygons
   geom_polygon(data = uk, aes(x = long, y = lat, group = group), 
-               fill = "lemonchiffon3", color = "black", size = 0.1, alpha = 0.3) + 
-  coord_fixed(1.3) 
+               fill = "lemonchiffon3", color = "grey49", size = 0.1, alpha = 0.3) + 
+  coord_fixed(1.3)
   # Remove grey background
   theme_bw() +
   # Remove x and y axes labels and tick marks
@@ -182,10 +182,10 @@ for(i in seq_along(decades)){
   #A few additions for hex plots 
   map.list[[i]] <- 
     base.map + 
-    geom_hex(data = one.decade, aes(y = Latitude, x= Longitude), bins = 100, alpha = 0.5) +
+    geom_hex(data = one.decade, aes(y = Latitude, x= Longitude), bins = 50, alpha = 0.5) +
     coord_equal() + 
     stat_binhex() +
-    scale_fill_gradientn(colours = c("blue", "red")) +
+    scale_fill_gradientn(colours = c("blue1", "red1"), limits=c(1,100)) +
     theme(axis.line  = element_blank(),
           axis.text  = element_blank(),
           axis.ticks = element_blank(),
@@ -193,7 +193,7 @@ for(i in seq_along(decades)){
           panel.grid.minor = element_blank(),
           plot.background=element_rect(fill = "white"),
           panel.background=element_rect(fill= "white"),
-          panel.border = element_rect(colour = "black", fill = NA, size = 0.25),
+          panel.border = element_rect(colour = "white", fill = NA, size = 0.25),
           axis.title = element_blank()) +
     guides(fill = guide_colorbar(title = "Stranding intensity", ticks = TRUE)) +
     # Add title with years covered
@@ -202,8 +202,6 @@ for(i in seq_along(decades)){
 } # end loop
 # Plot all the plots in map.list
 do.call(grid.arrange, map.list)
-
-
 
 
 
