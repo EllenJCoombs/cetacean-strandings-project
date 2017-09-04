@@ -3,6 +3,8 @@
 
 library(rgdal)
 library(dplyr)
+library(sp)
+
 wind1969_1980 <- read.csv("MeanWindSpeed_1969-1980.csv")
 
 # Variables for holding the coordinate system types (see:
@@ -38,3 +40,14 @@ colnames(wind_SP_LL@coords)[colnames(wind_SP_LL@coords) == "Northing"] <- "Latit
 
 head(wind_SP_LL@coords)
 plot(wind_SP_LL)
+
+wind_SP_LL
+
+write.csv(wind_SP_LL, file = "Wind_data_1969_1980.csv")
+
+coords <- wind_SP_LL@coords
+data <- wind_SP_LL@data
+
+
+winds1969 <- SpatialPointsDataFrame(coords=coords, data=wind_SP_LL@data)
+test <- as.data.frame(winds1969)
