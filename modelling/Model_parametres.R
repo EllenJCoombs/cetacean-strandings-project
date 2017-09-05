@@ -53,5 +53,18 @@ write.csv(geomag_yearly_max, file = "Geomag_yearly_global_max.csv")
 ##################################################################################################
 #Species richness 
 
-cleaneddata <- read.csv("cleandatesnames.csv")
+library(vegan)
+library(picante)
 
+cleaneddata <- read.csv("cleandatesnames.csv")
+speciesyearcount <- dplyr::count(cleaneddata, Name.Current.Sci, Year) %>%
+  na.omit()
+
+speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum) %>%
+  na.omit()
+
+reordering <- speciesyearcount[c("Year", "n", "Name.Current.Sci")]
+whale.matrix <- sample2matrix(reordering)
+
+#Number of species per year 
+specnumber(whale.matrix)
