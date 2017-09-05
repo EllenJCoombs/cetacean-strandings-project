@@ -6,10 +6,13 @@ library(ggplot2)
 #for altering my data into presence/absence???
 library(picante)
 
-cleaneddata <- read.csv("cleandatesnames.csv")
+cleaneddata <- read.csv("cleandatesnames.csv") 
 
 #Need to reorder the data
-reordering <- speciesbyyear[c("Year", "n", "Name.Current.Sci")]
+speciesyearcount <- dplyr::count(cleaneddata, Name.Current.Sci, Year) %>%
+  na.omit()
+
+reordering <- speciesyearcount[c("Year", "n", "Name.Current.Sci")]
 whale.matrix <- sample2matrix(reordering)
 
 #Number of species per year 
