@@ -9,7 +9,11 @@ library(tidyr)
 library(ggplot2)
 
 nhmcsip <- read.csv("cleandatesnames.csv") 
-nhmcsip
+
+nhmcsip <- nhmcsip %>% 
+  select(S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Year, Date)
+
+
 names(nhmcsip) 
 
 nhmcsip$Name.Current.Sci
@@ -49,29 +53,32 @@ nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinid "] <- 
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinid"] <- "Unknown delphinid" 
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinidae "] <- "Unknown delphinid" 
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinidae"] <- "Unknown delphinid" 
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenoptera "] <- "Unknown balaenoptera" 
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenopterid"] <- "Unknown balaenoptera"
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenoptera"] <- "Unknown balaenoptera"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenoptera "] <- "Unknown mysticete" 
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenopterid"] <- "Unknown mysticete"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown balaenoptera"] <- "Unknown mysticete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown odontocete "] <- "Unknown odontocete" 
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown odontocete"] <- "Unknown odontocete" 
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Un. mysticete"] <- "Unknown mysticete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. mysticete"] <- "Unknown mysticete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Mysticete "] <- "Unknown mysticete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Mystitcete"] <- "Unknown mysticete"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Mysticete"] <- "Unknown mysticete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Balaenoptera acutorostrata?"] <- "Balaenoptera acutorostrata"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Balaenoptera physalus?"] <- "Balaenoptera physalus"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Phocoena phocoena?"] <- "Phocoena phocoena"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "phocoena phocoena"] <- "Phocoena phocoena"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Mystitcete "] <- "Unknown mysticete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Lagenorhyncus "] <- "Unknown delphinid"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Lagenorhyncus"] <- "Unknown delphinid"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Ziphiidae "]<- "Unknown odontocete"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Ziphiidae"]<- "Unknown odontocete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Physeter catodon"]<- "Physeter macrocephalus"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Lagenorhynchus acutus?"]<- "Lagenorhynchus acutus"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown "]<- "Unknown"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Odontocete"] <- "Unknown odontocete"
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un.  Balaenoptera"] <- "Unknown balaenopterid"
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Balaenoptera"] <- "Unknown balaenopterid"
-nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un.Balaenoptera"] <- "Unknown balaenopterid"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un.  Balaenoptera"] <- "Unknown mysticete"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Balaenoptera"] <- "Unknown mysticete"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un.Balaenoptera"] <- "Unknown mysticete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Delphinidae"] <- "Unknown delphinid"
 replace(nhmcsip$Name.Current.Sci, is.na(nhmcsip$Name.Current.Sci), "Unknown")
 
@@ -80,11 +87,6 @@ View(nhmcsip)
 #putting all in lowercase - this was fir ease of quick tyoing - don't do normally 
 #nhmcsip$Name.Current.Sci<-tolower(nhmcsip$Name.Current.Sci)
 #nhmcsip$Name.Common<-tolower(nhmcsip$Name.Common)
-
-
-#variations in species name 
- 
-nhmcsip$Name.Current.Sci
 
 #Code for using 'replace' instead of base R - not working - not sure why! 
 #replace(nhmcsip$Name.Common, "unknown delphinidae", "unknown delphinid")

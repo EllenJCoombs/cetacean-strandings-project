@@ -18,6 +18,12 @@ whale.matrix <- sample2matrix(reordering)
 #Number of species per year 
 specnumber(whale.matrix)
 
+#Doublecheck
+speciesrichness <- speciesyearcount %>%
+  count(Year)
+  
+
+
 #Alpha diversity 
 #Simpson's diversity index 
 simpson <- diversity(whale.matrix, index = "simpson")
