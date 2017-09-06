@@ -171,7 +171,7 @@ ggplot(data = ler_yearly_max, aes(x = Year, y = K_index, group = 1)) +
 #1940-2015: All 
 
 geomag_had1913 <- geomag_had %>%
-  filter(Year %in% c(1913:1940))
+  filter(Year %in% c(1913:1939))
 
 geom_had1940 <- geomag_had %>%
   filter(Year %in% c(1940:2015))
@@ -189,7 +189,7 @@ geomag_1940_2015 <- bind_cols(geom_ler1940, geom_esk1940, geom_had1940)
 geomag_1940_2015 <- geomag_1940_2015 %>%
   select(Day, Month, Year, Max_daily, Max_daily1, Max_daily2)
 
-write.csv(geomag_1940_2015, file = "Geomag_1940_2015.csv")
+#write.csv(geomag_1940_2015, file = "Geomag_1940_2015.csv")
 
 #Slimming the data down 
 geomag_1940_2015 <- read.csv("Geomag_1940_2015.csv")
@@ -202,8 +202,8 @@ geomag_1940_2015 <- geomag_1940_2015 %>%
 
 #Get yearly max 
 #Rename the variables 
-All_geom_yearly_max <- aggregate(geomag_1940_2015$Max, by = list(geomag_1940_2015), max())
-All_geom_yearly_max <- All_geom_yearly_max %>%
+multiple_stations_max <- aggregate(geomag_1940_2015$Max, by = list(geomag_1940_2015$Year), max) 
+multiple_stations_max <- multiple_stations_max %>%
   rename(Year = Group.1) %>%
   rename(Max_K_index = x)
 
@@ -214,10 +214,13 @@ geomag_1913_max <- geomag_1913_max %>%
   rename(Year = Group.1) %>%
   rename(Max_K_index = x)
 
-#Bind both datasets 
-All_geom_yearly_max <- bind_rows(All_geom_yearly_max, geomag_1913_max)
+#Bind both datasets - 1913 and the 1940
+All_geom_yearly_max <- bind_rows(multiple_stations_max, geomag_1913_max)
 All_geom_yearly_max <- arrange(All_geom_yearly_max, Year)
   
 ggplot(data = All_geom_yearly_max, aes(x = Year, y = Max_K_index, group = 1)) +
   geom_line() +
   labs(y = "Max Kp value")
+
+
+write.csv(All_geom_yearly_max, file = "Final_geom_max.csv")

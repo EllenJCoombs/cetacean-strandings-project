@@ -16,11 +16,18 @@ storms <- storms %>%
   group_by(Year) %>% 
   summarise(count = sum(Count))
 
+#Renaming count to storms 
+storms <- storms %>%
+  rename(Storms = count)
+
 ###################################################################################################
 #Population data 
 #This is a data file that is combined with yearly strandings 
 
 Population <- read.csv("Population_UK.csv")
+Population <- Population %>%
+  rename(Year = YEAR) %>%
+  rename(Population = POPULATION)
 
 
 ###################################################################################################
@@ -69,3 +76,23 @@ whale.matrix <- sample2matrix(reordering)
 #Number of species per year 
 specnumber(whale.matrix)
 
+speciesrichness <- speciesyearcount %>%
+  count(Year)
+
+#rename 
+speciesrichness <- speciesrichness %>%
+  rename(Richness = nn)
+
+#################################################################################################
+#Geomagnetic max daily, max yearly, max station 
+
+Final_geom_max <- read.csv("Final_geom_max.csv")
+Final_geom_max$X <- NULL
+
+#Combining all of the data 
+test <- bind_cols(speciesrichness, Population, storms, Final_geom_max) 
+test$Year1 <- NULL 
+test$Year2 <- NULL
+test$Year3 <- NULL
+
+test
