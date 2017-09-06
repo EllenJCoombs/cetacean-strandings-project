@@ -108,21 +108,21 @@ magnet.data.ler <- map_dfr(files, fix_magnet_data)
 # into characters, which isn't an issue at present
 # but may need fixing later
 
-write.csv(magnet.data.had, file ="Geomag_ler.csv")
+write.csv(magnet.data.ler, file ="Geomag_ler.csv")
 
 
 ################################################################################################
 #Cleaning up the geomag data 
 
-#Firstly the esk.data 
+#Firstly the esk.data (Eskdalemuir)
 geomag_esk <- read.csv("Geomag_esk.csv")
 
 geomag_esk <- geomag_esk %>%
-  select(Day, Month, Year, Mean_daily)
+  select(Day, Month, Year, Mean_daily, Max_daily)
 
 #Take yearly max value 
 #Rename variables 
-esk_yearly_max <- aggregate(geomag_esk$Mean_daily, by = list(geomag_esk$Year), max)
+esk_yearly_max <- aggregate(geomag_esk$Max_daily, by = list(geomag_esk$Year), max)
 esk_yearly_max <- esk_yearly_max %>%
   rename(Year = Group.1) %>%
   rename(K_index = x)
@@ -131,6 +131,93 @@ ggplot(data = esk_yearly_max, aes(x = Year, y = K_index, group = 1)) +
   geom_line() +
   labs(y = "Kp value")
 
-#Yearly mean 
+#Hartland (Had)
+geomag_had <- read.csv("Geomag_had.csv")
+geomag_had <- geomag_had %>%
+  select(Day, Month, Year, Mean_daily, Max_daily)
+
+#Take yearly max value 
+#Rename variables 
+had_yearly_max <- aggregate(geomag_had$Max_daily, by = list(geomag_had$Year), max)
+had_yearly_max <- had_yearly_max %>%
+  rename(Year = Group.1) %>%
+  rename(K_index = x)
+
+ggplot(data = had_yearly_max, aes(x = Year, y = K_index, group = 1)) +
+  geom_line() +
+  labs(y = "Kp value")
 
 
+#Lerwick (Ler) 
+geomag_ler <- read.csv("Geomag_ler.csv")
+geomag_ler <- geomag_ler %>%
+  select(Day, Month, Year, Mean_daily, Max_daily)
+
+#Take yearly max value 
+#Rename variables 
+ler_yearly_max <- aggregate(geomag_ler$Max_daily, by = list(geomag_ler$Year), max)
+ler_yearly_max <- ler_yearly_max %>%
+  rename(Year = Group.1) %>%
+  rename(K_index = x)
+
+ggplot(data = ler_yearly_max, aes(x = Year, y = K_index, group = 1)) +
+  geom_line() +
+  labs(y = "Kp value")
+
+
+###############################################################################################
+#Combining all the data 
+#1913-1940: Had 
+#1940-2015: All 
+
+geomag_had1913 <- geomag_had %>%
+  filter(Year %in% c(1913:1940))
+
+geom_had1940 <- geomag_had %>%
+  filter(Year %in% c(1940:2015))
+
+geom_esk1940 <- geomag_esk %>%
+  filter(Year %in% c(1940:2015))
+
+geom_ler1940 <- geomag_ler %>%
+  filter(Year %in% c(1940:2015))
+
+
+#Combining all of the data 
+geomag_1940_2015 <- bind_cols(geom_ler1940, geom_esk1940, geom_had1940)
+
+geomag_1940_2015 <- geomag_1940_2015 %>%
+  select(Day, Month, Year, Max_daily, Max_daily1, Max_daily2)
+
+write.csv(geomag_1940_2015, file = "Geomag_1940_2015.csv")
+
+#Slimming the data down 
+geomag_1940_2015 <- read.csv("Geomag_1940_2015.csv")
+#Selecting only a few files 
+geomag_1940_2015 <- geomag_1940_2015 %>%
+  select(Day, Month, Year, Mean_max, Max)
+
+geomag_1940_2015 <- geomag_1940_2015 %>%
+  select(Day, Month, Year, Max_daily, Max_daily1, Max_daily2)
+
+#Get yearly max 
+#Rename the variables 
+All_geom_yearly_max <- aggregate(geomag_1940_2015$Max, by = list(geomag_1940_2015), max())
+All_geom_yearly_max <- All_geom_yearly_max %>%
+  rename(Year = Group.1) %>%
+  rename(Max_K_index = x)
+
+#And the same for geom_had1913 
+geomag_1913_max <- aggregate(geomag_had1913$Max_daily, by = list(geomag_had1913$Year), max)
+#rename 
+geomag_1913_max <- geomag_1913_max %>%
+  rename(Year = Group.1) %>%
+  rename(Max_K_index = x)
+
+#Bind both datasets 
+All_geom_yearly_max <- bind_rows(All_geom_yearly_max, geomag_1913_max)
+All_geom_yearly_max <- arrange(All_geom_yearly_max, Year)
+  
+ggplot(data = All_geom_yearly_max, aes(x = Year, y = Max_K_index, group = 1)) +
+  geom_line() +
+  labs(y = "Max Kp value")
