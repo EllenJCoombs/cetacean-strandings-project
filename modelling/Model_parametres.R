@@ -68,3 +68,4 @@ whale.matrix <- sample2matrix(reordering)
 
 #Number of species per year 
 specnumber(whale.matrix)
+

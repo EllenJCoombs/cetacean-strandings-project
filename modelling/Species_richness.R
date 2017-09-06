@@ -22,7 +22,7 @@ specnumber(whale.matrix)
 speciesrichness <- speciesyearcount %>%
   count(Year)
   
-
+write.csv(speciesrichness, file = "richness.csv")
 
 #Alpha diversity 
 #Simpson's diversity index 

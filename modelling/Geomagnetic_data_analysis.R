@@ -59,23 +59,78 @@ require(readr)  # for read_csv()
 require(dplyr)  # for mutate()
 require(tidyr)  # for unnest()
 require(purrr)  # for map(), reduce()
+require(stringr)
 
-#First, the Eskdalemuir (ESK) files 
-files_esk <- dir(pattern = "*.esk")
-files_esk
+# Function to fix the weirdly formatted magnet data
+# Natalie Cooper 2017
 
-data_esk <- files_esk %>% 
- map_dfr(files_esk)
 
-test <- dir(pattern = "*.txt")
-test
-data_test <- test %>%  
-  map_dfr(data_test)
+fix_magnet_data <- function(filename){
+  
+  # Read in the magnet data
+  raw.data <- read_lines(filename)
+  
+  # Make list of column names
+  # You will need to edit these 
+  names.col <- c("Day","Month","Year","Day_number","3_1", "3_2", "3_3", "3_4", "3_5", "3_6", "3_7", "3_8")
+  
+  # Remove whitespace at the front of the first column
+  # Replace spaces with commas
+  # Remove excess commas
+  # Split into columns using commas as delimiters
+  # Outputs a list but with separators in right places
+  fixed.data <- raw.data %>%
+    str_trim() %>%
+    str_replace_all(" ", ",") %>%
+    str_replace_all(",,,,", ",") %>%
+    str_replace_all(",,,", ",") %>%
+    str_replace_all(",,", ",") %>%
+    str_split(",")
+  
+  # Coerce list into a dataframe and name columns
+  df1 <- setNames(do.call(rbind.data.frame, fixed.data), names.col)
+  
+}
 
-data_test <- test %>%
-  map(read_delim, delim = "\t") %>%    
-  reduce(rbind)     
-data_esk
+# To run the code...
 
+# Extract all the files from a folder
+# Due to the weird file extensions you'll need a folder that
+# contains _only_ your magnet data
+files <- list.files()
+
+# Read in the files
+# Tidy them up
+# Combine them all
+magnet.data.ler <- map_dfr(files, fix_magnet_data)
+
+# This may throw some warning messages about making factors 
+# into characters, which isn't an issue at present
+# but may need fixing later
+
+write.csv(magnet.data.had, file ="Geomag_ler.csv")
+
+
+################################################################################################
+#Cleaning up the geomag data 
+
+#Firstly the esk.data 
+geomag_esk <- read.csv("Geomag_esk.csv")
+
+geomag_esk <- geomag_esk %>%
+  select(Day, Month, Year, Mean_daily)
+
+#Take yearly max value 
+#Rename variables 
+esk_yearly_max <- aggregate(geomag_esk$Mean_daily, by = list(geomag_esk$Year), max)
+esk_yearly_max <- esk_yearly_max %>%
+  rename(Year = Group.1) %>%
+  rename(K_index = x)
+#Plot
+ggplot(data = esk_yearly_max, aes(x = Year, y = K_index, group = 1)) +
+  geom_line() +
+  labs(y = "Kp value")
+
+#Yearly mean 
 
 
