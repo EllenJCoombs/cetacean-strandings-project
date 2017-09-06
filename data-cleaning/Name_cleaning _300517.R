@@ -8,7 +8,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-nhmcsip <- read.csv("cleandates.csv")
+nhmcsip <- read.csv("cleandatesnames.csv") 
 nhmcsip
 names(nhmcsip) 
 
@@ -38,6 +38,7 @@ nhmcsip$Name.Common[nhmcsip$Name.Common %in% "un. mysticete"] <- "Unknown mystic
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Unknown odontocete  "] <- "Unknown odontocete" 
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "Un. mysticete"] <- "Unknown mysticete"
 nhmcsip$Name.Common[nhmcsip$Name.Common %in% "un. mysticete"] <- "Unknown mysticete"
+
 #Replace NA with "unknown" - the only replace command that I can get to work 
 replace(nhmcsip$Name.Common, is.na(nhmcsip$Name.Common), "Unknown")
 
@@ -56,6 +57,7 @@ nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown odontocete"] <- 
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Un. mysticete"] <- "Unknown mysticete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. mysticete"] <- "Unknown mysticete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Mysticete "] <- "Unknown mysticete"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Mystitcete"] <- "Unknown mysticete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Balaenoptera acutorostrata?"] <- "Balaenoptera acutorostrata"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Balaenoptera physalus?"] <- "Balaenoptera physalus"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Phocoena phocoena?"] <- "Phocoena phocoena"
@@ -66,6 +68,11 @@ nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Ziphiidae "]<- "Unkn
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Physeter catodon"]<- "Physeter macrocephalus"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Lagenorhynchus acutus?"]<- "Lagenorhynchus acutus"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown "]<- "Unknown"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Odontocete"] <- "Unknown odontocete"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un.  Balaenoptera"] <- "Unknown balaenopterid"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Balaenoptera"] <- "Unknown balaenopterid"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un.Balaenoptera"] <- "Unknown balaenopterid"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Delphinidae"] <- "Unknown delphinid"
 replace(nhmcsip$Name.Current.Sci, is.na(nhmcsip$Name.Current.Sci), "Unknown")
 
 View(nhmcsip)
@@ -78,7 +85,6 @@ View(nhmcsip)
 #variations in species name 
  
 nhmcsip$Name.Current.Sci
-
 
 #Code for using 'replace' instead of base R - not working - not sure why! 
 #replace(nhmcsip$Name.Common, "unknown delphinidae", "unknown delphinid")
