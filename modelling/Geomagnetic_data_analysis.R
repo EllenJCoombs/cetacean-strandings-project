@@ -195,14 +195,14 @@ geomag_1940_2015 <- geomag_1940_2015 %>%
 geomag_1940_2015 <- read.csv("Geomag_1940_2015.csv")
 #Selecting only a few files 
 geomag_1940_2015 <- geomag_1940_2015 %>%
-  select(Day, Month, Year, Mean_max, Max)
+  select(Day, Month, Year, Mean_max, Absolute_max)
 
-geomag_1940_2015 <- geomag_1940_2015 %>%
-  select(Day, Month, Year, Max_daily, Max_daily1, Max_daily2)
+#geomag_1940_2015 <- geomag_1940_2015 %>%
+  #select(Day, Month, Year, Max_daily, Max_daily1, Max_daily2)
 
 #Get yearly max 
 #Rename the variables 
-multiple_stations_max <- aggregate(geomag_1940_2015$Max, by = list(geomag_1940_2015$Year), max) 
+multiple_stations_max <- aggregate(geomag_1940_2015$Absolute_max, by = list(geomag_1940_2015$Year), max) 
 multiple_stations_max <- multiple_stations_max %>%
   rename(Year = Group.1) %>%
   rename(Max_K_index = x)
@@ -215,12 +215,34 @@ geomag_1913_max <- geomag_1913_max %>%
   rename(Max_K_index = x)
 
 #Bind both datasets - 1913 and the 1940
-All_geom_yearly_max <- bind_rows(multiple_stations_max, geomag_1913_max)
-All_geom_yearly_max <- arrange(All_geom_yearly_max, Year)
+All_geom_absolute_max <- bind_rows(multiple_stations_max, geomag_1913_max)
+All_geom_absolute_max <- arrange(All_geom_absolute_max, Year)
   
-ggplot(data = All_geom_yearly_max, aes(x = Year, y = Max_K_index, group = 1)) +
+ggplot(data = All_geom_absolute_max, aes(x = Year, y = Max_K_index, group = 1)) +
   geom_line() +
   labs(y = "Max Kp value")
 
 
-write.csv(All_geom_yearly_max, file = "Final_geom_max.csv")
+write.csv(All_geom_absolute_max, file = "Geom_absolute_max.csv")
+
+##################################################################################################
+#This is doing the same as the above but taking the mean of all the maxes, rather than the 
+#absolute max 
+
+#Need geomag_1940_2015 andtake mean max from this + geomag_had1913 as these are the only records for 
+#1913 - 1939 (so no mean can be taken)
+
+#Get the mean max values from geomag_1940_2015 
+geomag_1940_2015_mean_max <- aggregate(geomag_1940_2015$Mean_max, by = list(geomag_1940_2015$Year), max)
+#Rename for binding 
+geomag_1940_2015_mean_max<- geomag_1940_2015_mean_max %>%
+rename(Year = Group.1) %>%
+  rename(Max_K_index = x)
+
+#Bind with geomag_had1913 
+All_geom_mean_max <- bind_rows(geomag_1940_2015_mean_max, geomag_1913_max)
+All_geom_mean_max <- arrange(All_geom_mean_max, Year)
+
+ggplot(data = All_geom_mean_max, aes(x = Year, y = Max_K_index, group = 1)) +
+  geom_line() +
+  labs(y = "Max Kp value")
