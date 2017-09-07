@@ -183,19 +183,15 @@ G_melas <- G_melas %>%
 
 
 
-ggplot() +
+ab <- ggplot() +
   geom_line(data = D_delphis, aes(x = Year, y = n), col = "deepskyblue") + 
   geom_line(data = B_musculus, aes(x = Year, y = n), col = "red") +
-  geom_line(data = O_orca, aes(x = Year, y = n), col = "turquoise4") +
+  geom_line(data = O_orca, aes(x = Year, y = n), col = "turquoise3") +
+  geom_line(data = B_acutorostrata, aes(x = Year, y = n), col = "darkorchid2") +
   #geom_line(data = G_melas, aes(x = Year, y = n), col = "hotpink3") +
   theme(plot.background=element_rect(fill = "white"), 
   panel.background=element_rect(fill= "white"), 
   axis.line  = element_line(colour = "black")) + 
-  labs(x="Year",y="Stranding count") + 
-  guides(colour = guide_legend())
-
-
-
-
+  labs(x="Year",y="Stranding count")
 
 
