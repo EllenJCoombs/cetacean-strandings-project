@@ -156,7 +156,7 @@ base.map <-
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank())
 # Create a list for the start years of each decade
-decades <- c(seq(from = 1913, to = 2003, by = 10), 2013)
+decades <- c(seq(from = 1913, to = 2003, by = 20), 2013)
 # Make an empty list that you're going to put all your
 # ggplot maps into
 map.list <- list()
@@ -165,7 +165,7 @@ for(i in seq_along(decades)){
   
   # Define the start and end year of the decade
   start.year <- decades[i]
-  end.year <- decades[i] + 9
+  end.year <- decades[i] + 19
   # Add a short if statement so that you don't go into the future!
   if(end.year > 2017){
     end.year <- 2017

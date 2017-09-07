@@ -16,7 +16,7 @@ whale_years_plot <- function(data, species.name = NULL, binwidth = 0.5,
   ggplot(data, aes(x = Year)) +
     geom_histogram(binwidth = binwidth) +
     xlim(start.date, end.date) +
-    theme_bw() +
+    #theme_bw() +
     labs(title = species.name)
 }
 
@@ -81,8 +81,8 @@ plot_all_whale_years <- function(data, species.col, whales,
 library(ggplot2)
 library(gridExtra)
 
-c# Read in the data
-ds <- read_csv("cleaned.data.300517.csv")
+# Read in the data
+ds <- read_csv("cleandatesnames.csv")
 
 # This would get a full list of the whale species
 # But for now we just want a couple as an example
@@ -92,11 +92,14 @@ ds <- read_csv("cleaned.data.300517.csv")
 whales <- whale_list(ds, "Name.Current.Sci")
 
 #If I want to look at just these species 
-whales <- c("delphinus delphis", "phocoena phocoena", "kogia sima", "orcinus orca")
+whales <- c("Delphinus delphis", "Orcinus orca") 
+            
+          #, "phocoena phocoena", "kogia sima", "orcinus orca")
 
 # Plot graphs
 plot_all_whale_years(ds, species.col = "Name.Current.Sci", whales,
-                     binwidth = 0.5, start.date = 1913, end.date = 2017)
+                     binwidth = 0.5, start.date = 1913, end.date = 2015)
+
 
 
 #Mysitcetes ###########################################################################
@@ -140,3 +143,17 @@ nophocoena_odonts <- odontocetes[ !(odontocetes$Name.Current.Sci %in% allphocoen
 ggplot(nophocoena_odonts, aes(x = Year)) +
   stat_count(width = 0.5) +
   facet_wrap(~ Name.Current.Sci)
+
+
+
+D_delpis <- ds %>%
+  filter(Name.Current.Sci == "Delphinus delphis")
+
+ab <- ggplot(D_delpis, aes(x = Year, colour = Name.Current.Sci)) + 
+  stat_count(width = 0.5) +
+  theme_bw()
+  
+ab + coord_cartesian(xlim=c(1913:2015))
+
+
+
