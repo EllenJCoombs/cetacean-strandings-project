@@ -90,7 +90,7 @@ Final_geom <- read.csv("Geom_mean_max.csv")
 Final_geom$X <- NULL
 
 #Combining all of the data 
-test <- bind_cols(speciesrichness, Population, storms, Final_geom) 
+test <- bind_cols(speciesrichness, Population, storms, Final_geom)
 test$Year1 <- NULL 
 test$Year2 <- NULL
 test$Year3 <- NULL
