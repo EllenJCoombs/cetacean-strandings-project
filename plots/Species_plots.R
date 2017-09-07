@@ -146,14 +146,56 @@ ggplot(nophocoena_odonts, aes(x = Year)) +
 
 
 
-D_delpis <- ds %>%
-  filter(Name.Current.Sci == "Delphinus delphis")
+T_truncatus <- ds %>%
+  filter(Name.Current.Sci == "Tursiops truncatus")
 
-ab <- ggplot(D_delpis, aes(x = Year, colour = Name.Current.Sci)) + 
-  stat_count(width = 0.5) +
-  theme_bw()
-  
-ab + coord_cartesian(xlim=c(1913:2015))
+T_truncatus <- T_truncatus %>%
+  select(Year, Name.Current.Sci) %>%
+  count(Year)
+
+B_musculus <- ds %>%
+  filter(Name.Current.Sci == "Balaenoptera musculus")
+
+B_musculus <- B_musculus %>%
+  select(Year, Name.Current.Sci) %>%
+  count(Year)
+
+O_orca <- ds %>%
+  filter(Name.Current.Sci == "Orcinus orca")
+
+O_orca <- O_orca %>%
+  select(Year, Name.Current.Sci) %>%
+  count(Year)
+
+B_acutorostrata <- ds %>%
+  filter(Name.Current.Sci == "Balaenoptera acutorostrata")
+
+B_acutorostrata <- B_acutorostrata %>%
+  select(Year, Name.Current.Sci) %>%
+  count(Year)
+
+G_melas <- ds %>%
+  filter(Name.Current.Sci == "Globicephala melas")
+
+G_melas <- G_melas %>%
+  select(Year, Name.Current.Sci) %>%
+  count(Year)
+
+
+
+ggplot() +
+  geom_line(data = D_delphis, aes(x = Year, y = n), col = "deepskyblue") + 
+  geom_line(data = B_musculus, aes(x = Year, y = n), col = "red") +
+  geom_line(data = O_orca, aes(x = Year, y = n), col = "turquoise4") +
+  #geom_line(data = G_melas, aes(x = Year, y = n), col = "hotpink3") +
+  theme(plot.background=element_rect(fill = "white"), 
+  panel.background=element_rect(fill= "white"), 
+  axis.line  = element_line(colour = "black")) + 
+  labs(x="Year",y="Stranding count") + 
+  guides(colour = guide_legend())
+
+
+
 
 
 
