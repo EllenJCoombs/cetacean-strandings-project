@@ -246,3 +246,5 @@ All_geom_mean_max <- arrange(All_geom_mean_max, Year)
 ggplot(data = All_geom_mean_max, aes(x = Year, y = Max_K_index, group = 1)) +
   geom_line() +
   labs(y = "Max Kp value")
+
+write.csv(All_geom_mean_max, file = "Geom_mean_max.csv")
