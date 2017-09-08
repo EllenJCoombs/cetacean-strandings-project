@@ -96,3 +96,7 @@ test$Year2 <- NULL
 test$Year3 <- NULL
 
 write.csv(test, file = "Model_data.csv")
+
+
+labels(test)
+sapply(test, class)
