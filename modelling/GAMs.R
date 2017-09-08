@@ -40,3 +40,56 @@ b_t <- gam(Richness ~ offset(log(Population)) + s(Year) +s(Storms, k = 4) +s(Max
            family=poisson())
 
 summary(b_t)
+plot(b_t)
+
+# get the AIC
+AIC(b_t)
+
+par(mfrow=c(2,2))
+# compare k' column to edf if close, double k
+gam.check(b_t)
+
+
+# residuals look wacky (quantile-quantile plot not matching red line)
+# increasing variance in resids. vs. linear pred. plot
+# try quasi poisson?
+b_t <- gam(Richness ~ offset(log(Population)) + s(Year) +s(Storms, k = 4) +s(Max_K_index, k=4), data=Model_data, method = "REML",
+           family=quasipoisson())
+
+summary(b_t)
+plot(b_t)
+
+par(mfrow=c(2,2))
+gam.check(b_t)
+
+
+# lets be fancy!
+# Tweedie
+# set a=1.2 because things get weird if less than 1.2
+b_t <- gam(Richness ~ offset(log(Population)) + s(Year) +s(Storms, k = 4) +s(Max_K_index, k=4), data=Model_data, method = "REML",
+           family=tw(a=1.2))
+
+summary(b_t)
+plot(b_t)
+
+par(mfrow=c(2,2))
+gam.check(b_t)
+
+# make predictions - useful if I have loads of missing data 
+b_t <- gam(Richness ~ offset(log(Population)) + s(Year), data=Model_data, method = "REML",
+           family=tw(a=1.2))
+
+plot_data <- Model_data
+predict_Richness <- predict(b_t, newdata=Model_data, type="response", se.fit=TRUE)
+plot_data$predict_Richness <- predict_Richness$fit
+plot_data$upper_Richness <- predict_Richness$fit + 2*predict_Richness$se.fit
+plot_data$lower_Richness <- predict_Richness$fit - 2*predict_Richness$se.fit
+
+plot(plot_data[,c("Year", "Richness")])
+# a bit jagged
+lines(plot_data[,c("Year", "predict_Richness")])
+lines(plot_data[,c("Year", "upper_Richness")], lty=2)
+lines(plot_data[,c("Year", "lower_Richness")], lty=2)
+rug(plot_data$Year)
+
+
