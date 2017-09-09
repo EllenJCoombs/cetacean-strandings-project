@@ -92,4 +92,24 @@ lines(plot_data[,c("Year", "upper_Richness")], lty=2)
 lines(plot_data[,c("Year", "lower_Richness")], lty=2)
 rug(plot_data$Year)
 
+#Playing around with data that has missing values (here population during the war years)
+test_data <- read.csv("test_data.csv")
 
+b_t <- gam(Richness ~ offset(log(Population)) + s(Year), data=Model_data, method = "REML",
+           family=tw(a=1.2))
+
+plot_data <- test_data
+predict_Richness <- predict(b_t, newdata=test_data, type="response", se.fit=TRUE)
+predict_Richness
+
+plot_data$predict_Richness <- predict_Richness$fit
+plot_data$upper_Richness <- predict_Richness$fit + 2*predict_Richness$se.fit
+plot_data$lower_Richness <- predict_Richness$fit - 2*predict_Richness$se.fit
+
+plot(plot_data[,c("Year", "Richness")])
+# a bit jagged
+lines(plot_data[,c("Year", "predict_Richness")])
+lines(plot_data[,c("Year", "upper_Richness")], lty=2)
+lines(plot_data[,c("Year", "lower_Richness")], lty=2)
+#Shows you which years you have data for 
+rug(plot_data$Year)
