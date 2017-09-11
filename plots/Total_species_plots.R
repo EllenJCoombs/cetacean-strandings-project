@@ -118,14 +118,12 @@ ggplot(sortedodonts, aes(x = Year, y = n, color = Name.Current.Sci)) +
 
 
 #Splitting out baleen whales - must be a better way to use filter....
-bphysalus <- filter(speciesyear, Name.Current.Sci ==  "balaenoptera physalus") 
-bactorostrata <- filter(speciesyear, Name.Current.Sci ==  "balaenoptera acutorostrata") 
-bborealis <- filter(speciesyear, Name.Current.Sci ==  "balaenoptera borealis")
-bmusculus <- filter(speciesyear, Name.Current.Sci ==  "balaenoptera musculus") 
-unmysticete <- filter(speciesyear, Name.Current.Sci ==  "unknown mysticete") 
-unbalaenopterid <- filter(speciesyear, Name.Current.Sci ==  "unknown balaenoptera") 
-mysticete <- filter(speciesyear, Name.Current.Sci == "un. mystitcete")
-mnovaeangliae <- filter(speciesyear, Name.Current.Sci == "megaptera novaeangliae") 
+bphysalus <- filter(speciesyear, Name.Current.Sci ==  "Balaenoptera physalus") 
+bactorostrata <- filter(speciesyear, Name.Current.Sci ==  "Balaenoptera acutorostrata") 
+bborealis <- filter(speciesyear, Name.Current.Sci ==  "Balaenoptera borealis")
+bmusculus <- filter(speciesyear, Name.Current.Sci ==  "Balaenoptera musculus") 
+unmysticete <- filter(speciesyear, Name.Current.Sci ==  "Unknown mysticete") 
+mnovaeangliae <- filter(speciesyear, Name.Current.Sci == "Megaptera novaeangliae") 
 
 
 
@@ -189,6 +187,13 @@ colors()
 bind_cols(sortodontscount, sortmystcount) 
 
 write.csv(mysticetes, file = "Mysticetes.csv")
+
+#Seperate species plots
+
+
+ggplot(D_delphis, aes(x = Year)) +
+  stat_count(width = 0.5) +
+  scale_y_continuous(breaks = seq(0, 200, 10), lim = c(0, 200))
 
 
 

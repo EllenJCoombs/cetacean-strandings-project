@@ -92,13 +92,13 @@ ds <- read_csv("cleandatesnames.csv")
 whales <- whale_list(ds, "Name.Current.Sci")
 
 #If I want to look at just these species 
-whales <- c("Delphinus delphis", "Orcinus orca") 
+whales <- c("Delphinus delphis", "Orcinus orca", "B") 
             
           #, "phocoena phocoena", "kogia sima", "orcinus orca")
 
 # Plot graphs
 plot_all_whale_years(ds, species.col = "Name.Current.Sci", whales,
-                     binwidth = 0.5, start.date = 1913, end.date = 2015)
+                     binwidth = 0.5, start.date = 1913, end.date = 2017)
 
 
 
@@ -187,7 +187,8 @@ ab <- ggplot() +
   #geom_line(data = D_delphis, aes(x = Year, y = n), col = "deepskyblue") + 
   geom_line(data = B_musculus, aes(x = Year, y = n), col = "red") +
   geom_line(data = O_orca, aes(x = Year, y = n), col = "honeydew4") +
-  geom_line(data = B_acutorostrata, aes(x = Year, y = n), col = "darkorchid2") +
+  geom_line(data = B_acutorostrata, aes(x = Year, y = n), col = "darkorchid2") + 
+  #geom_line(data = B_physalus, aes(x = Year, y = n), col = "black") +
   #geom_line(data = G_melas, aes(x = Year, y = n), col = "hotpink3") +
   theme(plot.background=element_rect(fill = "white"), 
   panel.background=element_rect(fill= "white"), 
@@ -195,3 +196,4 @@ ab <- ggplot() +
   labs(x="Year",y="Stranding count")
 
 
+ab
