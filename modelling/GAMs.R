@@ -42,7 +42,11 @@ b_t <- gam(Richness ~ offset(log(Population)) + s(Year) +s(Storms, k = 4) +s(Max
 summary(b_t)
 plot(b_t)
 
-# get the AIC
+# get the AIC - the lower the better - this gives you an idea of whether extra parametres added 
+#to a model are worth it for the added analysis/complexity, or whether the simpler model with fewer 
+#parametres is better 
+
+
 AIC(b_t)
 
 par(mfrow=c(2,2))
