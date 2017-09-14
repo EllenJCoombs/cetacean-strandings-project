@@ -5,3 +5,6 @@
 .DS_Store
 .pdf
 .Rapp.history
+.gitignore
+.Rbuildignore
+pacman.Rproj
