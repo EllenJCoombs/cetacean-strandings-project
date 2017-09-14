@@ -89,11 +89,21 @@ speciesrichness <- speciesrichness %>%
 Final_geom <- read.csv("Geom_mean_max.csv")
 Final_geom$X <- NULL
 
+##################################################################################################
+#Organisational counts 
+
+orgs <- read.csv("Organisations.csv")
+#Picked up NAs for some reason: filter and then replace count with orgs 
+orgs <- orgs %>%
+  filter(Year %in% c(1913:2015)) %>%
+  rename(Organisations = Count)
+
 #Combining all of the data 
-test <- bind_cols(speciesrichness, Population, storms, Final_geom)
+test <- bind_cols(speciesrichness, Population, storms, Final_geom, orgs)
 test$Year1 <- NULL 
 test$Year2 <- NULL
 test$Year3 <- NULL
+test$Year4 <- NULL 
 
 write.csv(test, file = "Model_data.csv")
 
