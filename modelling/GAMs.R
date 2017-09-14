@@ -12,20 +12,24 @@ summary(b_t)
 plot(b_t)
 
 
-# not enough unique values of storms? How many are there?
+# not enough unique values of storms? How many are there? 
+#This is useful when deciding the K value 
 unique(Model_data$Storms)
 
+unique(Model_data$Organisations)
 
 #Running my own models 
-#Be aware of the k value - the model might be over complicating the data (e.g. assuming more values
+#Be aware of the k value - the model might be over complicating the data 
+#(e.g. assuming more values
 #when we only have 4 different categories)
 
 #Here this model is looking at Richness, offset by population and the smooths are "Year" and "Storms"
 b_t <- gam(Richness ~ offset(log(Population)) + s(Year) +s(Storms, k=4), data=Model_data, method = "REML",
            family=poisson())
 
-unique(Model_data$Max_K_index)
 #Just looking at geogmagnetic data and year 
+unique(Model_data$Max_K_index)
+
 #It has 5 categories so using a K value of 4 
 b_t <- gam(Richness ~ offset(log(Population)) + s(Year) +s(Max_K_index, k=4), data=Model_data, method = "REML",
            family=poisson())
@@ -43,8 +47,8 @@ summary(b_t)
 plot(b_t)
 
 # get the AIC - the lower the better - this gives you an idea of whether extra parametres added 
-#to a model are worth it for the added analysis/complexity, or whether the simpler model with fewer 
-#parametres is better 
+# to a model are worth it for the added analysis/complexity, or whether the simpler model with fewer 
+# parametres is better 
 
 AIC(b_t)
 
@@ -95,7 +99,8 @@ lines(plot_data[,c("Year", "upper_Richness")], lty=2)
 lines(plot_data[,c("Year", "lower_Richness")], lty=2)
 rug(plot_data$Year)
 
-#Playing around with data that has missing values (here population during the war years)
+#Can't get this to work....
+#Playing around with data that has missing values (here richness during and around the war years)
 test_data <- read.csv("test_data.csv")
 
 b_t <- gam(Richness ~ offset(log(Population)) + s(Year), data=Model_data, method = "REML",
@@ -116,3 +121,32 @@ lines(plot_data[,c("Year", "upper_Richness")], lty=2)
 lines(plot_data[,c("Year", "lower_Richness")], lty=2)
 #Shows you which years you have data for 
 rug(plot_data$Year)
+
+
+#Here this model is looking at Richness, offset by population and the smooths 
+#are "Year" and "Organisations"
+
+b_t <- gam(Richness ~ offset(log(Population)) + s(Year) +s(Organisations), data=Model_data, method = "REML",
+           family=tw(a=1.2))
+
+summary(b_t)
+plot(b_t)
+
+par(mfrow=c(2,2))
+gam.check(b_t)
+
+AIC(b_t)
+
+#Shoving everything into the model 
+b_t <- gam(Richness ~ offset(log(Population)) + s(Year) +s(Storms, k = 4) +s(Max_K_index, k=4) +s(Organisations), data=Model_data, method = "REML",
+           family=tw(a=1.2))
+
+summary(b_t)
+plot(b_t)
+
+par(mfrow=c(2,2))
+gam.check(b_t)
+
+#This gives an AIC score 3 points higher - is the model complexity really worth it? 
+#Model only explains .3 more of the variation 
+AIC(b_t)
