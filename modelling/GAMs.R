@@ -26,7 +26,7 @@ b_t <- gam(Richness ~ offset(log(Population)) + s(Year) +s(Storms, k=4), data=Mo
 
 unique(Model_data$Max_K_index)
 #Just looking at geogmagnetic data and year 
-#It has 5 so using a K value of 4 
+#It has 5 categories so using a K value of 4 
 b_t <- gam(Richness ~ offset(log(Population)) + s(Year) +s(Max_K_index, k=4), data=Model_data, method = "REML",
            family=poisson())
 
@@ -45,7 +45,6 @@ plot(b_t)
 # get the AIC - the lower the better - this gives you an idea of whether extra parametres added 
 #to a model are worth it for the added analysis/complexity, or whether the simpler model with fewer 
 #parametres is better 
-
 
 AIC(b_t)
 
