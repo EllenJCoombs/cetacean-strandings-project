@@ -53,11 +53,12 @@ unknowns <- speciesyearcount %>%
 
 #Selecting out species with identities from unknowns 
 Species_ident <- speciesyearcount[ !(speciesyearcount$Name.Current.Sci %in% unknowns$Name.Current.Sci), ]
-View(odontocetes)
+
 
 
 #Geom_line of all species for every year 
-ggplot(data = Species_ident, aes(x = Year, y = n, colour= Name.Current.Sci))+
+#Can plot unknowns using "unknowns" 
+ggplot(data = unknowns, aes(x = Year, y = n, colour= Name.Current.Sci))+
   theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
   labs(x = "Year", y = "Species count") +
   geom_line() +
