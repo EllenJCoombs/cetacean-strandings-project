@@ -10,10 +10,11 @@ library(reshape)
 
 
 data <- read.csv("cleandatesnames.csv")
-names(data)
+data$X.1 <- NULL
+data$X <- NULL
 
 #Getting rid of the extra X1 column - not sure where this comes from 
-cleaneddata <- select(data, Name.Current.Sci, Name.Common, Latitude, Longitude, County, Year, Date) 
+cleaneddata <- select(data, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Year, Date) 
 levels(cleaneddata$Name.Current.Sci)
 
 #write.csv(cleaneddata, file = "cleaneddata.csv")
@@ -42,6 +43,27 @@ ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Name.Current.Sci))+
   geom_line() +
   scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE) + 
   facet_wrap(~ Name.Current.Sci)
+
+#The unknowns 
+
+unknowns <- speciesyearcount %>%
+  filter(Name.Current.Sci %in% c("Unknown", "Unknown delphinid", "Unknown mysticete", 
+                                 "Unknown odontocete"))
+
+
+#Selecting out species with identities from unknowns 
+Species_ident <- speciesyearcount[ !(speciesyearcount$Name.Current.Sci %in% unknowns$Name.Current.Sci), ]
+View(odontocetes)
+
+
+#Geom_line of all species for every year 
+ggplot(data = Species_ident, aes(x = Year, y = n, colour= Name.Current.Sci))+
+  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
+  labs(x = "Year", y = "Species count") +
+  geom_line() +
+  scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE)
+
+
 
 
 #Plot of all species - ugly histogram 

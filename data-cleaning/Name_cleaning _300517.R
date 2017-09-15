@@ -80,6 +80,7 @@ nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un.  Balaenoptera"] <- "
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Balaenoptera"] <- "Unknown mysticete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un.Balaenoptera"] <- "Unknown mysticete"
 nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "un. Delphinidae"] <- "Unknown delphinid"
+nhmcsip$Name.Current.Sci[nhmcsip$Name.Current.Sci %in% "Unknown delphinid "] <- "Unknown delphinid"
 replace(nhmcsip$Name.Current.Sci, is.na(nhmcsip$Name.Current.Sci), "Unknown")
 
 View(nhmcsip)
