@@ -63,6 +63,8 @@ gg2 <- gg1+
   geom_hex(data = ds, aes(y = Latitude, x= Longitude), bins = 100, alpha = 0.5) +
   scale_fill_gradientn(colours = viridis(4))
 
+gg2
+
 pg <- ggplot_build(gg2)
 
 # Look at this object
