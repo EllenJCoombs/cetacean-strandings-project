@@ -110,3 +110,9 @@ write.csv(test, file = "Model_data.csv")
 
 labels(test)
 sapply(test, class)
+
+###############################################################################################
+#SST
+#Yearly max recorded temperature taken from 14 different places around the UK and Ireland 
+
+

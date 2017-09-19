@@ -308,7 +308,7 @@ ggplot() +
 
 #Plot the mean SST
 UK_mean_SST <- UK_Ireland_SST %>%
-  select(time, UK_mean) 
+  dplyr::select(time, UK_mean) 
 
 #Plotting UK mean temperature 
 bb1 <- ggplot() + 
@@ -329,6 +329,14 @@ bb1
 
 ##########################################################################################
 #Extracting yearly max SST data 
+
+#Renaming uk_mean_SST columns 
+
+UK_mean_SST <- UK_mean_SST %>%
+  dplyr::rename(Date = time)
+
+#Had to make it a as.Date first 
+UK_mean_SST <- mutate(UK_mean_SST, Date = as.Date(Date))
 
 #Splitting SST into day, month, year 
 df <- data.frame(date = UK_mean_SST$Date,
@@ -356,6 +364,9 @@ ggplot(data = SST_yearly_max, aes(x = year, y = year_max)) +
   ggtitle("Yearly maximum UK sea-surface-temperature (SST) (1913 - 2015)",
           subtitle = "Average taken from 14 sites closest to chosen model grid points") + 
   theme_classic()
+
+
+write.csv(SST_yearly_max, file = "SST_yearly_max.csv")
 
 
 #####################################################
