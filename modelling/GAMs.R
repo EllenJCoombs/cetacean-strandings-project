@@ -5,7 +5,7 @@ Model_data <- read.csv("Model_data.csv")
 Model_data$X <- NULL 
 
 
-b_a <- gam(Richness ~ offset(log(Population)) + s(Year) +s(Storms, k=4), data=Model_data, method = "REML",
+b_a <- gam(Richness ~ offset(log(Population)) + s(Year), data=Model_data, method = "REML",
            family=poisson())
 
 summary(b_a)
@@ -180,3 +180,20 @@ plot(b_l)
 par(mfrow=c(2,2))
 gam.check(b_l)
 AIC(b_l)
+
+
+
+#Stranding events 
+b_m <- gam(Stranding_count ~ offset(log(Population)) + s(Year) +s(Max_SST_temp), data=Model_data, method = "REML",
+           family=tw(a=1.2))
+
+summary(b_m)
+plot(b_m)
+
+par(mfrow=c(2,2))
+gam.check(b_m)
+AIC(b_m)
+
+
++s(Year) +s(Storms, k = 4) +s(Max_K_index, k=4) +s(Organisations) +s(Max_SST_temp)
++s(Storms, k =4) +s(Max_K_index, k=4) +s(Organisations)

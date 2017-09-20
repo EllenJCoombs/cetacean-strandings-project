@@ -104,17 +104,32 @@ orgs <- orgs %>%
 
 SST_yearly_max <- read.csv("SST_yearly.max.csv")
 test <- bind_cols(speciesrichness, Population, storms, Final_geom, orgs, SST_yearly_max)
+
+test <- test %>% 
+  dplyr::rename(Max_SST_temp = year_max)
+
+###############################################################################################
+#Stranding events 
+
+stranding_events_count <- read.csv("Stranding_events_count.csv")
+stranding_events_count$X <- NULL
+
+test <- bind_cols(speciesrichness, Population, storms, Final_geom, 
+                  orgs, SST_yearly_max, stranding_events_count)
+
 test$Year1 <- NULL 
 test$Year2 <- NULL
 test$Year3 <- NULL
 test$Year4 <- NULL 
 test$year <- NULL
+test$Year5 <- NULL
+
 
 test <- test %>% 
-  dplyr::rename(Max_SST_temp = year_max)
+  dplyr::rename(Stranding_count = n)
 
 
-labels(test)
-sapply(test, class)
 write.csv(test, file = "Model_data.csv")
+
+
 
