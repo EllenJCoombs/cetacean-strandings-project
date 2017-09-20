@@ -98,21 +98,23 @@ orgs <- orgs %>%
   filter(Year %in% c(1913:2015)) %>%
   rename(Organisations = Count)
 
-#Combining all of the data 
-test <- bind_cols(speciesrichness, Population, storms, Final_geom, orgs)
-test$Year1 <- NULL 
-test$Year2 <- NULL
-test$Year3 <- NULL
-test$Year4 <- NULL 
-
-write.csv(test, file = "Model_data.csv")
-
-
-labels(test)
-sapply(test, class)
-
 ###############################################################################################
 #SST
 #Yearly max recorded temperature taken from 14 different places around the UK and Ireland 
 
+SST_yearly_max <- read.csv("SST_yearly.max.csv")
+test <- bind_cols(speciesrichness, Population, storms, Final_geom, orgs, SST_yearly_max)
+test$Year1 <- NULL 
+test$Year2 <- NULL
+test$Year3 <- NULL
+test$Year4 <- NULL 
+test$year <- NULL
+
+test <- test %>% 
+  dplyr::rename(Max_SST_temp = year_max)
+
+
+labels(test)
+sapply(test, class)
+write.csv(test, file = "Model_data.csv")
 

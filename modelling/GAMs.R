@@ -142,7 +142,7 @@ gam.check(b_i)
 AIC(b_i)
 
 #Shoving everything into the model 
-b_j <- gam(Richness ~ offset(log(Population)) + s(Year) +s(Storms, k = 4) +s(Max_K_index, k=4) +s(Organisations), data=Model_data, method = "REML",
+b_j <- gam(Richness ~ offset(log(Population)) +s(Year) +s(Storms, k = 4) +s(Max_K_index, k=4) +s(Organisations), data=Model_data, method = "REML",
            family=tw(a=1.2))
 
 summary(b_j)
@@ -156,3 +156,27 @@ gam.check(b_j)
 AIC(b_i, b_j)
 anova(b_i)
 anova(b_j)
+
+#SST - tweedie seems to work best 
+unique(Model_data$Max_SST_temp)
+
+b_k <- gam(Richness ~ offset(log(Population)) +s(Max_SST_temp), data=Model_data, method = "REML",
+           family=tw(a=1.2))
+
+summary(b_k)
+plot(b_k)
+
+par(mfrow=c(2,2))
+gam.check(b_k)
+AIC(b_k)
+
+
+b_l <- gam(Richness ~ offset(log(Population)) +s(Year) +s(Storms, k = 4) +s(Max_K_index, k=4) +s(Organisations) +s(Max_SST_temp), data=Model_data, method = "REML",
+           family=tw(a=1.2))
+
+summary(b_l)
+plot(b_l)
+
+par(mfrow=c(2,2))
+gam.check(b_l)
+AIC(b_l)
