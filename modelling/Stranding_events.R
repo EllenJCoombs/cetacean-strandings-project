@@ -29,4 +29,4 @@ ggplot(stranding_events, aes(x = Year, fill = Name.Current.Sci)) +
 
 stranding_events_count <- count(stranding_events, Year)
 
-write.csv(stranding_events_count, file = "Stranding_events_count")
+write.csv(stranding_events_count, file = "Stranding_events_count.csv")
