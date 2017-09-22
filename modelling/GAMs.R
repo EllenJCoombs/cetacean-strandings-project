@@ -197,3 +197,29 @@ AIC(b_m)
 
 +s(Year) +s(Storms, k = 4) +s(Max_K_index, k=4) +s(Organisations) +s(Max_SST_temp)
 +s(Storms, k =4) +s(Max_K_index, k=4) +s(Organisations)
+
+
+
+install.packages("broom")
+library(broom)
+
+#Tidy gives the neat model output - summarises the model statistical findings 
+tidy(b_m)
+#construct a concise one-row summary of the model. This typically contains values such as R^2, 
+#adjusted R^2, and residual standard error that are computed once for the entire model.
+glance(b_m)
+
+#Note: You can't use 'augment' on a GAM 
+
+#Tidy multiple models at once 
+#Create a list of the models (use mget(paste0("b", 1"14))) or whatever to 'get' all models 
+models <- list(b_m = b_m, b_l = b_l, b_i = b_i) 
+
+#Saving the tidy and glance datasets 
+all_coefs_tidy <- plyr::ldply(models, tidy, .id = "model")
+all_coefs_glance <- plyr::ldply(models, glance, .id = "model")
+
+sapply(models, class)
+
+
+
