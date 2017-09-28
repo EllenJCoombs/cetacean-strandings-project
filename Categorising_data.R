@@ -131,7 +131,7 @@ write.csv(Mysticete_events, file = "Mysticete_strandings.csv")
 #################################################################################################
 #By size 
 #Big = all baleens (except Minkes) + Sperm whales 
-#Medium = Orca, Minke, Hyperoodon 
+#Medium = Orca, Minke, Hyperoodon (8 -10m)
 #Small = everything else (small beakers, phocoena and dolphins)
 
 
@@ -161,14 +161,13 @@ Medium_bs$X <- NULL
 write.csv(Medium_bs, file = "Medium_body_size.csv")
 
 #Small - need to remove all of the uknowns as well 
-
 Small_bs_clean <- cleaneddata[ !(cleaneddata$Name.Current.Sci %in% Big_bs$Name.Current.Sci), ] 
-Small_bs_clean <- cleaneddata[ !(cleaneddata$Name.Current.Sci %in% Medium_bs$Name.Current.Sci), ] 
+Small_bs_clean2 <- Small_bs_clean[ !(Small_bs_clean$Name.Current.Sci %in% Medium_bs$Name.Current.Sci), ] 
 
 
-Small_bs <- Small_bs_clean %>% 
+Small_bs <- Small_bs_clean2 %>% 
   filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
-                                   "Unknown delphinid")))
+                                   "Unknown delphinid", "Unknown mysticete")))
 
 levels(Small_bs$Name.Current.Sci)
 
