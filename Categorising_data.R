@@ -245,7 +245,67 @@ ggplot(Small_bs_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
 
-write.csv(Big_bs_events, file = "Big_strandings.csv")
+write.csv(Small_bs_events, file = "Small_strandings.csv")
 
+
+################################################################################################
+#Splitting North and South 
+#49N - 61 N 
+#Midpoint = 55.5 
+#South = 49N - 55.5 
+#North = 55.5 - 61N 
+
+
+cleaneddata <- read.csv("cleandatesnames.csv")
+cleaneddata$X.1 <- NULL
+cleaneddata$X <- NULL
+
+
+North_strandings <- cleaneddata %>%
+  filter(Latitude > 55.5)
+
+write.csv(North_strandings, file = "North_strandings.csv")
+
+
+#South_Strandings 
+
+South_Strandings <- cleaneddata %>%
+  filter(Latitude < 55.5) %>%
+  filter(Longitude < 4)
+
+write.csv(South_Strandings, file = "South_strandings.csv")
+
+
+#Testing that these work
+gg1+
+  geom_hex(data = North_strandings, aes(y = Latitude, x= Longitude), bins = 50, alpha = 0.5, 
+           colour = "blue") +
+  geom_hex(data = South_Strandings, aes(y = Latitude, x= Longitude), bins = 50, alpha = 0.5, 
+           colour = "red") 
+
+
+#Richness South ########################################################
+
+#Remove uknowns 
+South_Strandings <- South_Strandings %>% 
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
+                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
+
+
+South_year <- dplyr::count(South_Strandings, Name.Current.Sci, Year)
+South_year <- South_year[c("Year","n", "Name.Current.Sci")]
+
+South.matrix <- sample2matrix(South_year)
+#Number of species per year 
+specnumber(South.matrix)
+
+#Richness double check 
+South_richness <- South_year %>%
+  count(Year)
+
+South_richness <- Medium_bs_richness %>%
+  rename(Richness = nn)
+
+write.csv(South_richness, file = "South_richness.csv")
 
 
