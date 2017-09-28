@@ -363,18 +363,43 @@ Pre_CSIP <- Pre_CSIP %>%
 
 
 #Richness for Pre and Post CSIP 
-Post_CSIP_year <- dplyr::count(Post_CSIP, Name.Current.Sci, Year)
-Post_CSIP_year <- Post_CSIP_year[c("Year","n", "Name.Current.Sci")]
+Pre_CSIP_year <- dplyr::count(Pre_CSIP, Name.Current.Sci, Year)
+Pre_CSIP_year <- Pre_CSIP_year[c("Year","n", "Name.Current.Sci")]
 
-Post.matrix <- sample2matrix(Post_CSIP_year)
+Pre.matrix <- sample2matrix(Pre_CSIP_year)
 #Number of species per year 
-specnumber(Post.matrix)
+specnumber(Pre.matrix)
 
 #Richness double check 
-Post_CSIP_richness <- Post_CSIP_year %>%
+Pre_CSIP_richness <- Pre_CSIP_year %>%
   count(Year)
 
-Post_CSIP_richness <- Post_CSIP_richness %>%
+Pre_CSIP_richness <- Pre_CSIP_richness %>%
   rename(Richness = nn)
 
-write.csv(Post_CSIP_richness, file = "Post_CSIP_richness.csv")
+Post_CSIP$X.1 <- NULL
+Post_CSIP$X <- NULL 
+Pre_CSIP$X.1 <- NULL 
+Pre_CSIP$X <- NULL
+
+write.csv(Pre_CSIP_richness, file = "Pre_CSIP_richness.csv")
+
+#Stranding events ################################################
+#Done for Pre and Post CSIP 
+duplicated(Pre_CSIP$S.W.No.)
+#Or you can use unique 
+unique(Pre_CSIP$S.W.No.)
+
+#This works to get rid of e.g. 1932/14, 1932/14 
+Pre_CSIP_events <- Pre_CSIP[!duplicated(Pre_CSIP$S.W.No.), ]
+
+#Removing duplicates from SW (CSIP data)
+Pre_CSIP_events$S.W.No. <- (sub("\\.\\d+$","", Pre_CSIP_events$S.W.No.))
+Pre_CSIP_events <- Pre_CSIP_events[!duplicated(Pre_CSIP_events$S.W.No.), ]
+
+
+ggplot(Pre_CSIP_events, aes(x = Year, fill = Name.Current.Sci)) +
+  geom_histogram(binwidth = 0.5)
+
+
+write.csv(Pre_CSIP_events, file = "Pre_CSIP_events.csv")
