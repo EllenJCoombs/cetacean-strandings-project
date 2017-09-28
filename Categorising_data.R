@@ -129,7 +129,7 @@ ggplot(Mysticete_events, aes(x = Year, fill = Name.Current.Sci)) +
 write.csv(Mysticete_events, file = "Mysticete_strandings.csv")
 
 #################################################################################################
-#By size 
+#By body size 
 #Big = all baleens (except Minkes) + Sperm whales 
 #Medium = Orca, Minke, Hyperoodon (8 -10m)
 #Small = everything else (small beakers, phocoena and dolphins)
@@ -167,7 +167,85 @@ Small_bs_clean2 <- Small_bs_clean[ !(Small_bs_clean$Name.Current.Sci %in% Medium
 
 Small_bs <- Small_bs_clean2 %>% 
   filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
-                                   "Unknown delphinid", "Unknown mysticete")))
+                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
-levels(Small_bs$Name.Current.Sci)
+write.csv(Small_bs, file = "Small_body_size.csv")
+
+##################################################################################################
+#Splitting size into richness and stranding events 
+
+#Big body size richness #########################################
+Big_bs_year <- dplyr::count(Big_bs, Name.Current.Sci, Year)
+Big_bs_year <- Big_bs_year[c("Year","n", "Name.Current.Sci")]
+
+Big.bs.matrix <- sample2matrix(Big_bs_year)
+#Number of species per year 
+specnumber(Big.bs.matrix)
+
+#Richness double check 
+Big_bs_richness <- Big_bs_year %>%
+  count(Year)
+
+Big_bs_richness <- Big_bs_richness %>%
+  rename(Richness = nn)
+
+write.csv(Big_bs_richness, file = "Big_bs_richness.csv")
+
+#Medium body size richness #######################################
+Medium_bs_year <- dplyr::count(Medium_bs, Name.Current.Sci, Year)
+Medium_bs_year <- Medium_bs_year[c("Year","n", "Name.Current.Sci")]
+
+Medium.bs.matrix <- sample2matrix(Medium_bs_year)
+#Number of species per year 
+specnumber(Medium.bs.matrix)
+
+#Richness double check 
+Medium_bs_richness <- Medium_bs_year %>%
+  count(Year)
+
+Medium_bs_richness <- Medium_bs_richness %>%
+  rename(Richness = nn)
+
+write.csv(Medium_bs_richness, file = "Medium_bs_richness.csv")
+
+
+#Small body size richness #######################################
+Small_bs_year <- dplyr::count(Small_bs, Name.Current.Sci, Year)
+Small_bs_year <- Small_bs_year[c("Year","n", "Name.Current.Sci")]
+
+Small.bs.matrix <- sample2matrix(Small_bs_year)
+#Number of species per year 
+specnumber(Small.bs.matrix)
+
+#Richness double check 
+Small_bs_richness <- Small_bs_year %>%
+  count(Year)
+
+Small_bs_richness <- Small_bs_richness %>%
+  rename(Richness = nn)
+
+write.csv(Small_bs_richness, file = "Small_bs_richness.csv")
+
+#Stranding events ###############################################################################
+#Do this with: Big_bs, Medium_bs and Small_bs 
+
+duplicated(Small_bs$S.W.No.)
+#Or you can use unique 
+unique(Small_bs$S.W.No.)
+
+#This works to get rid of e.g. 1932/14, 1932/14 
+Small_bs_events <- Small_bs[!duplicated(Small_bs$S.W.No.), ]
+
+#Removing duplicates from SW (CSIP data)
+Small_bs_events$S.W.No. <- (sub("\\.\\d+$","", Small_bs_events$S.W.No.))
+Small_bs_events <- Small_bs_events[!duplicated(Small_bs_events$S.W.No.), ]
+
+
+ggplot(Small_bs_events, aes(x = Year, fill = Name.Current.Sci)) +
+  geom_histogram(binwidth = 0.5)
+
+
+write.csv(Big_bs_events, file = "Big_strandings.csv")
+
+
 
