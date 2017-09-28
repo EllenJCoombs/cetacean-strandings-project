@@ -296,7 +296,7 @@ gg1+
 #Surprisingly the Scottish strandings in 1942 were unknown species and unknown lat/long so have been
 #dropped from the Northern dataset (i.e. 0 richness for 1942)
 
-#Remove uknowns 
+#Remove unknowns 
 North_strandings <- North_strandings %>% 
   filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
@@ -351,4 +351,30 @@ Pre_CSIP <- cleaneddata %>%
   filter(Year %in% c(1913:1989))
 
 
+#Remove unknowns 
+Post_CSIP <- Post_CSIP %>% 
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
+                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
+#Remove unknowns 
+Pre_CSIP <- Pre_CSIP %>% 
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
+                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
+
+
+#Richness for Pre and Post CSIP 
+Post_CSIP_year <- dplyr::count(Post_CSIP, Name.Current.Sci, Year)
+Post_CSIP_year <- Post_CSIP_year[c("Year","n", "Name.Current.Sci")]
+
+Post.matrix <- sample2matrix(Post_CSIP_year)
+#Number of species per year 
+specnumber(Post.matrix)
+
+#Richness double check 
+Post_CSIP_richness <- Post_CSIP_year %>%
+  count(Year)
+
+Post_CSIP_richness <- Post_CSIP_richness %>%
+  rename(Richness = nn)
+
+write.csv(Post_CSIP_richness, file = "Post_CSIP_richness.csv")
