@@ -1,5 +1,8 @@
 #Splitting the dataset into smaller sections: guilds, regions, pre/post CSIP etc 
 
+#NB: Richness = richness
+#Events = single stranding events (mass strandings taken out)
+
 library(dplyr)
 library(tidyverse)
 library(picante)
@@ -333,4 +336,19 @@ ggplot(North_events, aes(x = Year, fill = Name.Current.Sci)) +
 
 
 write.csv(North_events, file = "North_events.csv")
+
+###############################################################################################
+#Post and pre-CSIP stranding events and richness 
+#CSIP started in 1990
+
+cleaneddata <- read.csv("cleandatesnames.csv")
+
+#Post-CSIP 
+Post_CSIP <- cleaneddata %>%
+  filter(Year %in% c(1990:2015))
+
+Pre_CSIP <- cleaneddata %>% 
+  filter(Year %in% c(1913:1989))
+
+
 
