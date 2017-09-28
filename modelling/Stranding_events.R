@@ -5,7 +5,7 @@
 
 cleaneddata <- read.csv("cleandatesnames.csv")
 cleaneddata$X <- NULL
-cleaneddata$X.1 <- NULL
+cleaneddata$X.1 <- NULL 
 
 #Can use duplicated 
 duplicated(cleaneddata$S.W.No.)
