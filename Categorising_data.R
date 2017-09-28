@@ -245,7 +245,7 @@ ggplot(Small_bs_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
 
-write.csv(Small_bs_events, file = "Small_strandings.csv")
+write.csv(Medium_bs_events, file = "Medium_bs_events.csv")
 
 
 ################################################################################################
@@ -264,6 +264,7 @@ cleaneddata$X <- NULL
 North_strandings <- cleaneddata %>%
   filter(Latitude > 55.5)
 
+
 write.csv(North_strandings, file = "North_strandings.csv")
 
 
@@ -272,6 +273,9 @@ write.csv(North_strandings, file = "North_strandings.csv")
 South_Strandings <- cleaneddata %>%
   filter(Latitude < 55.5) %>%
   filter(Longitude < 4)
+
+South_Strandings$X.1 <- NULL
+South_Strandings$X <-NULL
 
 write.csv(South_Strandings, file = "South_strandings.csv")
 
@@ -284,28 +288,49 @@ gg1+
            colour = "red") 
 
 
-#Richness South ########################################################
+#Richness South and North ########################################################
+#Used the same code for both of these (North and South)
+#Surprisingly the Scottish strandings in 1942 were unknown species and unknown lat/long so have been
+#dropped from the Northern dataset (i.e. 0 richness for 1942)
 
 #Remove uknowns 
-South_Strandings <- South_Strandings %>% 
+North_strandings <- North_strandings %>% 
   filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
 
-South_year <- dplyr::count(South_Strandings, Name.Current.Sci, Year)
-South_year <- South_year[c("Year","n", "Name.Current.Sci")]
+North_year <- dplyr::count(North_strandings, Name.Current.Sci, Year)
+North_year <- North_year[c("Year","n", "Name.Current.Sci")]
 
-South.matrix <- sample2matrix(South_year)
+North.matrix <- sample2matrix(North_year)
 #Number of species per year 
-specnumber(South.matrix)
+specnumber(North.matrix)
 
 #Richness double check 
-South_richness <- South_year %>%
+North_richness <- North_year %>%
   count(Year)
 
-South_richness <- Medium_bs_richness %>%
+North_richness <- North_richness %>%
   rename(Richness = nn)
 
-write.csv(South_richness, file = "South_richness.csv")
+write.csv(North_richness, file = "North_richness.csv")
 
+#Stranding events - North and South #######################################
+duplicated(North_strandings$S.W.No.)
+#Or you can use unique 
+unique(North_strandings$S.W.No.)
+
+#This works to get rid of e.g. 1932/14, 1932/14 
+North_events <- North_strandings[!duplicated(North_strandings$S.W.No.), ]
+
+#Removing duplicates from SW (CSIP data)
+North_events$S.W.No. <- (sub("\\.\\d+$","", North_events$S.W.No.))
+North_events <- North_events[!duplicated(North_events$S.W.No.), ]
+
+
+ggplot(North_events, aes(x = Year, fill = Name.Current.Sci)) +
+  geom_histogram(binwidth = 0.5)
+
+
+write.csv(North_events, file = "North_events.csv")
 
