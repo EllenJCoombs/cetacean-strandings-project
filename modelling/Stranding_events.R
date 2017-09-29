@@ -7,7 +7,8 @@ cleaneddata <- read.csv("cleandatesnames.csv")
 cleaneddata$X <- NULL
 cleaneddata$X.1 <- NULL 
 
-#Can use duplicated 
+
+
 duplicated(cleaneddata$S.W.No.)
 #Or you can use unique 
 unique(cleaneddata$S.W.No.)
@@ -16,8 +17,13 @@ unique(cleaneddata$S.W.No.)
 stranding_events <- cleaneddata[!duplicated(cleaneddata$S.W.No.), ]
 
 #Removing duplicates from SW (CSIP data)
-cleaneddata$S.W.No. <- (sub("\\.\\d+$","",cleaneddata$S.W.No.))
+stranding_events$S.W.No. <- (sub("\\.\\d+$","",stranding_events$S.W.No.))
 stranding_events <- cleaneddata[!duplicated(cleaneddata$S.W.No.), ]
+
+#Remove unknowns 
+stranding_events <- stranding_events %>% 
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
+                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
 
 ggplot(stranding_events, aes(x = Year, fill = Name.Current.Sci)) +

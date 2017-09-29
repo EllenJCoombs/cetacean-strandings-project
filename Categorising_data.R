@@ -386,16 +386,16 @@ write.csv(Pre_CSIP_richness, file = "Pre_CSIP_richness.csv")
 
 #Stranding events ################################################
 #Done for Pre and Post CSIP 
-duplicated(Pre_CSIP$S.W.No.)
+duplicated(Post_CSIP$S.W.No.)
 #Or you can use unique 
-unique(Pre_CSIP$S.W.No.)
+unique(Post_CSIP$S.W.No.)
 
 #This works to get rid of e.g. 1932/14, 1932/14 
-Pre_CSIP_events <- Pre_CSIP[!duplicated(Pre_CSIP$S.W.No.), ]
+Post_CSIP_events <- Post_CSIP[!duplicated(Post_CSIP$S.W.No.), ]
 
 #Removing duplicates from SW (CSIP data)
-Pre_CSIP_events$S.W.No. <- (sub("\\.\\d+$","", Pre_CSIP_events$S.W.No.))
-Pre_CSIP_events <- Pre_CSIP_events[!duplicated(Pre_CSIP_events$S.W.No.), ]
+Post_CSIP_events$S.W.No. <- (sub("\\.\\d+$","", Post_CSIP_events$S.W.No.))
+Post_CSIP_events <- Post_CSIP_events[!duplicated(Post_CSIP_events$S.W.No.), ]
 
 
 ggplot(Pre_CSIP_events, aes(x = Year, fill = Name.Current.Sci)) +
@@ -403,3 +403,6 @@ ggplot(Pre_CSIP_events, aes(x = Year, fill = Name.Current.Sci)) +
 
 
 write.csv(Pre_CSIP_events, file = "Pre_CSIP_events.csv")
+
+
+test <- count(Post_CSIP_events, Year) 
