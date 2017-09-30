@@ -2,6 +2,7 @@
 
 library(dplyr)
 library(tidyr)
+library(zoo)
 
 #1 - Storm data 
 
@@ -33,28 +34,29 @@ Population <- Population %>%
 ###################################################################################################
 #Global max magnetic data 
 
-geomag <- read.csv("Geomagnetic_data.csv")
+#library(zoo)
 
-sapply(geomag, class)
+#geomag <- read.csv("Geomagnetic_data.csv")
+
+#sapply(geomag, class)
 #Changing Date to dat (ymd)
-geomag <- mutate(geomag, Date = ymd(Date))
+#geomag <- mutate(geomag, Date = ymd(Date))
 
 #Take a yearly average?? 
 #Firstly split the data in to year, month and day 
-geomag <- separate(geomag, "Date", c("Year", "Month", "Day"), sep = "-") 
+#geomag <- separate(geomag, "Date", c("Year", "Month", "Day"), sep = "-") 
 #Take average by year 
-geomag_yearly_mean <- aggregate(k ~ Year, FUN=mean, data=geomag)
+#geomag_yearly_mean <- aggregate(k ~ Year, FUN=mean, data=geomag)
 #monthly mean (I'm not sure yearly shows enough definition)
-geomag_monthly_mean <- aggregate(k ~ Year + Month, FUN=mean, data=geomag) %>%
-  arrange(Year)
+#geomag_monthly_mean <- aggregate(k ~ Year + Month, FUN=mean, data=geomag) %>%
+  #arrange(Year)
 
 #Yearly max Kp values 
-geomag_yearly_max <- aggregate(geomag$k, by = list(geomag$Year), max)
+#geomag_yearly_max <- aggregate(geomag$k, by = list(geomag$Year), max)
 #Renaming the columns
-geomag_yearly_max <- geomag_yearly_max %>%
-  dplyr::rename(Year = Group.1)
+#geomag_yearly_max <- geomag_yearly_max %>%
+  #plyr::rename(Year = Group.1)
 
-write.csv(geomag_yearly_max, file = "Geomag_yearly_global_max.csv")
 
 
 ##################################################################################################
@@ -66,6 +68,12 @@ library(picante)
 cleaneddata <- read.csv("cleandatesnames.csv")
 speciesyearcount <- dplyr::count(cleaneddata, Name.Current.Sci, Year) %>%
   na.omit()
+
+#Removing unknowns 
+speciesyearcount <- speciesyearcount %>% 
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
+                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
+
 
 speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum) %>%
   na.omit()
@@ -82,6 +90,9 @@ speciesrichness <- speciesyearcount %>%
 #rename 
 speciesrichness <- speciesrichness %>%
   rename(Richness = nn)
+
+#write.csv(speciesrichness, file = "Richness.csv")
+
 
 #################################################################################################
 #Geomagnetic max daily, max yearly, max station 
@@ -102,11 +113,14 @@ orgs <- orgs %>%
 #SST
 #Yearly max recorded temperature taken from 14 different places around the UK and Ireland 
 
-SST_yearly_max <- read.csv("SST_yearly.max.csv")
-test <- bind_cols(speciesrichness, Population, storms, Final_geom, orgs, SST_yearly_max)
+SST_yearly_max <- read.csv("SST_yearly_max.csv")
+SST_yearly_max <- SST_yearly_max %>% 
+  rename(Max_SST_temp = year_max)
 
-test <- test %>% 
-  dplyr::rename(Max_SST_temp = year_max)
+#test <- bind_cols(speciesrichness, Population, storms, Final_geom, orgs, SST_yearly_max)
+
+#test <- test %>% 
+  #dplyr::rename(Max_SST_temp = year_max)
 
 ###############################################################################################
 #Stranding events 
@@ -123,6 +137,7 @@ test$Year3 <- NULL
 test$Year4 <- NULL 
 test$year <- NULL
 test$Year5 <- NULL
+test$X <- NULL
 
 
 test <- test %>% 

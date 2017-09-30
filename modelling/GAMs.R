@@ -18,6 +18,8 @@ unique(Model_data$Storms)
 
 unique(Model_data$Organisations)
 
+unique(Model_data$Max_K_index)
+
 #Running my own models 
 #Be aware of the k value - the model might be over complicating the data 
 #(e.g. assuming more values
@@ -195,8 +197,8 @@ gam.check(b_m)
 AIC(b_m)
 
 
-+s(Year) +s(Storms, k = 4) +s(Max_K_index, k=4) +s(Organisations) +s(Max_SST_temp)
-+s(Storms, k =4) +s(Max_K_index, k=4) +s(Organisations)
+#+s(Year) +s(Storms, k = 4) +s(Max_K_index, k=4) +s(Organisations) +s(Max_SST_temp)
+#+s(Storms, k =4) +s(Max_K_index, k=4) +s(Organisations)
 
 
 
@@ -222,4 +224,21 @@ all_coefs_glance <- plyr::ldply(models, glance, .id = "model")
 sapply(models, class)
 
 
+############################################################################################
+#GAMs stranding events 
+b_m <- gam(Stranding_count ~ offset(log(Population)) + s(Max_K_index, k=4), data=Model_data, method = "REML",
+           family=tw(a=1.2))
 
+# +s(Max_SST_temp),
+
+summary(b_m)
+plot(b_m)
+
+par(mfrow=c(2,2))
+gam.check(b_m)
+AIC(b_m)
+vis.gam(b_m)
+
+
+vis.gam(b_m, n.grid = 50, theta = 35, phi = 32, zlab = "",
+        ticktype = "detailed", color = "topo")
