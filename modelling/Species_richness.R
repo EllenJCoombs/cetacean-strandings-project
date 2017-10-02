@@ -8,21 +8,49 @@ library(picante)
 
 cleaneddata <- read.csv("cleandatesnames.csv") 
 
+
 #Need to reorder the data
 speciesyearcount <- dplyr::count(cleaneddata, Name.Current.Sci, Year) %>%
   na.omit()
 
-reordering <- speciesyearcount[c("Year", "n", "Name.Current.Sci")]
+#Remove unknowns 
+species_known <- speciesyearcount %>% 
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
+                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
+
+
+reordering <- species_known[c("Year", "n", "Name.Current.Sci")]
 whale.matrix <- sample2matrix(reordering)
 
 #Number of species per year 
 specnumber(whale.matrix)
 
 #Doublecheck
-speciesrichness <- speciesyearcount %>%
-  count(Year)
+speciesrichness <- species_known %>%
+  count(Year) %>%
+  rename(Richness = nn)
+
+#plot of Richness 
+#Messing around with geom_smooth 
+ggplot(data = speciesrichness, aes(x = Year, y = Richness)) +
+  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
+  labs(x = "Year", y = "Species richness") +
+  geom_smooth() +
+  geom_line()
+
+
+#Plotting richness using 'species known'
+ggplot(data = species_known, aes(x = Year)) +
+  geom_histogram(binwidth = 0.5) +
+  labs(x = "Year", y = "Species richness") +
+  theme_bw()
+
+ggplot() +
+geom_line(data = speciesrichness, aes(x = Year, y = Richness)) +
+  xlim(1913,2015)
   
-write.csv(speciesrichness, file = "richness.csv")
+  
+write.csv(speciesrichness, file = "Richness.csv")
 
 #Alpha diversity 
 #Simpson's diversity index 
@@ -57,7 +85,6 @@ plot(whale.curve, ci.type = "poly", col = "blue", ci.col = "lightblue",
      ylab = "Cumulative number of whale species")
 
 
-
 #Playing around with permutations 
 #whale.curve1 <- specaccum(whale.matrix, method = "random", permutations = 1)
 #whale.curve2 <- specaccum(whale.matrix, method = "random", permutations = 1)
@@ -73,27 +100,10 @@ plot(whale.curve, ci.type = "poly", col = "blue", ci.col = "lightblue",
 #par(mfrow = c(1,1))
 
 
+#This includes unknowns e.g. 'unknown mysticete'
 #Species per year (this no longer incorporates NAs)
-total_speciesbyyear <- aggregate(speciesbyyear$n, by = speciesbyyear[c('Year')], length)
+total_speciesbyyear <- aggregate(speciesyearcount$n, by = speciesyearcount[c('Year')], length)
 rarecurve(total_speciesbyyear)
-
-#Histogram of species richness 
-ggplot(data = speciesbyyear, aes(x = Year)) +
-  geom_histogram(binwidth = 0.5)
-
-
-#plot of total species per year 
-ggplot(data = total_speciesbyyear, aes(x = Year, y = x)) +
-  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
-  labs(x = "Year", y = "Species count") +
-  geom_smooth() +
-  geom_line()
-
-
-#Want to plot this as a histogram 
-ggplot(total_speciesbyyear, aes(x = Year)) +
-  geom_histogram(binwidth = 0.5)
-
 
 dev.off()
 

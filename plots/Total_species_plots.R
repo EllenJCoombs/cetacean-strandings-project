@@ -225,9 +225,8 @@ species_plots <- species_plots %>%
   rename(Species = Name.Current.Sci)
   
 
-bb <- ggplot(species_plots, aes(x = Year, col = Species)) +
+bb <- ggplot(species_plots, aes(x = Year, fill = Species)) +
   stat_count(width = 0.5) +
   facet_wrap(~ Species) +
   theme_bw()
- 
-bb
+
