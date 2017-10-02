@@ -35,7 +35,7 @@ ggplot() +
 #Blue, Fin, Sei, Right, Bottlenose, Minke, Humpback, Sperm, others 
 
 whaling <- read.csv("North_Atlantic_whaling.csv")
-View(whaling)
+
 
 #Selecting the species and the year 
 whaling_species <- whaling %>%
@@ -93,6 +93,10 @@ hunted_stranders <- cleaneddata %>%
                                  "Physeter macrocephalus", "Eubalaena glacialis", 
                                  "Hyperoodon ampullatus", "Balaenoptera acutorostrata"))
 
+hunted_stranders$X.1 <- NULL
+hunted_stranders$X <- NULL
+
+
 #Aggregating by year 
 hunted_strandersyear <- count(hunted_stranders, Name.Current.Sci, Year)
 
@@ -117,28 +121,33 @@ Total_hunted <- whaling %>%
 #Want to plot total whaled and total strandings of hunted species 
 
 #Changing the total.catch column to n 
-Total_hunted_rename <- rename(Total_hunted, n = Total.catch)
+Total_hunted <- Total_hunted %>%
+  rename(n = Total.catch)
 
 #Plotting total hunted and total strandeds (of hunted species)
 #don't think this works...
-ggplot(Total_hunted_stranders$n*100, aes(x = Year, y = n, ylab = "Count")) + geom_line(aes(color = "Strandings"))+
-  geom_line(data = Total_hunted_rename, aes(color="Hunted")) +
-  scale_y_continuous(sec.axis = sec_axis(~.*100))
-  labs(color = "Stranding and hunting data") 
+#ggplot(Total_hunted_stranders$n*100, aes(x = Year, y = n, ylab = "Count")) + geom_line(aes(color = "Strandings"))+
+  #geom_line(data = Total_hunted_rename, aes(color="Hunted")) +
+  #scale_y_continuous(sec.axis = sec_axis(~.*100))
+  #labs(color = "Stranding and hunting data") 
 
   
 #Bind the two datasets (Total_hunted and Total_hunted_stranding)
 #Clean up the data 
-Catch_and_strandings <- bind_cols(Total_hunted, Total_hunted_stranders) %>%
-  select(Year, Total.catch, n) %>%
-  dplyr::rename("Strandings" = "n")
+Catch_and_strandings <- bind_cols(Total_hunted, Total_hunted_stranders) 
+
+Catch_and_strandings <- Catch_and_strandings %>%
+  select(Year, n, n1) %>%
+  rename(Strandings = n1) %>%
+  rename(Catch = n)
+
 
 #Plot them both on the same graph 
   p <- ggplot(Catch_and_strandings, aes(x = Year))
   p <- p + geom_line(aes(y = Strandings, colour = "Total strandings"))
   
   # adding the stranding data, transformed to match roughly the range of the total catch
-  p <- p + geom_line(aes(y = Total.catch/20, colour = "Total catch"))
+  p <- p + geom_line(aes(y = Catch/20, colour = "Total catch"))
   
   # now adding the secondary axis, following the example in the help file ?scale_y_continuous
   # and, very important, reverting the above transformation
@@ -191,7 +200,8 @@ ggplot() +
   labs(y = "Total stranding",
               x = "Year",
               colour = "Parameter") +
-  facet_wrap(~ Name.Current.Sci)
+  facet_wrap(~ Name.Current.Sci) +
+  theme_bw()
 
 
 #regression lines 

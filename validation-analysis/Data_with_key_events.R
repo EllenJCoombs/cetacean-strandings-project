@@ -14,17 +14,19 @@ p <- ggplot(Catch_and_strandings, aes(x = Year))
 p <- p + geom_line(aes(y = Strandings, colour = "Total strandings"))
 
 # adding the stranding data, transformed to match roughly the range of the total catch
-p <- p + geom_line(aes(y = Total.catch/20, colour = "Total catch"))
+p <- p + geom_line(aes(y = Catch/20, colour = "Total catch"))
 
 # now adding the secondary axis, following the example in the help file ?scale_y_continuous
 # and, very important, reverting the above transformation
 p <- p + scale_y_continuous(sec.axis = sec_axis(~.*20, name = "Total catch"))
 
 # modifying colours and theme options
-p <- p + scale_colour_manual(values = c("blue", "red"))
+p <- p + scale_colour_manual(values = c("dodgerblue4", "tomato2"))
 p <- p + labs(y = "Total stranding",
               x = "Year",
               colour = "Parameter")
+
+p
 
 #p <- p + annotate("segment", x = 0, xend = -0, y = 0, yend = -20, colour="blue", size=2, arrow=arrow())
 
@@ -71,6 +73,7 @@ p <- p + annotate("segment", x = 1945, xend = 1950, y = 0, yend = -10, colour="b
     aes(x = 1945, y = -14, label = "Increase in post-war
         fishing & whaling effort"), size = 3)
 
+p
 
 
 
