@@ -16,7 +16,7 @@ whale_years_plot <- function(data, species.name = NULL, binwidth = 0.5,
   ggplot(data, aes(x = Year)) +
     geom_histogram(binwidth = binwidth) +
     xlim(start.date, end.date) +
-    #theme_bw() +
+    theme_bw() + 
     labs(title = species.name)
 }
 
@@ -83,6 +83,8 @@ library(gridExtra)
 
 # Read in the data
 ds <- read_csv("cleandatesnames.csv")
+ds$X1 <- NULL
+ds$X <- NULL
 
 # This would get a full list of the whale species
 # But for now we just want a couple as an example
@@ -92,9 +94,8 @@ ds <- read_csv("cleandatesnames.csv")
 whales <- whale_list(ds, "Name.Current.Sci")
 
 #If I want to look at just these species 
-whales <- c("Delphinus delphis", "Orcinus orca", "B") 
+whales <- c("Delphinus delphis", "Orcinus orca", "Balaenoptera acutorostrata", "Physeter macrocephalus") 
             
-          #, "phocoena phocoena", "kogia sima", "orcinus orca")
 
 # Plot graphs
 plot_all_whale_years(ds, species.col = "Name.Current.Sci", whales,

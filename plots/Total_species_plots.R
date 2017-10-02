@@ -216,15 +216,18 @@ write.csv(mysticetes, file = "Mysticetes.csv")
 cleaneddata <- read.csv("cleandatesnames.csv")
 
 species_plots <- cleaneddata %>%
-  filter(Name.Current.Sci %in% c("Delphinus delphis", "Balaenoptera musculus", 
+  filter(Name.Current.Sci %in% c("Delphinus delphis", "Physeter macrocephalus", 
                                  "Tursiops truncatus", "Balaenoptera acutorostrata"))
 
 
 species_plots <- species_plots %>%
-  select(Name.Current.Sci, Year)
+  select(Name.Current.Sci, Year) %>%
+  rename(Species = Name.Current.Sci)
   
 
-ggplot(species_plots, aes(x = Year, col = Name.Current.Sci)) +
+bb <- ggplot(species_plots, aes(x = Year, col = Species)) +
   stat_count(width = 0.5) +
-  facet_wrap(~ Name.Current.Sci) +
+  facet_wrap(~ Species) +
   theme_bw()
+ 
+bb
