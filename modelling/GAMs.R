@@ -215,7 +215,8 @@ glance(b_m)
 
 #Tidy multiple models at once 
 #Create a list of the models (use mget(paste0("b", 1"14))) or whatever to 'get' all models 
-models <- list(b_m = b_m, b_l = b_l, b_i = b_i) 
+models <- list(b_a = b_a, b_b = b_b, b_c = b_c, b_d = b_d,
+               b_e = b_e, b_f = b_f, b_h = b_h, b_i = b_i) 
 
 #Saving the tidy and glance datasets 
 all_coefs_tidy <- plyr::ldply(models, tidy, .id = "model")
@@ -226,19 +227,24 @@ sapply(models, class)
 
 ############################################################################################
 #GAMs stranding events 
-b_m <- gam(Stranding_count ~ offset(log(Population)) + s(Max_K_index, k=4), data=Model_data, method = "REML",
+b_i <- gam(Stranding_count ~ offset(log(Population))  + s(Year) +s(Max_SST_temp), data=Model_data, method = "REML",
            family=tw(a=1.2))
 
 # +s(Max_SST_temp),
+#+s(Storms, k = 4) +s(Max_SST_temp)
+#+s(Max_K_index, k=4)
 
-summary(b_m)
-plot(b_m)
+summary(b_i)
+plot(b_i)
 
 par(mfrow=c(2,2))
-gam.check(b_m)
-AIC(b_m)
-vis.gam(b_m)
+gam.check(b_i)
+AIC(b_i)
+vis.gam(b_f)
 
 
-vis.gam(b_m, n.grid = 50, theta = 35, phi = 32, zlab = "",
+vis.gam(b_f, n.grid = 50, theta = 35, phi = 32, zlab = "",
         ticktype = "detailed", color = "topo")
+
+
+

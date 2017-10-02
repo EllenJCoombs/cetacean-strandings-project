@@ -29,6 +29,11 @@ Mysticetes$X.1 <- NULL
 
 write.csv(Mysticetes, file = "Mysticetes.csv")
 
+
+ggplot(Mysticetes_known, aes(x = Year, fill = Name.Current.Sci)) +
+  geom_histogram(binwidth = 0.5)
+
+
 #Selecting out odontocetes from main dataset and then delete Mysticetes 
 Odontocetes <- cleaneddata[ !(cleaneddata$Name.Current.Sci %in% Mysticetes$Name.Current.Sci), ]
 
