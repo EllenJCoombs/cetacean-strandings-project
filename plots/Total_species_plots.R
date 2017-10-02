@@ -37,24 +37,26 @@ speciesyear <- select(cleaneddata, Year, Name.Current.Sci) %>%
 
 
 #Geom_line of all species for every year 
-ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Name.Current.Sci))+
+
+speciesyearcount <- speciesyearcount %>%
+  rename(Species = Name.Current.Sci)
+
+ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Species))+
   theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
-  labs(x = "Year", y = "Species count") +
+  labs(x = "Year", y = "Count") +
   geom_line() +
+  theme_bw() + 
+  theme(legend.position="bottom")
   scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE) + 
-  facet_wrap(~ Name.Current.Sci)
+  facet_wrap(~ Species) 
+  
+  
 
+  
 #The unknowns 
-
 unknowns <- speciesyearcount %>%
-  filter(Name.Current.Sci %in% c("Unknown", "Unknown delphinid", "Unknown mysticete", 
+  filter(Species %in% c("Unknown", "Unknown delphinid", "Unknown mysticete", 
                                  "Unknown odontocete"))
-
-
-#Selecting out species with identities from unknowns 
-Species_ident <- speciesyearcount[ !(speciesyearcount$Name.Current.Sci %in% unknowns$Name.Current.Sci), ]
-
-
 
 #Geom_line of all species for every year 
 #Can plot unknowns using "unknowns" 
@@ -63,6 +65,22 @@ ggplot(data = unknowns, aes(x = Year, y = n, colour= Name.Current.Sci))+
   labs(x = "Year", y = "Species count") +
   geom_line() +
   scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE)
+
+
+#Removing unknowns 
+Strandings_known <- speciesyearcount[ !(speciesyearcount$Species %in% unknowns$Species), ]
+
+ggplot(data = Strandings_known, aes(x = Year, y = n, colour= Species))+
+  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
+  labs(x = "Year", y = "Count") +
+  geom_line() +
+  theme_bw() + 
+  theme(legend.position="bottom") +
+  scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE) + 
+  facet_wrap(~ Species)   
+
+
+
 
 
 

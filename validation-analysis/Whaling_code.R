@@ -204,6 +204,32 @@ ggplot() +
   theme_bw()
 
 
+###########
+p <- ggplot(Catch_and_strandings, aes(x = Year))
+p <- p + geom_line(aes(y = Strandings, colour = "Total strandings"))
+
+# adding the stranding data, transformed to match roughly the range of the total catch
+p <- p + geom_line(aes(y = Catch/20, colour = "Total catch"))
+
+# now adding the secondary axis, following the example in the help file ?scale_y_continuous
+# and, very important, reverting the above transformation
+p <- p + scale_y_continuous(sec.axis = sec_axis(~.*20, name = "Total catch"))
+
+# modifying colours and theme options
+p <- p + scale_colour_manual(values = c("dodgerblue3", "tomato2"))
+p <- p + labs(y = "Total stranding",
+              x = "Year",
+              colour = "Parameter")
+
+p <- p + theme_bw()
+p <- p + theme(legend.position="bottom")
+
+p
+
+
+
+
+
 #regression lines 
 model1 <- lm(Year ~ Strandings, data = hunted_stranders_total)
 
