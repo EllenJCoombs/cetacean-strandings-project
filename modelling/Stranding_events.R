@@ -15,6 +15,8 @@ unique(cleaneddata$S.W.No.)
 
 #This works to get rid of e.g. 1932/14, 1932/14 
 stranding_events <- cleaneddata[!duplicated(cleaneddata$S.W.No.), ]
+stranding_events$X.1 <- NULL
+stranding_events$X <- NULL
 
 #Removing duplicates from SW (CSIP data)
 stranding_events$S.W.No. <- (sub("\\.\\d+$","",stranding_events$S.W.No.))

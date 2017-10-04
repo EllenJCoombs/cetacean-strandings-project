@@ -20,14 +20,14 @@ gg1 <-
   coord_fixed(1.3) 
 
 # Read in the strandings data
-ds <- read.csv("cleandatesnames.csv")
+ds <- read.csv("UK_and_Irish_strandings.csv")
 
 # Remove NAs from coordinates
 # And restrict to things in UK waters
 #Filter species here too 
 ds <- ds %>%
   filter(!is.na(Latitude) & !is.na(Longitude)) %>%
-  filter(Latitude < 65 & Latitude > 45) %>%
+  filter(Latitude < 62 & Latitude > 45) %>%
   filter(Longitude < 3 & Latitude > -11) 
 
 # Basic plot using viridis colour scheme
@@ -158,7 +158,7 @@ base.map <-
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank())
 # Create a list for the start years of each decade
-decades <- c(seq(from = 1913, to = 2003, by = 20), 2013)
+decades <- c(seq(from = 1913, to = 2003, by = 10), 2013)
 # Make an empty list that you're going to put all your
 # ggplot maps into
 map.list <- list()
@@ -167,7 +167,7 @@ for(i in seq_along(decades)){
   
   # Define the start and end year of the decade
   start.year <- decades[i]
-  end.year <- decades[i] + 19
+  end.year <- decades[i] + 9
   # Add a short if statement so that you don't go into the future!
   if(end.year > 2017){
     end.year <- 2017

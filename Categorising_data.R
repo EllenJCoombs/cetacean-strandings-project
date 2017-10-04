@@ -342,6 +342,27 @@ ggplot(North_events, aes(x = Year, fill = Name.Current.Sci)) +
 
 write.csv(North_events, file = "North_events.csv")
 
+####South events 
+duplicated(South_Strandings$S.W.No.)
+#Or you can use unique 
+unique(South_Strandings$S.W.No.)
+
+#This works to get rid of e.g. 1932/14, 1932/14 
+South_events <- South_Strandings[!duplicated(South_Strandings$S.W.No.), ]
+
+#Removing duplicates from SW (CSIP data)
+South_events$S.W.No. <- (sub("\\.\\d+$","", South_events$S.W.No.))
+South_events <- South_events[!duplicated(South_events$S.W.No.), ]
+
+
+ggplot(South_events, aes(x = Year, fill = Name.Current.Sci)) +
+  geom_histogram(binwidth = 0.5)
+
+
+write.csv(South_events, file = "South_events.csv")
+
+
+
 ###############################################################################################
 #Post and pre-CSIP stranding events and richness 
 #CSIP started in 1990
