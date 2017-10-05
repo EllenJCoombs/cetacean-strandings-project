@@ -111,7 +111,7 @@ ggplot(Odontocete_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
 
-write.csv(Odontocete_events, file = "Odontocete_strandings.csv")
+write.csv(Odontocete_events, file = "Odontocete_events.csv")
 
 
 #Can use duplicated - Mysticetes 
@@ -133,7 +133,7 @@ Mysticete_events <- Mysticete_events[!duplicated(Mysticete_events$S.W.No.), ]
 ggplot(Mysticete_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
-write.csv(Mysticete_events, file = "Mysticete_strandings.csv")
+write.csv(Mysticete_events, file = "Mysticete_events.csv")
 
 #################################################################################################
 #By body size 
@@ -143,12 +143,13 @@ write.csv(Mysticete_events, file = "Mysticete_strandings.csv")
 
 
 #Big 
-cleaneddata <- read.csv("cleandatesnames.csv")
-bphysalus <- filter(cleaneddata, Name.Current.Sci ==  "Balaenoptera physalus") 
-bborealis <- filter(cleaneddata, Name.Current.Sci ==  "Balaenoptera borealis")
-bmusculus <- filter(cleaneddata, Name.Current.Sci ==  "Balaenoptera musculus") 
-mnovaeangliae <- filter(cleaneddata, Name.Current.Sci == "Megaptera novaeangliae") 
-pmacrocephalus <- filter(cleaneddata, Name.Current.Sci == "Physeter macrocephalus") 
+UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
+bphysalus <- filter(UK_and_Irish, Name.Current.Sci ==  "Balaenoptera physalus") 
+bborealis <- filter(UK_and_Irish, Name.Current.Sci ==  "Balaenoptera borealis")
+bmusculus <- filter(UK_and_Irish, Name.Current.Sci ==  "Balaenoptera musculus") 
+mnovaeangliae <- filter(UK_and_Irish, Name.Current.Sci == "Megaptera novaeangliae") 
+pmacrocephalus <- UK_and_Irish %>%
+  filter(Name.Current.Sci %in% c("Physeter macrocephalus", "Physeter macrocephalus "))  
 
 Big_bs <- rbind(bphysalus, bborealis, bmusculus, mnovaeangliae, pmacrocephalus)
 Big_bs$X.1 <- NULL
@@ -157,9 +158,10 @@ Big_bs$X <- NULL
 write.csv(Big_bs, file = "Big_body_size.csv")
 
 #Medium 
-oorca <- filter(cleaneddata, Name.Current.Sci ==  "Orcinus orca")
-hampullatus <- filter(cleaneddata, Name.Current.Sci ==  "Hyperoodon ampullatus")
-bacutorostrata <- filter(cleaneddata, Name.Current.Sci ==  "Balaenoptera acutorostrata") 
+oorca <- UK_and_Irish %>% 
+  filter(Name.Current.Sci %in% c("Orcinus orca", "Orcinus orca "))
+hampullatus <- filter(UK_and_Irish, Name.Current.Sci ==  "Hyperoodon ampullatus")
+bacutorostrata <- filter(UK_and_Irish, Name.Current.Sci ==  "Balaenoptera acutorostrata") 
 
 Medium_bs <- rbind(oorca, hampullatus, bacutorostrata)
 Medium_bs$X.1 <- NULL
@@ -168,14 +170,13 @@ Medium_bs$X <- NULL
 write.csv(Medium_bs, file = "Medium_body_size.csv")
 
 #Small - need to remove all of the uknowns as well 
-Small_bs_clean <- cleaneddata[ !(cleaneddata$Name.Current.Sci %in% Big_bs$Name.Current.Sci), ] 
+Small_bs_clean <- UK_and_Irish[ !(UK_and_Irish$Name.Current.Sci %in% Big_bs$Name.Current.Sci), ] 
 Small_bs_clean2 <- Small_bs_clean[ !(Small_bs_clean$Name.Current.Sci %in% Medium_bs$Name.Current.Sci), ] 
 
 
 Small_bs <- Small_bs_clean2 %>% 
-  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
-
 
 Small_bs$X.1 <- NULL
 Small_bs$X <- NULL 
@@ -238,21 +239,21 @@ Small_bs_richness <- Small_bs_richness %>%
 write.csv(Small_bs_richness, file = "Small_bs_richness.csv")
 
 #Stranding events ###############################################################################
-#Do this with: Big_bs, Medium_bs and Small_bs 
+#Small BS stranding events 
 
-duplicated(Medium_bs$S.W.No.)
+duplicated(Small_bs$S.W.No.)
 #Or you can use unique 
-unique(Medium_bs$S.W.No.)
+unique(Small_bs$S.W.No.)
 
 #This works to get rid of e.g. 1932/14, 1932/14 
-Medium_bs_events <- Medium_bs[!duplicated(Medium_bs$S.W.No.), ]
+Small_bs_events <- Small_bs[!duplicated(Small_bs$S.W.No.), ]
 
 #Removing duplicates from SW (CSIP data)
-Medium_bs_events$S.W.No. <- (sub("\\.\\d+$","", Medium_bs_events$S.W.No.))
-Medium_bs_events <- Medium_bs_events[!duplicated(Medium_bs_events$S.W.No.), ]
+Small_bs_events$S.W.No. <- (sub("\\.\\d+$","", Small_bs_events$S.W.No.))
+Small_bs_events <- Small_bs_events[!duplicated(Small_bs_events$S.W.No.), ]
 
 
-ggplot(Medium_bs_events, aes(x = Year, fill = Name.Current.Sci)) +
+ggplot(Small_bs_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
 Small_bs_events$X.2 <- NULL
@@ -270,6 +271,78 @@ Small_bs_events_count <- Small_bs_events_count %>%
   rename(Small_events = n)
 
 write.csv(Small_bs_events_count, file = "Small_bs_events_count.csv")
+
+###################
+#Medium BS stranding events 
+
+duplicated(Medium_bs$S.W.No.)
+#Or you can use unique 
+unique(Medium_bs$S.W.No.)
+
+#This works to get rid of e.g. 1932/14, 1932/14 
+Medium_bs_events <- Medium_bs[!duplicated(Medium_bs$S.W.No.), ]
+
+#Removing duplicates from SW (CSIP data)
+Medium_bs_events$S.W.No. <- (sub("\\.\\d+$","", Medium_bs_events$S.W.No.))
+Medium_bs_events <- Medium_bs_events[!duplicated(Medium_bs_events$S.W.No.), ]
+
+
+ggplot(Medium_bs_events, aes(x = Year, fill = Name.Current.Sci)) +
+  geom_histogram(binwidth = 0.5)
+
+Medium_bs_events$X.2 <- NULL
+Medium_bs_events$X.1 <- NULL
+Medium_bs_events$X <- NULL
+
+write.csv(Medium_bs_events, file = "Medium_bs_events.csv")
+
+
+#Need to get a count of stranding events per year 
+#Small_body_stranding events 
+
+Medium_bs_events_count <- count(Medium_bs_events, Year)
+Medium_bs_events_count <- Medium_bs_events_count %>% 
+  rename(Medium_events = n)
+
+write.csv(Medium_bs_events_count, file = "Medium_bs_events_count.csv")
+
+##############
+#Big BS stranding events 
+
+duplicated(Big_bs$S.W.No.)
+#Or you can use unique 
+unique(Big_bs$S.W.No.)
+
+#This works to get rid of e.g. 1932/14, 1932/14 
+Big_bs_events <- Big_bs[!duplicated(Big_bs$S.W.No.), ]
+
+#Removing duplicates from SW (CSIP data)
+Big_bs_events$S.W.No. <- (sub("\\.\\d+$","", Big_bs_events$S.W.No.))
+Big_bs_events <- Big_bs_events[!duplicated(Big_bs_events$S.W.No.), ]
+
+
+ggplot(Big_bs_events, aes(x = Year, fill = Name.Current.Sci)) +
+  geom_histogram(binwidth = 0.5)
+
+Big_bs_events$X.2 <- NULL
+Big_bs_events$X.1 <- NULL
+Big_bs_events$X <- NULL
+
+write.csv(Big_bs_events, file = "Big_bs_events.csv")
+
+
+#Need to get a count of stranding events per year 
+#Small_body_stranding events 
+
+Big_bs_events_count <- count(Big_bs_events, Year)
+Big_bs_events_count <- Big_bs_events_count %>% 
+  rename(Big_events = n)
+
+write.csv(Big_bs_events_count, file = "Big_bs_events_count.csv")
+
+
+
+
 
 
 ################################################################################################

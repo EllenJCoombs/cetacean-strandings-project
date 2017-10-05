@@ -113,6 +113,12 @@ UK_and_Irish$County[UK_and_Irish$County %in%  "Co.Derry, N.Ireland"] <- "Co. Der
 UK_and_Irish$County[UK_and_Irish$County %in%  "Donegal"] <- "Co. Donegal"
 UK_and_Irish$County[UK_and_Irish$County %in%  "Cork"] <- "Co. Cork"
 
+
+UK_and_Irish$Name.Current.Sci[UK_and_Irish$Name.Current.Sci %in%  "Orcinus orca "] <- "Orcinus orca"
+UK_and_Irish$Name.Current.Sci[UK_and_Irish$Name.Current.Sci %in%  "Physeter macrocephalus "] <- "Physeter macrocephalus"
+UK_and_Irish$Name.Current.Sci[UK_and_Irish$Name.Current.Sci %in%  "Pseudorca crassidens "] <- "Pseudorca crassidens"
+
+
 #for duplicates 
 UK_and_Irish[!(duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")]) | duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")], fromLast = TRUE)), ]
 
