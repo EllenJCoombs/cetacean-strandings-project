@@ -6,16 +6,16 @@ library(ggplot2)
 #for altering my data into presence/absence???
 library(picante)
 
-cleaneddata <- read.csv("cleandatesnames.csv") 
+UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv") 
 
 
 #Need to reorder the data
-speciesyearcount <- dplyr::count(cleaneddata, Name.Current.Sci, Year) %>%
+speciesyearcount <- dplyr::count(UK_and_Irish, Name.Current.Sci, Year) %>%
   na.omit()
 
 #Remove unknowns 
 species_known <- speciesyearcount %>% 
-  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
 

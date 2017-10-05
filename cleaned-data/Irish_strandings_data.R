@@ -89,11 +89,71 @@ arrange(UK_and_Irish, Date)
 
 
 #Filtering out the EIRE data (these are duplicates) EIRE appears in the NHM/CSIP data 
+#Remove EIRE and Antrim 
+#Be aware that Antrim is also written "Antrim N. Ireland" 
+#Down = Co.Down 
+#Antrim = Co. Antrim 
+#Delete all N.I then rename Derry to Co. Derry 
+#Londonderry to Co. Derry 
+UK_and_Irish <- UK_and_Irish %>% 
+  dplyr::filter(UK_and_Irish, !grepl("EIRE",County))
 
-a <- dplyr::filter(UK_and_Irish, !grepl("EIRE",County))
+#Remove N.I numbers - this removes most duplicates 
+UK_and_Irish <- UK_and_Irish %>% 
+  filter(!(S.W.No. %in% c("N.I.\\.\\d+")))
 
-write.csv(UK_and_Irish, file = "UK_and_Irish_strandings.csv")
+UK_and_Irish$County[UK_and_Irish$County %in%  "Down"] <- "Co. Down"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Antrim"] <- "Co. Antrim"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Londonderry"] <- "Co. Derry"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Derry, N.Ireland"] <- "Co. Derry"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Down, N.Ireland"] <- "Co. Down"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Antrim, N.Ireland"] <- "Co. Antrim"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Londonderry"] <- "Co. Derry"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Co.Derry, N.Ireland"] <- "Co. Derry"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Donegal"] <- "Co. Donegal"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Cork"] <- "Co. Cork"
 
+#for duplicates 
+UK_and_Irish[!(duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")]) | duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")], fromLast = TRUE)), ]
 
 #for duplicates 
 UK_and_Irish[!(duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")]) | duplicated(df[c("Date","Name.Current.Sci", "County")], fromLast = TRUE)), ]
+
+
+write.csv(UK_and_Irish, file = "UK_and_Irish_strandings.csv")
+
+#Quick plot of Data, including Irish counts 
+UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
+
+Strandings_IRL_UK <- UK_and_Irish %>%
+  select(Name.Current.Sci, Year)
+
+#A count per year of each species (with unknowns)
+Strandings_count_IRL_UK <- count(Strandings_IRL_UK, Year, Name.Current.Sci)
+
+#Plotting the above 
+ggplot(data = Strandings_count_IRL_UK, aes(x = Year, y = n, colour= Name.Current.Sci))+
+  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
+  labs(x = "Year", y = "Count") +
+  geom_line() +
+  theme_bw() + 
+  theme(legend.position="bottom") +
+  scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE) + 
+  facet_wrap(~ Species)   
+
+
+#Remove unknowns 
+Count_known_IRL_UK <- Strandings_count_IRL_UK %>% 
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
+                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
+
+
+ggplot(data = Count_known_IRL_UK, aes(x = Year, y = n, colour= Name.Current.Sci))+
+  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
+  labs(x = "Year", y = "Count") +
+  geom_line() +
+  theme_bw() + 
+  theme(legend.position="bottom") +
+  scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE) + 
+  facet_wrap(~ Species)   
+

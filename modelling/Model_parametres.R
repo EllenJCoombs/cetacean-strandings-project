@@ -68,40 +68,8 @@ library(picante)
 #Or can just put: 
 #Richness <- read.csv("richness.csv")
 
-cleaneddata <- read.csv("cleandatesnames.csv")
-speciesyearcount <- dplyr::count(cleaneddata, Name.Current.Sci, Year) %>%
-  na.omit()
-
-#Removing unknowns 
-speciesyearcount <- speciesyearcount %>% 
-  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
-                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
-
-
-speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum) %>%
-  na.omit()
-
-reordering <- speciesyearcount[c("Year", "n", "Name.Current.Sci")]
-whale.matrix <- sample2matrix(reordering)
-
-#Number of species per year 
-specnumber(whale.matrix)
-
-speciesrichness <- speciesyearcount %>%
-  count(Year)
-
-#rename 
-speciesrichness <- speciesrichness %>%
-  rename(Richness = nn)
-
-#write.csv(speciesrichness, file = "Richness.csv")
-
-#Small body size richness (everything under 8m)
-
-Small_bs_richness <- read.csv("Small_bs_richness.csv")
-
-Small_bs_richness <- Small_bs_richness %>%
-  rename(Small_richness = Richness)
+speciesrichness <- read.csv("Richness.csv")
+speciesrichness$X <- NULL 
 
 
 #################################################################################################
@@ -134,13 +102,43 @@ SST_yearly_max <- SST_yearly_max %>%
 
 ###############################################################################################
 #Stranding events 
+#Using the stranding count data 
 
-stranding_events_count <- read.csv("Stranding_events_count.csv")
-stranding_events_count$X <- NULL
+UK_IRL_stranding_events_count <- read.csv("Stranding_events_count_IRL_UK.csv")
 
-stranding_events_count <- stranding_events_count %>%
-  dplyr::rename(Stranding_count = n)
+UK_IRL_stranding_events_count <- UK_IRL_stranding_events_count %>%
+  rename(Stranding_events = Count)
 
+
+#This model dataset has all stranding events (including stranding events and richness for the
+#whole dataset)
+
+
+#Tying all of the data together 
+
+test <- bind_cols(speciesrichness, Population, storms, Final_geom, 
+                  orgs, SST_yearly_max, UK_IRL_stranding_events_count)
+
+test$X <- NULL
+test$Year1 <- NULL 
+test$Year2 <- NULL
+test$Year3 <- NULL
+test$Year4 <- NULL 
+test$year <- NULL
+test$Year5 <- NULL
+
+
+write.csv(test, file = "Model_data.csv")
+
+
+
+#Seperate model parametres ######################################################################
+#Small body size richness (everything under 8m)
+
+Small_bs_richness <- read.csv("Small_bs_richness.csv")
+
+Small_bs_richness <- Small_bs_richness %>%
+  rename(Small_richness = Richness)
 
 #Small body stranding events count 
 Small_bs_events_count <- read.csv("Small_bs_events_count.csv") 
@@ -165,6 +163,12 @@ test$Year7 <- NULL
 
 
 write.csv(test, file = "Model_data.csv")
+
+#Make a model parametre table for 1. Small body size (Richness, Stranding events)
+#same for medium and big 
+#Seperate model tables for 2. North and South (Richness, Stranding events)
+#Seperate model tables for 3. Guilds, odontocetes, mysticetes (Richness, Stranding events)
+#Pre and Post CSIP 4. Richness and Stranding events 
 
 
 

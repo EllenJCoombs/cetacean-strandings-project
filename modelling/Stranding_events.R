@@ -3,24 +3,19 @@
 #Looking at only stranding events (rather than individual strandings)
 #Based on S.W.No. 
 
-cleaneddata <- read.csv("cleandatesnames.csv")
-cleaneddata$X <- NULL
-cleaneddata$X.1 <- NULL 
+UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
+UK_and_Irish$X <- NULL
 
-
-
-duplicated(cleaneddata$S.W.No.)
+duplicated(UK_and_Irish$S.W.No.)
 #Or you can use unique 
-unique(cleaneddata$S.W.No.)
+unique(UK_and_Irish$S.W.No.)
 
 #This works to get rid of e.g. 1932/14, 1932/14 
-stranding_events <- cleaneddata[!duplicated(cleaneddata$S.W.No.), ]
-stranding_events$X.1 <- NULL
-stranding_events$X <- NULL
+UK_IRL_stranding_events <- UK_and_Irish[!duplicated(UK_and_Irish$S.W.No.), ]
 
 #Removing duplicates from SW (CSIP data)
-stranding_events$S.W.No. <- (sub("\\.\\d+$","",stranding_events$S.W.No.))
-stranding_events <- stranding_events[!duplicated(stranding_events$S.W.No.), ]
+UK_IRL_stranding_events$S.W.No. <- (sub("\\.\\d+$","",UK_IRL_stranding_events$S.W.No.))
+UK_IRL_stranding_events <- UK_IRL_stranding_events[!duplicated(UK_IRL_stranding_events$S.W.No.), ]
 
 #something like sub("\\.\\d+$","","SW1234.1")
 #substitute a . (\\.) followed by 1 or more digits (\\d+) followed by the end of the line ($) with nothing ("")
@@ -30,22 +25,23 @@ stranding_events <- stranding_events[!duplicated(stranding_events$S.W.No.), ]
 #on the data.frame?
 
 
-#Remove unknowns 
-stranding_events <- stranding_events %>% 
-  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
-                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
+#Remove unknowns if wanted 
+#UK_IRL_stranding_events <- UK_IRL_stranding_events %>% 
+  #filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
+                                   #"Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
 
-ggplot(stranding_events, aes(x = Year, fill = Name.Current.Sci)) +
+ggplot(UK_IRL_stranding_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
 
-write.csv(stranding_events, file = "Stranding_events.csv")
+write.csv(UK_IRL_stranding_events, file = "Stranding_events_IRL_UK.csv")
 
 
 #Getting these ready for adding to the model data 
 #How many stranding events per year? 
+UK_IRL_stranding_events_count <- count(UK_IRL_stranding_events, Year)
+UK_IRL_stranding_events_count <- UK_IRL_stranding_events_count %>%
+  rename(Count = n)
 
-stranding_events_count <- count(stranding_events, Year)
-
-write.csv(stranding_events_count, file = "Stranding_events_count.csv")
+write.csv(UK_IRL_stranding_events_count, file = "Stranding_events_count_IRL_UK.csv")
