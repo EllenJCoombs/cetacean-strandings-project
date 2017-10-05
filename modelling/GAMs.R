@@ -154,7 +154,7 @@ par(mfrow=c(2,2))
 gam.check(b_j)
 
 #This gives an AIC score 3 points higher - is the model complexity really worth it? 
-#Model only explains .3 more of the variation 
+#Model only explains .3 more of the variation (not worth the 3 extra AIC points)
 AIC(b_i, b_j)
 anova(b_i)
 anova(b_j)
@@ -239,12 +239,47 @@ plot(b_i)
 
 par(mfrow=c(2,2))
 gam.check(b_i)
+#AIC (model comparison)
 AIC(b_i)
-vis.gam(b_f)
+#Visualisation 
+vis.gam(b_i)
 
-
-vis.gam(b_f, n.grid = 50, theta = 35, phi = 32, zlab = "",
+vis.gam(b_i, n.grid = 50, theta = 35, phi = 32, zlab = "",
         ticktype = "detailed", color = "topo")
 
 
+###############################################################################################
+#Body size 
+#Small body size richness 
+
+
+small_bs_GAM <- gam(Small_richness ~ offset(log(Population)) +s(Year) +s(Max_SST_temp) , data=Model_data, method = "REML",
+                    family=tw(a=1.2))
+
+summary(small_bs_GAM)
+plot(small_bs_GAM)
+
+par(mfrow=c(2,2))
+gam.check(small_bs_GAM)
+#AIC (model comparison)
+AIC(small_bs_GAM)
+#Visualisation 
+vis.gam(small_bs_GAM)
+
+vis.gam(small_bs_GAM, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
+        ticktype = "detailed", color = "topo")
+
+
+#+s(Year) +s(Max_SST_temp) 
+#+s(Storms, k = 4) +s(Max_K_index, k=4) +s(Organisations)
+
+#Small body size stranding count 
+small_events <- gam(Small_events ~ offset(log(Population)) +s(Year) +s(Storms, k = 4), data=Model_data, method = "REML",
+                    family=tw(a=1.2))
+
+summary(small_events)
+plot(small_events)
+
+par(mfrow=c(2,2))
+gam.check(small_events)
 

@@ -22,7 +22,7 @@ storms <- storms %>%
   rename(Storms = count)
 
 ###################################################################################################
-#Population data 
+#Population data UK
 #This is a data file that is combined with yearly strandings 
 
 Population <- read.csv("Population_UK.csv")
@@ -65,6 +65,9 @@ Population <- Population %>%
 library(vegan)
 library(picante)
 
+#Or can just put: 
+#Richness <- read.csv("richness.csv")
+
 cleaneddata <- read.csv("cleandatesnames.csv")
 speciesyearcount <- dplyr::count(cleaneddata, Name.Current.Sci, Year) %>%
   na.omit()
@@ -92,6 +95,13 @@ speciesrichness <- speciesrichness %>%
   rename(Richness = nn)
 
 #write.csv(speciesrichness, file = "Richness.csv")
+
+#Small body size richness (everything under 8m)
+
+Small_bs_richness <- read.csv("Small_bs_richness.csv")
+
+Small_bs_richness <- Small_bs_richness %>%
+  rename(Small_richness = Richness)
 
 
 #################################################################################################
@@ -128,8 +138,19 @@ SST_yearly_max <- SST_yearly_max %>%
 stranding_events_count <- read.csv("Stranding_events_count.csv")
 stranding_events_count$X <- NULL
 
+stranding_events_count <- stranding_events_count %>%
+  dplyr::rename(Stranding_count = n)
+
+
+#Small body stranding events count 
+Small_bs_events_count <- read.csv("Small_bs_events_count.csv") 
+
+###
+#Tying all of the data together 
+
 test <- bind_cols(speciesrichness, Population, storms, Final_geom, 
-                  orgs, SST_yearly_max, stranding_events_count)
+                  orgs, SST_yearly_max, stranding_events_count, 
+                  Small_bs_richness, Small_bs_events_count)
 
 test$Year1 <- NULL 
 test$Year2 <- NULL
@@ -138,10 +159,9 @@ test$Year4 <- NULL
 test$year <- NULL
 test$Year5 <- NULL
 test$X <- NULL
-
-
-test <- test %>% 
-  dplyr::rename(Stranding_count = n)
+test$Year6 <- NULL
+test$X1 <- NULL 
+test$Year7 <- NULL
 
 
 write.csv(test, file = "Model_data.csv")

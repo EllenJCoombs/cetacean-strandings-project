@@ -177,6 +177,10 @@ Small_bs <- Small_bs_clean2 %>%
   filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
+
+Small_bs$X.1 <- NULL
+Small_bs$X <- NULL 
+
 write.csv(Small_bs, file = "Small_body_size.csv")
 
 ##################################################################################################
@@ -237,23 +241,36 @@ write.csv(Small_bs_richness, file = "Small_bs_richness.csv")
 #Stranding events ###############################################################################
 #Do this with: Big_bs, Medium_bs and Small_bs 
 
-duplicated(Small_bs$S.W.No.)
+duplicated(Medium_bs$S.W.No.)
 #Or you can use unique 
-unique(Small_bs$S.W.No.)
+unique(Medium_bs$S.W.No.)
 
 #This works to get rid of e.g. 1932/14, 1932/14 
-Small_bs_events <- Small_bs[!duplicated(Small_bs$S.W.No.), ]
+Medium_bs_events <- Medium_bs[!duplicated(Medium_bs$S.W.No.), ]
 
 #Removing duplicates from SW (CSIP data)
-Small_bs_events$S.W.No. <- (sub("\\.\\d+$","", Small_bs_events$S.W.No.))
-Small_bs_events <- Small_bs_events[!duplicated(Small_bs_events$S.W.No.), ]
+Medium_bs_events$S.W.No. <- (sub("\\.\\d+$","", Medium_bs_events$S.W.No.))
+Medium_bs_events <- Medium_bs_events[!duplicated(Medium_bs_events$S.W.No.), ]
 
 
-ggplot(Small_bs_events, aes(x = Year, fill = Name.Current.Sci)) +
+ggplot(Medium_bs_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
+Small_bs_events$X.2 <- NULL
+Small_bs_events$X.1 <- NULL
+Small_bs_events$X <- NULL
 
-write.csv(Medium_bs_events, file = "Medium_bs_events.csv")
+write.csv(Small_bs_events, file = "Small_bs_events.csv")
+
+
+#Need to get a count of stranding events per year 
+#Small_body_stranding events 
+
+Small_bs_events_count <- count(Small_bs_events, Year)
+Small_bs_events_count <- Small_bs_events_count %>% 
+  rename(Small_events = n)
+
+write.csv(Small_bs_events_count, file = "Small_bs_events_count.csv")
 
 
 ################################################################################################
