@@ -340,11 +340,6 @@ Big_bs_events_count <- Big_bs_events_count %>%
 
 write.csv(Big_bs_events_count, file = "Big_bs_events_count.csv")
 
-
-
-
-
-
 ################################################################################################
 #Splitting North and South 
 #49N - 61 N 
@@ -353,12 +348,12 @@ write.csv(Big_bs_events_count, file = "Big_bs_events_count.csv")
 #North = 55.5 - 61N 
 
 
-cleaneddata <- read.csv("cleandatesnames.csv")
-cleaneddata$X.1 <- NULL
-cleaneddata$X <- NULL
+UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
+UK_and_Irish$X.1 <- NULL
+UK_and_Irish$X <- NULL
 
 
-North_strandings <- cleaneddata %>%
+North_strandings <- UK_and_Irish %>%
   filter(Latitude > 55.5)
 
 
@@ -366,8 +361,7 @@ write.csv(North_strandings, file = "North_strandings.csv")
 
 
 #South_Strandings 
-
-South_Strandings <- cleaneddata %>%
+South_Strandings <- UK_and_Irish %>%
   filter(Latitude < 55.5) %>%
   filter(Longitude < 4)
 
@@ -392,7 +386,7 @@ gg1+
 
 #Remove unknowns 
 North_strandings <- North_strandings %>% 
-  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
 
@@ -450,34 +444,32 @@ ggplot(South_events, aes(x = Year, fill = Name.Current.Sci)) +
 
 write.csv(South_events, file = "South_events.csv")
 
-
-
 ###############################################################################################
 #Post and pre-CSIP stranding events and richness 
 #CSIP started in 1990
 
-cleaneddata <- read.csv("cleandatesnames.csv")
+UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
 
 #Post-CSIP 
-Post_CSIP <- cleaneddata %>%
+Post_CSIP <- UK_and_Irish %>%
   filter(Year %in% c(1990:2015))
 
-Pre_CSIP <- cleaneddata %>% 
+Pre_CSIP <- UK_and_Irish %>% 
   filter(Year %in% c(1913:1989))
 
 
 #Remove unknowns 
 Post_CSIP <- Post_CSIP %>% 
-  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
 #Remove unknowns 
 Pre_CSIP <- Pre_CSIP %>% 
-  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown delphinid ",
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
 
-#Richness for Pre and Post CSIP 
+#Richness for Pre CSIP 
 Pre_CSIP_year <- dplyr::count(Pre_CSIP, Name.Current.Sci, Year)
 Pre_CSIP_year <- Pre_CSIP_year[c("Year","n", "Name.Current.Sci")]
 
