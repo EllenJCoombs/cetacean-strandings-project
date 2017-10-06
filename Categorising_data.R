@@ -59,7 +59,7 @@ Mysticete_richness <- Mysticetes_year %>%
   count(Year)
 
 Mysticete_richness <- Mysticete_richness %>%
-  rename(Richness = nn)
+  rename(Mysticete_richness = Richness)
 
 write.csv(Mysticete_richness, file = "Mysticete_richness.csv")
 
@@ -84,7 +84,7 @@ Odontocete_richness <- Odontocetes_year %>%
 
 #Rename
 Odontocete_richness <- Odontocete_richness %>%
-  rename(Richness = nn)
+  rename(Odontocete_richness = Richness)
 
 write.csv(Odontocete_richness, file = "Odontocete_richness.csv")
 
@@ -110,10 +110,14 @@ Odontocete_events <- Odontocete_events[!duplicated(Odontocete_events$S.W.No.), ]
 ggplot(Odontocete_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
+#Count yearly events for GAM 
+Odontocete_events_count <- count(Odontocete_events, Year) 
+Odontocete_events_count <- Odontocete_events_count %>%
+  rename(Odontocete_events = n)
 
-write.csv(Odontocete_events, file = "Odontocete_events.csv")
+write.csv(Odontocete_events_count, file = "Odontocete_events_count.csv")
 
-
+##### Mysticetes 
 #Can use duplicated - Mysticetes 
 Mysticetes_known$X <- NULL
 Mysticetes_known$X.1 <- NULL
@@ -133,7 +137,11 @@ Mysticete_events <- Mysticete_events[!duplicated(Mysticete_events$S.W.No.), ]
 ggplot(Mysticete_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
-write.csv(Mysticete_events, file = "Mysticete_events.csv")
+#Count yearly events for GAM 
+Mysticete_events_count <- count(Mysticete_events, Year) 
+Mysticete_events_count <- Mysticete_events_count %>%
+  rename(Mysticete_events = n)
+write.csv(Mysticete_events_count, file = "Mysticete_events_count.csv")
 
 #################################################################################################
 #By body size 
@@ -155,7 +163,6 @@ Big_bs <- rbind(bphysalus, bborealis, bmusculus, mnovaeangliae, pmacrocephalus)
 Big_bs$X.1 <- NULL
 Big_bs$X <- NULL
 
-write.csv(Big_bs, file = "Big_body_size.csv")
 
 #Medium 
 oorca <- UK_and_Irish %>% 
@@ -167,7 +174,6 @@ Medium_bs <- rbind(oorca, hampullatus, bacutorostrata)
 Medium_bs$X.1 <- NULL
 Medium_bs$X <- NULL
 
-write.csv(Medium_bs, file = "Medium_body_size.csv")
 
 #Small - need to remove all of the uknowns as well 
 Small_bs_clean <- UK_and_Irish[ !(UK_and_Irish$Name.Current.Sci %in% Big_bs$Name.Current.Sci), ] 
@@ -181,27 +187,65 @@ Small_bs <- Small_bs_clean2 %>%
 Small_bs$X.1 <- NULL
 Small_bs$X <- NULL 
 
-write.csv(Small_bs, file = "Small_body_size.csv")
+
 
 ##################################################################################################
 #Splitting size into richness and stranding events 
 
 #Big body size richness #########################################
+#We have a problem with big cetaceans because they aren't recorded every year
+#This will mess up the bind_cols as there needs to be a count for wach year 
+#Try...
+
 Big_bs_year <- dplyr::count(Big_bs, Name.Current.Sci, Year)
+#This gives a count for every year 1913:2015 
+Big_bs_year <- Big_bs_year %>% 
+  complete(nesting(Name.Current.Sci), Year = seq(min(1913), max(2015), 1L))
+#This makes the NAs 0s
+Big_bs_year[is.na(Big_bs_year)] <- 0
+
+#This is for the matrix 
 Big_bs_year <- Big_bs_year[c("Year","n", "Name.Current.Sci")]
 
+#Makes the matrix for species richness 
 Big.bs.matrix <- sample2matrix(Big_bs_year)
+
 #Number of species per year 
 specnumber(Big.bs.matrix)
 
-#Richness double check 
-Big_bs_richness <- Big_bs_year %>%
-  count(Year)
+#Add a year colum to the matrix and then melt
+Big.bs.matrix <- cbind(Big.bs.matrix, Year = c(1913:2015))
 
-Big_bs_richness <- Big_bs_richness %>%
-  rename(Richness = nn)
+#Convert the matrix into a dataframe 
+Big_bs_matrix <- melt(Big.bs.matrix, measure.vars=names(Big.bs.matrix)%except%"Year")
+
+Big_bs_matrix <- Big_bs_matrix %>%
+  rename(Name.Current.Sci = variable)
+  
+Big_bs_matrix <- Big_bs_matrix %>%
+  filter(Name.Current.Sci %in% c("Balaenoptera physalus", "Balaenoptera musculus", "Megaptera novaeangliae",
+                         "Physeter macrocephalus", "Physeter macrocephalus "))
+
+
+#This uses count but doesn't get rid of the 0s - it counts years with 0 too 
+Big_bs_richness <- Big_bs_matrix %>% 
+  complete(Year, fill = list(value = 0)) %>% 
+  group_by(Year) %>% 
+  summarise(count = sum(value))
+
+
+Big_bs_richness <- count(Big_bs_matrix, Year)
+
 
 write.csv(Big_bs_richness, file = "Big_bs_richness.csv")
+
+x <- Big_bs_year %>% complete(nesting(Name.Current.Sci), Year = seq(min(1913), max(2015), 1L))
+x[is.na(x)] <- 0
+
+x <- x %>% 
+  complete(Year, fill = list(n = 0)) %>% 
+  group_by(Year) %>% 
+  summarise(count = sum(n))
 
 #Medium body size richness #######################################
 Medium_bs_year <- dplyr::count(Medium_bs, Name.Current.Sci, Year)
@@ -216,7 +260,7 @@ Medium_bs_richness <- Medium_bs_year %>%
   count(Year)
 
 Medium_bs_richness <- Medium_bs_richness %>%
-  rename(Richness = nn)
+  rename(Medium_richness = nn)
 
 write.csv(Medium_bs_richness, file = "Medium_bs_richness.csv")
 
@@ -234,7 +278,7 @@ Small_bs_richness <- Small_bs_year %>%
   count(Year)
 
 Small_bs_richness <- Small_bs_richness %>%
-  rename(Richness = nn)
+  rename(Small_richness = nn)
 
 write.csv(Small_bs_richness, file = "Small_bs_richness.csv")
 
@@ -259,9 +303,6 @@ ggplot(Small_bs_events, aes(x = Year, fill = Name.Current.Sci)) +
 Small_bs_events$X.2 <- NULL
 Small_bs_events$X.1 <- NULL
 Small_bs_events$X <- NULL
-
-write.csv(Small_bs_events, file = "Small_bs_events.csv")
-
 
 #Need to get a count of stranding events per year 
 #Small_body_stranding events 
@@ -294,9 +335,6 @@ Medium_bs_events$X.2 <- NULL
 Medium_bs_events$X.1 <- NULL
 Medium_bs_events$X <- NULL
 
-write.csv(Medium_bs_events, file = "Medium_bs_events.csv")
-
-
 #Need to get a count of stranding events per year 
 #Small_body_stranding events 
 
@@ -327,8 +365,6 @@ ggplot(Big_bs_events, aes(x = Year, fill = Name.Current.Sci)) +
 Big_bs_events$X.2 <- NULL
 Big_bs_events$X.1 <- NULL
 Big_bs_events$X <- NULL
-
-write.csv(Big_bs_events, file = "Big_bs_events.csv")
 
 
 #Need to get a count of stranding events per year 
@@ -361,14 +397,14 @@ write.csv(North_strandings, file = "North_strandings.csv")
 
 
 #South_Strandings 
-South_Strandings <- UK_and_Irish %>%
+South_strandings <- UK_and_Irish %>%
   filter(Latitude < 55.5) %>%
   filter(Longitude < 4)
 
 South_Strandings$X.1 <- NULL
 South_Strandings$X <-NULL
 
-write.csv(South_Strandings, file = "South_strandings.csv")
+write.csv(South_strandings, file = "South_strandings.csv")
 
 
 #Testing that these work
@@ -402,9 +438,32 @@ North_richness <- North_year %>%
   count(Year)
 
 North_richness <- North_richness %>%
-  rename(Richness = nn)
+  rename(North_richness = nn)
 
 write.csv(North_richness, file = "North_richness.csv")
+
+####### South richness 
+South_strandings <- South_strandings %>% 
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
+                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
+
+
+South_year <- dplyr::count(South_strandings, Name.Current.Sci, Year)
+South_year <- South_year[c("Year","n", "Name.Current.Sci")]
+
+South.matrix <- sample2matrix(South_year)
+#Number of species per year 
+specnumber(South.matrix)
+
+#Richness double check 
+South_richness <- South_year %>%
+  count(Year)
+
+South_richness <- South_richness %>%
+  rename(South_richness = nn)
+
+write.csv(South_richness, file = "South_richness.csv")
+
 
 #Stranding events - North and South #######################################
 duplicated(North_strandings$S.W.No.)
@@ -422,16 +481,20 @@ North_events <- North_events[!duplicated(North_events$S.W.No.), ]
 ggplot(North_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
+#Count for GAMs
+North_events_count <- count(North_events, Year) 
+North_events_count <- North_events_count %>%
+  rename(North_events = n)
 
-write.csv(North_events, file = "North_events.csv")
+write.csv(North_events_count, file = "North_events_count.csv")
 
 ####South events 
-duplicated(South_Strandings$S.W.No.)
+duplicated(South_strandings$S.W.No.)
 #Or you can use unique 
-unique(South_Strandings$S.W.No.)
+unique(South_strandings$S.W.No.)
 
 #This works to get rid of e.g. 1932/14, 1932/14 
-South_events <- South_Strandings[!duplicated(South_Strandings$S.W.No.), ]
+South_events <- South_strandings[!duplicated(South_strandings$S.W.No.), ]
 
 #Removing duplicates from SW (CSIP data)
 South_events$S.W.No. <- (sub("\\.\\d+$","", South_events$S.W.No.))
@@ -441,8 +504,11 @@ South_events <- South_events[!duplicated(South_events$S.W.No.), ]
 ggplot(South_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
+South_events_count <- count(South_events, Year) 
+South_events_count <- South_events_count %>%
+  rename(South_events = n)
 
-write.csv(South_events, file = "South_events.csv")
+write.csv(South_events_count, file = "South_events_count.csv")
 
 ###############################################################################################
 #Post and pre-CSIP stranding events and richness 
@@ -450,10 +516,10 @@ write.csv(South_events, file = "South_events.csv")
 
 UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
 
-#Post-CSIP 
+#Post-CSIP filter  
 Post_CSIP <- UK_and_Irish %>%
   filter(Year %in% c(1990:2015))
-
+#Pre-CSIP filter 
 Pre_CSIP <- UK_and_Irish %>% 
   filter(Year %in% c(1913:1989))
 
@@ -484,15 +550,65 @@ Pre_CSIP_richness <- Pre_CSIP_year %>%
 Pre_CSIP_richness <- Pre_CSIP_richness %>%
   rename(Richness = nn)
 
-Post_CSIP$X.1 <- NULL
-Post_CSIP$X <- NULL 
+Pre_CSIP$X.1 <- NULL
+Pre_CSIP$X <- NULL 
 Pre_CSIP$X.1 <- NULL 
 Pre_CSIP$X <- NULL
 
 write.csv(Pre_CSIP_richness, file = "Pre_CSIP_richness.csv")
 
+######################
+#Post CSIP richness 
+#Richness for post CSIP 
+Post_CSIP_year <- dplyr::count(Post_CSIP, Name.Current.Sci, Year)
+Post_CSIP_year <- Post_CSIP_year[c("Year","n", "Name.Current.Sci")]
+
+Post.matrix <- sample2matrix(Post_CSIP_year)
+#Number of species per year 
+specnumber(Post.matrix)
+
+#Richness double check 
+Post_CSIP_richness <- Post_CSIP_year %>%
+  count(Year)
+
+Post_CSIP_richness <- Post_CSIP_richness %>%
+  rename(Richness = nn)
+
+Post_CSIP$X.1 <- NULL
+Post_CSIP$X <- NULL 
+Post_CSIP$X.1 <- NULL 
+Post_CSIP$X <- NULL
+
+write.csv(Post_CSIP_richness, file = "Post_CSIP_richness.csv")
+
 #Stranding events ################################################
-#Done for Pre and Post CSIP 
+#Pre-CSIP 
+duplicated(Pre_CSIP$S.W.No.)
+#Or you can use unique 
+unique(Pre_CSIP$S.W.No.)
+
+#This works to get rid of e.g. 1932/14, 1932/14 
+Pre_CSIP_events <- Pre_CSIP[!duplicated(Pre_CSIP$S.W.No.), ]
+
+#Removing duplicates from SW (CSIP data)
+Pre_CSIP_events$S.W.No. <- (sub("\\.\\d+$","", Pre_CSIP_events$S.W.No.))
+Pre_CSIP_events <- Pre_CSIP_events[!duplicated(Pre_CSIP_events$S.W.No.), ]
+
+
+ggplot(Pre_CSIP_events, aes(x = Year, fill = Name.Current.Sci)) +
+  geom_histogram(binwidth = 0.5)
+
+#Count number of individual stranding events per year for the GAM 
+Pre_CSIP_events_count <- count(Pre_CSIP_events, Year)
+Pre_CSIP_events_count <- Pre_CSIP_events_count %>%
+  rename(Pre_CSIP_events = n)
+write.csv(Pre_CSIP_events_count, file = "Pre_CSIP_event_count.csv")
+
+
+###### Post CSIP 
+#Stranding events 
+
+#Post CSIP 
 duplicated(Post_CSIP$S.W.No.)
 #Or you can use unique 
 unique(Post_CSIP$S.W.No.)
@@ -505,11 +621,13 @@ Post_CSIP_events$S.W.No. <- (sub("\\.\\d+$","", Post_CSIP_events$S.W.No.))
 Post_CSIP_events <- Post_CSIP_events[!duplicated(Post_CSIP_events$S.W.No.), ]
 
 
-ggplot(Pre_CSIP_events, aes(x = Year, fill = Name.Current.Sci)) +
+ggplot(Post_CSIP_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
 
-write.csv(Pre_CSIP_events, file = "Pre_CSIP_events.csv")
+#Count number of individual stranding events per year for the GAM 
+Post_CSIP_events_count <- count(Post_CSIP_events, Year) 
+Post_CSIP_events_count <- Post_CSIP_events_count %>%
+  rename(Post_CSIP_events = n)
+write.csv(Post_CSIP_events_count, file = "Post_CSIP_events_count.csv")
 
-
-test <- count(Post_CSIP_events, Year) 

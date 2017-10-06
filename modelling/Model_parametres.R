@@ -170,5 +170,22 @@ write.csv(test, file = "Model_data.csv")
 #Seperate model tables for 3. Guilds, odontocetes, mysticetes (Richness, Stranding events)
 #Pre and Post CSIP 4. Richness and Stranding events 
 
+#Body size (using the above parametres but swapping in richness and stranding events for
+#the different body sizes 
+
+#Big body size first 
+#Read in richness and stranding event data 
+
+Big_bs_events_count <- read.csv("Big_bs_events_count.csv")  #Stranding events 
+Big_bs_richness <- read.csv("Big_bs_richness.csv")   #richness 
+
+
+
+
+
+
+Big_bs_GAM <- bind_cols(Big_bs_events_count, Big_bs_richness, Population, storms, Final_geom, 
+                  orgs, SST_yearly_max)
+
 
 
