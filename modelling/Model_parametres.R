@@ -173,19 +173,24 @@ write.csv(test, file = "Model_data.csv")
 #Body size (using the above parametres but swapping in richness and stranding events for
 #the different body sizes 
 
-#Big body size first 
+#Small body size first 
 #Read in richness and stranding event data 
 
-Big_bs_events_count <- read.csv("Big_bs_events_count.csv")  #Stranding events 
-Big_bs_richness <- read.csv("Big_bs_richness.csv")   #richness 
+Small_bs_events_count <- read.csv("Small_bs_events_count.csv")  #Stranding events 
+Small_bs_richness <- read.csv("Small_bs_richness.csv")   #richness 
 
-
-
-
-
-
-Big_bs_GAM <- bind_cols(Big_bs_events_count, Big_bs_richness, Population, storms, Final_geom, 
+Small_bs_GAM <- bind_cols(Small_bs_events_count, Small_bs_richness, Population, storms, Final_geom, 
                   orgs, SST_yearly_max)
 
+Small_bs_GAM$X <- NULL
+Small_bs_GAM$X1 <- NULL
+Small_bs_GAM$Year1 <- NULL
+Small_bs_GAM$Year2 <- NULL
+Small_bs_GAM$Year3 <- NULL
+Small_bs_GAM$Year4 <- NULL
+Small_bs_GAM$Year5 <- NULL
+Small_bs_GAM$X2 <- NULL
+Small_bs_GAM$year <- NULL 
 
+write.csv(Small_bs_GAM, file = "Small_model.csv")
 

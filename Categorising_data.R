@@ -227,25 +227,20 @@ Big_bs_matrix <- Big_bs_matrix %>%
                          "Physeter macrocephalus", "Physeter macrocephalus "))
 
 
+Big_bs_matrix <- Big_bs_matrix %>%
+  arrange(Year)
+
+
 #This uses count but doesn't get rid of the 0s - it counts years with 0 too 
 Big_bs_richness <- Big_bs_matrix %>% 
   complete(Year, fill = list(value = 0)) %>% 
-  group_by(Year) %>% 
+  group_by() %>% 
   summarise(count = sum(value))
 
-
-Big_bs_richness <- count(Big_bs_matrix, Year)
 
 
 write.csv(Big_bs_richness, file = "Big_bs_richness.csv")
 
-x <- Big_bs_year %>% complete(nesting(Name.Current.Sci), Year = seq(min(1913), max(2015), 1L))
-x[is.na(x)] <- 0
-
-x <- x %>% 
-  complete(Year, fill = list(n = 0)) %>% 
-  group_by(Year) %>% 
-  summarise(count = sum(n))
 
 #Medium body size richness #######################################
 Medium_bs_year <- dplyr::count(Medium_bs, Name.Current.Sci, Year)
@@ -279,6 +274,8 @@ Small_bs_richness <- Small_bs_year %>%
 
 Small_bs_richness <- Small_bs_richness %>%
   rename(Small_richness = nn)
+
+Small_bs_richness$X <- NULL
 
 write.csv(Small_bs_richness, file = "Small_bs_richness.csv")
 

@@ -251,22 +251,22 @@ vis.gam(b_i, n.grid = 50, theta = 35, phi = 32, zlab = "",
 ###############################################################################################
 #Body size 
 #Small body size richness 
+Small_model <- read.csv("Small_model.csv")
 
-
-small_bs_GAM <- gam(Small_richness ~ offset(log(Population)) +s(Year) +s(Max_SST_temp) , data=Model_data, method = "REML",
+Small_model <- gam(Small_richness ~ offset(log(Population)) +s(Year), data=Small_model, method = "REML",
                     family=tw(a=1.2))
 
-summary(small_bs_GAM)
-plot(small_bs_GAM)
+summary(Small_model)
+plot(Small_model)
 
 par(mfrow=c(2,2))
-gam.check(small_bs_GAM)
+gam.check(Small_model)
 #AIC (model comparison)
-AIC(small_bs_GAM)
+AIC(Small_model)
 #Visualisation 
-vis.gam(small_bs_GAM)
+vis.gam(Small_model)
 
-vis.gam(small_bs_GAM, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
+vis.gam(Small_bs_GAM, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
         ticktype = "detailed", color = "topo")
 
 
@@ -274,7 +274,7 @@ vis.gam(small_bs_GAM, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
 #+s(Storms, k = 4) +s(Max_K_index, k=4) +s(Organisations)
 
 #Small body size stranding count 
-small_events <- gam(Small_events ~ offset(log(Population)) +s(Year) +s(Storms, k = 4), data=Model_data, method = "REML",
+Small_bs_GAM <- gam(Small_events ~ offset(log(Population)) +s(Year) +s(Storms, k = 4), data=Small_bs_GAM, method = "REML",
                     family=tw(a=1.2))
 
 summary(small_events)
