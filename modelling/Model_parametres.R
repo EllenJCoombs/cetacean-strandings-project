@@ -194,3 +194,5 @@ Small_bs_GAM$year <- NULL
 
 write.csv(Small_bs_GAM, file = "Small_model.csv")
 
+#
+

@@ -253,20 +253,20 @@ vis.gam(b_i, n.grid = 50, theta = 35, phi = 32, zlab = "",
 #Small body size richness 
 Small_model <- read.csv("Small_model.csv")
 
-Small_model <- gam(Small_richness ~ offset(log(Population)) +s(Year), data=Small_model, method = "REML",
+Small_a <- gam(Small_richness ~ offset(log(Population)) +s(Storms, k = 4), data=Small_model, method = "REML",
                     family=tw(a=1.2))
 
-summary(Small_model)
-plot(Small_model)
+summary(Small_a)
+plot(Small_a)
 
 par(mfrow=c(2,2))
-gam.check(Small_model)
+gam.check(Small_a)
 #AIC (model comparison)
-AIC(Small_model)
+AIC(Small_a)
 #Visualisation 
-vis.gam(Small_model)
+vis.gam(Small_a)
 
-vis.gam(Small_bs_GAM, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
+vis.gam(Small_a, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
         ticktype = "detailed", color = "topo")
 
 
