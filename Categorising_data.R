@@ -562,6 +562,9 @@ Pre_CSIP$X <- NULL
 Pre_CSIP$X.1 <- NULL 
 Pre_CSIP$X <- NULL
 
+Pre_CSIP_richness <- Pre_CSIP_richness %>%
+  rename(Pre_CSIP_richness = Richness)
+
 write.csv(Pre_CSIP_richness, file = "Pre_CSIP_richness.csv")
 
 ######################
