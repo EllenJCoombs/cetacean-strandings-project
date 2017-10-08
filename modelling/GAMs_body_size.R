@@ -1,5 +1,4 @@
 
-
 #GAMs 
 
 library(mgcv)
@@ -58,7 +57,7 @@ AIC(Small_ed)
 #adjusted R^2, and residual standard error that are computed once for the entire model.
 #e.g. glance(b_m)
 
-#Note: You can't use 'augment' on a GAM 
+#Note: You can't use 'augment' on a GAM
 
 #Tidy multiple models at once 
 Small_tidy <- list(Small_ra = Small_ra, Small_rb = Small_rb, Small_rc = Small_rc, Small_rd = Small_rd,

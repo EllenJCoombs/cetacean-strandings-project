@@ -390,9 +390,6 @@ North_strandings <- UK_and_Irish %>%
   filter(Latitude > 55.5)
 
 
-write.csv(North_strandings, file = "North_strandings.csv")
-
-
 #South_Strandings 
 South_strandings <- UK_and_Irish %>%
   filter(Latitude < 55.5) %>%
@@ -400,8 +397,6 @@ South_strandings <- UK_and_Irish %>%
 
 South_Strandings$X.1 <- NULL
 South_Strandings$X <-NULL
-
-write.csv(South_strandings, file = "South_strandings.csv")
 
 
 #Testing that these work
@@ -416,6 +411,7 @@ gg1+
 #Used the same code for both of these (North and South)
 #Surprisingly the Scottish strandings in 1942 were unknown species and unknown lat/long so have been
 #dropped from the Northern dataset (i.e. 0 richness for 1942)
+
 
 #Remove unknowns 
 North_strandings <- North_strandings %>% 
@@ -438,6 +434,13 @@ North_richness <- North_richness %>%
   rename(North_richness = nn)
 
 write.csv(North_richness, file = "North_richness.csv")
+
+
+#Needed to add data here for 1942 - need to work out how to do that properly 
+#rereading the new data 
+
+North_richness <- read.csv("North_richness.csv")
+North_richness$X <- NULL
 
 ####### South richness 
 South_strandings <- South_strandings %>% 
@@ -484,6 +487,13 @@ North_events_count <- North_events_count %>%
   rename(North_events = n)
 
 write.csv(North_events_count, file = "North_events_count.csv")
+
+
+#Needed to add data here for 1942 - need to work out how to do that properly 
+#rereading the new data 
+
+North_events_count <- read.csv("North_events_count.csv")
+
 
 ####South events 
 duplicated(South_strandings$S.W.No.)
