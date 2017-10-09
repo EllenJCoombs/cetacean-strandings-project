@@ -582,12 +582,14 @@ Post_CSIP_richness <- Post_CSIP_year %>%
   count(Year)
 
 Post_CSIP_richness <- Post_CSIP_richness %>%
-  rename(Richness = nn)
+  rename(Post_CSIP_richness = nn)
 
 Post_CSIP$X.1 <- NULL
 Post_CSIP$X <- NULL 
 Post_CSIP$X.1 <- NULL 
 Post_CSIP$X <- NULL
+
+Post_CSIP_richness$X <- NULL
 
 write.csv(Post_CSIP_richness, file = "Post_CSIP_richness.csv")
 

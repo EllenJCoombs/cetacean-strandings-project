@@ -217,3 +217,41 @@ Pre_CSIP_model$year <- NULL
 
 
 write.csv(Pre_CSIP_model, file = "Pre_CSIP_model.csv")
+
+#####
+#Post CSIP 
+#This needs to be filtered: 1990-2015 
+
+Post_CSIP_events_count <- read.csv("Post_CSIP_events_count.csv")
+Post_CSIP_richness <- read.csv("Post_CSIP_richness.csv")
+
+
+Pop_post_CSIP <- Population %>%
+  filter(Year %in% c(1990:2015))
+
+#Filtering storms pre CSIP 
+Storms_post_CSIP <- storms %>%
+  filter(Year %in% c(1990:2015))
+
+#Filtering geomagnetic data pre CSIP 
+Geom_post_CSIP <- Final_geom %>%
+  filter(Year %in% c(1990:2015))
+
+SST_post_CSIP <- SST_yearly_max %>%
+  filter(year %in% c(1990:2015))
+
+
+Post_CSIP_model <- bind_cols(Post_CSIP_events_count, Post_CSIP_richness, Pop_post_CSIP, 
+                            Storms_post_CSIP, Geom_post_CSIP, SST_post_CSIP)
+
+Post_CSIP_model$X <- NULL
+Post_CSIP_model$X1 <- NULL
+Post_CSIP_model$Year1 <- NULL
+Post_CSIP_model$Year2 <- NULL
+Post_CSIP_model$Year3 <- NULL
+Post_CSIP_model$Year4 <- NULL
+Post_CSIP_model$Year5 <- NULL
+Post_CSIP_model$X2 <- NULL
+Post_CSIP_model$year <- NULL 
+
+write.csv(Post_CSIP_model, file = "Post_CSIP_model.csv")
