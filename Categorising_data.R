@@ -48,6 +48,15 @@ write.csv(Odontocetes, file = "Odontocetes.csv")
 #Have to order in this way for matrix to work
 
 Mysticetes_year <- dplyr::count(Mysticetes_known, Name.Current.Sci, Year)
+
+Mysticetes_year <- Mysticetes_year %>% 
+  complete(nesting(Name.Current.Sci), Year = seq(min(1913), max(2015), 1L))
+#This makes the NAs 0s
+Mysticetes_year[is.na(Big_bs_year)] <- 0
+
+
+
+
 Mysticetes_year <- Mysticetes_year[c("Year","n", "Name.Current.Sci")]
 
 Mysticete.matrix <- sample2matrix(Mysticetes_year)
