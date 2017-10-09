@@ -241,6 +241,12 @@ Big_bs_richness <- Big_bs_matrix %>%
 
 write.csv(Big_bs_richness, file = "Big_bs_richness.csv")
 
+#I've added in the extra data here as many years were 0 but I need to change this!
+#Need to read in new data 
+Big_bs_richness <- read.csv("Big_bs_richness.csv")
+Big_bs_richness$X <- NULL
+
+
 
 #Medium body size richness #######################################
 Medium_bs_year <- dplyr::count(Medium_bs, Name.Current.Sci, Year)
@@ -258,6 +264,10 @@ Medium_bs_richness <- Medium_bs_richness %>%
   rename(Medium_richness = nn)
 
 write.csv(Medium_bs_richness, file = "Medium_bs_richness.csv")
+
+#Two years of data where there were 0 records - need to work out how to do the code for this 
+
+Medium_bs_richness <- read.csv("Medium_bs_richness.csv")
 
 
 #Small body size richness #######################################
@@ -341,6 +351,11 @@ Medium_bs_events_count <- Medium_bs_events_count %>%
 
 write.csv(Medium_bs_events_count, file = "Medium_bs_events_count.csv")
 
+#Need to redo this as there were years where 0 
+
+Medium_bs_events_count <- read.csv("Medium_bs_events_count.csv")
+
+
 ##############
 #Big BS stranding events 
 
@@ -372,6 +387,10 @@ Big_bs_events_count <- Big_bs_events_count %>%
   rename(Big_events = n)
 
 write.csv(Big_bs_events_count, file = "Big_bs_events_count.csv")
+
+###I've had to redo the stranding events with added 0s - need to change this code!! 
+
+Big_bs_events_count <- read.csv("Big_bs_events_count.csv") 
 
 ################################################################################################
 #Splitting North and South 

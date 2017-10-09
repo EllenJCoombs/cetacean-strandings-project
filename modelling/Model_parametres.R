@@ -136,10 +136,51 @@ write.csv(test, file = "Model_data.csv")
 #Seperate model tables for 3. Guilds, odontocetes, mysticetes (Richness, Stranding events)
 #Pre and Post CSIP 4. Richness and Stranding events 
 
+#################################################################################################
 #Body size (using the above parametres but swapping in richness and stranding events for
 #the different body sizes 
 
-#Small body size first 
+
+Big_bs_events_count <- read.csv("Big_bs_events_count.csv")  #Stranding events 
+Big_bs_richness <- read.csv("Big_bs_richness.csv")   #richness 
+
+Big_model <- bind_cols(Big_bs_events_count, Big_bs_richness, Population, storms, Final_geom, 
+                         orgs, SST_yearly_max)
+
+Big_model$X <- NULL
+Big_model$X1 <- NULL
+Big_model$Year1 <- NULL
+Big_model$Year2 <- NULL
+Big_model$Year3 <- NULL
+Big_model$Year4 <- NULL
+Big_model$Year5 <- NULL
+Big_model$X2 <- NULL
+Big_model$year <- NULL 
+
+write.csv(Big_model, file = "Big_model.csv")
+
+
+#Medium body size 
+Medium_bs_events_count <- read.csv("Medium_bs_events_count.csv")  #Stranding events 
+Medium_bs_richness <- read.csv("Medium_bs_richness.csv")   #richness 
+
+Medium_model <- bind_cols(Medium_bs_events_count, Medium_bs_richness, Population, storms, Final_geom, 
+                       orgs, SST_yearly_max)
+
+Medium_model$X <- NULL
+Medium_model$X1 <- NULL
+Medium_model$Year1 <- NULL
+Medium_model$Year2 <- NULL
+Medium_model$Year3 <- NULL
+Medium_model$Year4 <- NULL
+Medium_model$Year5 <- NULL
+Medium_model$X2 <- NULL
+Medium_model$year <- NULL 
+
+write.csv(Medium_model, file = "Medium_model.csv")
+
+
+#Small body size
 #Read in richness and stranding event data 
 
 Small_bs_events_count <- read.csv("Small_bs_events_count.csv")  #Stranding events 
@@ -160,6 +201,7 @@ Small_model$year <- NULL
 
 write.csv(Small_model, file = "Small_model.csv")
 
+######
 #North and South models 
 North_richness <- read.csv("North_richness.csv")
 North_events_count <- read.csv("North_events_count.csv")
@@ -178,6 +220,26 @@ North_model$X2 <- NULL
 North_model$year <- NULL 
 
 write.csv(North_model, file = "North_model.csv")
+
+##########
+#South model 
+South_richness <- read.csv("South_richness.csv")
+South_events_count <- read.csv("South_events_count.csv")
+
+South_model <- bind_cols(South_richness, South_events_count, Population, storms, Final_geom, 
+                         orgs, SST_yearly_max)
+
+South_model$X <- NULL
+South_model$X1 <- NULL
+South_model$Year1 <- NULL
+South_model$Year2 <- NULL
+South_model$Year3 <- NULL
+South_model$Year4 <- NULL
+South_model$Year5 <- NULL
+South_model$X2 <- NULL
+South_model$year <- NULL 
+
+write.csv(South_model, file = "South_model.csv")
 
 
 ########
