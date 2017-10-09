@@ -49,10 +49,10 @@ write.csv(Odontocetes, file = "Odontocetes.csv")
 
 Mysticetes_year <- dplyr::count(Mysticetes_known, Name.Current.Sci, Year)
 
-Mysticetes_year <- Mysticetes_year %>% 
-  complete(nesting(Name.Current.Sci), Year = seq(min(1913), max(2015), 1L))
+#Mysticetes_year <- Mysticetes_year %>% 
+  #complete(nesting(Name.Current.Sci), Year = seq(min(1913), max(2015), 1L))
 #This makes the NAs 0s
-Mysticetes_year[is.na(Big_bs_year)] <- 0
+#Mysticetes_year[is.na(Big_bs_year)] <- 0
 
 
 Mysticetes_year <- Mysticetes_year[c("Year","n", "Name.Current.Sci")]
@@ -66,7 +66,7 @@ Mysticete_richness <- Mysticetes_year %>%
   count(Year)
 
 Mysticete_richness <- Mysticete_richness %>%
-  rename(Mysticete_richness = Richness)
+  rename(Mysticete_richness = nn)
 
 write.csv(Mysticete_richness, file = "Mysticete_richness.csv")
 
