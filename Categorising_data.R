@@ -55,8 +55,6 @@ Mysticetes_year <- Mysticetes_year %>%
 Mysticetes_year[is.na(Big_bs_year)] <- 0
 
 
-
-
 Mysticetes_year <- Mysticetes_year[c("Year","n", "Name.Current.Sci")]
 
 Mysticete.matrix <- sample2matrix(Mysticetes_year)
