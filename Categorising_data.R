@@ -70,6 +70,10 @@ Mysticete_richness <- Mysticete_richness %>%
 
 write.csv(Mysticete_richness, file = "Mysticete_richness.csv")
 
+#I've had to change this to put 0s in - need to sort the code for this....
+
+Mysticete_richness <- read.csv("Mysticete_richness.csv")
+
 #Odontocete richness 
 #Mysticete and Odontocete richness 
 #Have to order in this way for matrix to work 
@@ -149,6 +153,11 @@ Mysticete_events_count <- count(Mysticete_events, Year)
 Mysticete_events_count <- Mysticete_events_count %>%
   rename(Mysticete_events = n)
 write.csv(Mysticete_events_count, file = "Mysticete_events_count.csv")
+
+
+#Have had to fill in the 0s - need to sort the code for this 
+
+Mysticete_events_count <- read.csv("Mysticete_events_count.csv")
 
 #################################################################################################
 #By body size 

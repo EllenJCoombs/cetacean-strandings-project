@@ -136,6 +136,48 @@ write.csv(test, file = "Model_data.csv")
 #Seperate model tables for 3. Guilds, odontocetes, mysticetes (Richness, Stranding events)
 #Pre and Post CSIP 4. Richness and Stranding events 
 
+
+#################################################################################################
+#Parvorder plots 
+#Mysticetes and Odontocetes 
+
+
+Mysticete_events_count <- read.csv("Mysticete_events_count.csv")  #Stranding events 
+Mysticete_richness <- read.csv("Mysticete_richness.csv")   #richness 
+
+Mysticete_model <- bind_cols(Mysticete_events_count, Mysticete_richness, Population, storms, Final_geom, 
+                       orgs, SST_yearly_max)
+
+Mysticete_model$X <- NULL
+Mysticete_model$X1 <- NULL
+Mysticete_model$Year1 <- NULL
+Mysticete_model$Year2 <- NULL
+Mysticete_model$Year3 <- NULL
+Mysticete_model$Year4 <- NULL
+Mysticete_model$Year5 <- NULL
+Mysticete_model$X2 <- NULL
+Mysticete_model$year <- NULL 
+
+write.csv(Mysticete_model, file = "Mysticete_model.csv")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #################################################################################################
 #Body size (using the above parametres but swapping in richness and stranding events for
 #the different body sizes 

@@ -134,45 +134,18 @@ AIC(Medium_ed)
 #Note: You can't use 'augment' on a GAM
 
 #Tidy multiple models at once 
-Big_tidy <- list(Big_ra = Big_ra, Big_rb = Big_rb, Big_rc = Big_rc, Big_rd = Big_rd,
-                 Big_ea = Big_ea, Big_eb = Big_eb, Big_ec = Big_ec, Big_ed = Big_ed) 
+Medium_tidy <- list(Medium_ra = Medium_ra, Medium_rb = Medium_rb, Medium_rc = Medium_rc, Medium_rd = Medium_rd,
+                 Medium_ea = Medium_ea, Medium_eb = Medium_eb, Medium_ec = Medium_ec, Medium_ed = Medium_ed) 
 
 #Saving the tidy and glance datasets 
-Big_coefs_tidy <- plyr::ldply(Big_tidy, tidy, .id = "model")
-Big_coefs_glance <- plyr::ldply(Big_tidy, glance, .id = "model")
+Medium_coefs_tidy <- plyr::ldply(Medium_tidy, tidy, .id = "model")
+Medium_coefs_glance <- plyr::ldply(Medium_tidy, glance, .id = "model")
 
-write.csv(Big_coefs_tidy, file = "Big_tidy.csv")
-write.csv(Big_coefs_glance, file = "Big_glance.csv")
-
-
+write.csv(Medium_coefs_tidy, file = "Medium_tidy.csv")
+write.csv(Medium_coefs_glance, file = "Medium_glance.csv")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-library(mgcv)
-library(broom)
+#Small body size 
 #+s(Storms, k = 4)
 #+s(Year) +s(Max_SST_temp) 
 #+s(Storms, k = 4) +s(Max_K_index, k=4) +s(Organisations)
@@ -182,19 +155,19 @@ library(broom)
 Small_model <- read.csv("Small_model.csv")
 Small_model$X <- NULL
 
-Small_ra <- gam(Small_richness ~ offset(log(Population)) +s(Year), data=Small_model, 
+Small_re <- gam(Small_richness ~ offset(log(Population)) +s(Storms, k = 4), data=Small_model, 
                 method = "REML", family=tw(a=1.2))
 
 #+s(Max_SST) +s(Storms, k = 4)
 #+s(Max_K_index, k= 4)
 
-summary(Small_ra)
-plot(Small_ra)
+summary(Small_re)
+plot(Small_re)
 
 par(mfrow=c(2,2))
-gam.check(Small_ra)
+gam.check(Small_re)
 #AIC (model comparison)
-AIC(Small_rd)
+AIC(Small_re)
 #Visualisation 
 vis.gam(Small_rb)
 
