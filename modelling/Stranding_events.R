@@ -31,9 +31,9 @@ UK_IRL_stranding_events <- UK_IRL_stranding_events[!duplicated(UK_IRL_stranding_
 UK_IRL_stranding_events <- UK_IRL_stranding_events[!duplicated(UK_IRL_stranding_events[c("Name.Current.Sci", "Latitude", "Longitude", "Date")]), ]
 
 #Remove unknowns if wanted 
-#UK_IRL_stranding_events <- UK_IRL_stranding_events %>% 
-  #filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
-                                   #"Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
+UK_IRL_stranding_events <- UK_IRL_stranding_events %>% 
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
+                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
 
 ggplot(UK_IRL_stranding_events, aes(x = Year, fill = Name.Current.Sci)) +
