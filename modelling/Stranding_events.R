@@ -24,6 +24,11 @@ UK_IRL_stranding_events <- UK_IRL_stranding_events[!duplicated(UK_IRL_stranding_
 #then I think we used unique()
 #on the data.frame?
 
+#This deletes all duplicates 
+#UK_IRL_stranding_events <- UK_IRL_stranding_events[!(duplicated(UK_IRL_stranding_events[c("Date", "Name.Current.Sci", "Latitude", "Longitude")]) | duplicated(UK_IRL_stranding_events[c("Date", "Name.Current.Sci", "Latitude", "Longitude")], fromLast = TRUE)), ]
+
+#This deletes one of the duplicates and keeps the other 
+UK_IRL_stranding_events <- UK_IRL_stranding_events[!duplicated(UK_IRL_stranding_events[c("Name.Current.Sci", "Latitude", "Longitude", "Date")]), ]
 
 #Remove unknowns if wanted 
 #UK_IRL_stranding_events <- UK_IRL_stranding_events %>% 
@@ -35,13 +40,13 @@ ggplot(UK_IRL_stranding_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
 
-write.csv(UK_IRL_stranding_events, file = "Stranding_events_IRL_UK.csv")
+write.csv(UK_IRL_stranding_events, file = "UK_IRL_stranding_events.csv")
 
 
 #Getting these ready for adding to the model data 
 #How many stranding events per year? 
 UK_IRL_stranding_events_count <- count(UK_IRL_stranding_events, Year)
 UK_IRL_stranding_events_count <- UK_IRL_stranding_events_count %>%
-  rename(Count = n)
+  rename(Total_events = n)
 
-write.csv(UK_IRL_stranding_events_count, file = "Stranding_events_count_IRL_UK.csv")
+write.csv(UK_IRL_stranding_events_count, file = "UK_IRL_stranding_events_count.csv")

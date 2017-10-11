@@ -117,6 +117,7 @@ Odontocete_events <- Odontocetes_known[!duplicated(Odontocetes_known$S.W.No.), ]
 Odontocete_events$S.W.No. <- (sub("\\.\\d+$","", Odontocete_events$S.W.No.))
 Odontocete_events <- Odontocete_events[!duplicated(Odontocete_events$S.W.No.), ]
 
+Odontocete_events <- Odontocete_events[!duplicated(Odontocete_events[c("Name.Current.Sci", "Latitude", "Longitude", "Date")]), ]
 
 ggplot(Odontocete_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
@@ -144,6 +145,7 @@ Mysticete_events <- Mysticetes_known[!duplicated(Mysticetes_known$S.W.No.), ]
 Mysticete_events$S.W.No. <- (sub("\\.\\d+$","", Mysticete_events$S.W.No.))
 Mysticete_events <- Mysticete_events[!duplicated(Mysticete_events$S.W.No.), ]
 
+Mysticete_events <- Mysticete_events[!duplicated(Mysticete_events[c("Name.Current.Sci", "Latitude", "Longitude", "Date")]), ]
 
 ggplot(Mysticete_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
@@ -319,6 +321,8 @@ Small_bs_events <- Small_bs[!duplicated(Small_bs$S.W.No.), ]
 Small_bs_events$S.W.No. <- (sub("\\.\\d+$","", Small_bs_events$S.W.No.))
 Small_bs_events <- Small_bs_events[!duplicated(Small_bs_events$S.W.No.), ]
 
+#Remove duplicates 
+Small_bs_events <- Small_bs_events[!duplicated(Small_bs_events[c("Name.Current.Sci", "Latitude", "Longitude", "Date")]), ]
 
 ggplot(Small_bs_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
@@ -349,6 +353,9 @@ Medium_bs_events <- Medium_bs[!duplicated(Medium_bs$S.W.No.), ]
 #Removing duplicates from SW (CSIP data)
 Medium_bs_events$S.W.No. <- (sub("\\.\\d+$","", Medium_bs_events$S.W.No.))
 Medium_bs_events <- Medium_bs_events[!duplicated(Medium_bs_events$S.W.No.), ]
+
+#Remove duplicates 
+Medium_bs_events <- Medium_bs_events[!duplicated(Medium_bs_events[c("Name.Current.Sci", "Latitude", "Longitude", "Date")]), ]
 
 
 ggplot(Medium_bs_events, aes(x = Year, fill = Name.Current.Sci)) +
@@ -385,6 +392,9 @@ Big_bs_events <- Big_bs[!duplicated(Big_bs$S.W.No.), ]
 #Removing duplicates from SW (CSIP data)
 Big_bs_events$S.W.No. <- (sub("\\.\\d+$","", Big_bs_events$S.W.No.))
 Big_bs_events <- Big_bs_events[!duplicated(Big_bs_events$S.W.No.), ]
+
+#Remove duplicates 
+Big_bs_events <- Big_bs_events[!duplicated(Big_bs_events[c("Name.Current.Sci", "Latitude", "Longitude", "Date")]), ]
 
 
 ggplot(Big_bs_events, aes(x = Year, fill = Name.Current.Sci)) +

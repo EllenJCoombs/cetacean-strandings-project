@@ -28,11 +28,11 @@ specnumber(whale.matrix)
 #Doublecheck
 speciesrichness <- species_known %>%
   count(Year) %>%
-  rename(Richness = nn)
+  rename(Total_richness = nn)
 
 #plot of Richness 
 #Messing around with geom_smooth 
-ggplot(data = speciesrichness, aes(x = Year, y = Richness)) +
+ggplot(data = speciesrichness, aes(x = Year, y = Total_richness)) +
   theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
   labs(x = "Year", y = "Species richness") +
   geom_smooth() +
@@ -46,7 +46,7 @@ ggplot(data = species_known, aes(x = Year)) +
   theme_bw()
 
 ggplot() +
-geom_line(data = speciesrichness, aes(x = Year, y = Richness)) +
+geom_line(data = speciesrichness, aes(x = Year, y = Total_richness)) +
   xlim(1913,2015)
   
   

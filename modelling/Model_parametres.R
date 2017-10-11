@@ -116,19 +116,19 @@ UK_IRL_stranding_events_count <- UK_IRL_stranding_events_count %>%
 
 #Tying all of the data together 
 
-test <- bind_cols(speciesrichness, Population, storms, Final_geom, 
-                  orgs, SST_yearly_max, UK_IRL_stranding_events_count)
+All_test <- bind_cols(speciesrichness, UK_IRL_stranding_events_count,Population, storms, Final_geom, 
+                  orgs, SST_yearly_max)
 
-test$X <- NULL
-test$Year1 <- NULL 
-test$Year2 <- NULL
-test$Year3 <- NULL
-test$Year4 <- NULL 
-test$year <- NULL
-test$Year5 <- NULL
+All_test$X <- NULL
+All_test$Year1 <- NULL 
+All_test$Year2 <- NULL
+All_test$Year3 <- NULL
+All_test$Year4 <- NULL 
+All_test$year <- NULL
+All_test$Year5 <- NULL
 
 
-write.csv(test, file = "Model_data.csv")
+write.csv(All_test, file = "Model_data.csv")
 
 #Make a model parametre table for 1. Small body size (Richness, Stranding events)
 #same for medium and big 
@@ -140,7 +140,6 @@ write.csv(test, file = "Model_data.csv")
 #################################################################################################
 #Parvorder plots 
 #Mysticetes and Odontocetes 
-
 
 Mysticete_events_count <- read.csv("Mysticete_events_count.csv")  #Stranding events 
 Mysticete_richness <- read.csv("Mysticete_richness.csv")   #richness 
@@ -160,22 +159,25 @@ Mysticete_model$year <- NULL
 
 write.csv(Mysticete_model, file = "Mysticete_model.csv")
 
+###### Odontocetes 
 
+Odontocete_events_count <- read.csv("Odontocete_events_count.csv")  #Stranding events 
+Odontocete_richness <- read.csv("Odontocete_richness.csv")   #richness 
 
+Odontocete_model <- bind_cols(Odontocete_events_count, Odontocete_richness, Population, storms, Final_geom, 
+                             orgs, SST_yearly_max)
 
+Odontocete_model$X <- NULL
+Odontocete_model$X1 <- NULL
+Odontocete_model$Year1 <- NULL
+Odontocete_model$Year2 <- NULL
+Odontocete_model$Year3 <- NULL
+Odontocete_model$Year4 <- NULL
+Odontocete_model$Year5 <- NULL
+Odontocete_model$X2 <- NULL
+Odontocete_model$year <- NULL 
 
-
-
-
-
-
-
-
-
-
-
-
-
+write.csv(Odontocete_model, file = "Odontocete_model.csv")
 
 
 #################################################################################################
