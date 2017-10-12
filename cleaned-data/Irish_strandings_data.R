@@ -52,6 +52,7 @@ Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in%  "sei fin or blue w
 Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in%  "beaked whale species"] <- "Unknown odontocete"
 Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in%  "dolphin species possibly Phocoena phocoena"] <- "Unknown"
 Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in%  "common or Stenella coeruleoalba"] <- "Unknown delphinid"
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in%  "Pseudorca crassidens "] <- "Pseudorca crassidens"
 
 
 #Need to rename the variables to be the same as NHM/CSIP 

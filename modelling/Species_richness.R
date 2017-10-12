@@ -2,8 +2,7 @@
 #Species richness using the vegan package 
 library(vegan)
 library(ggplot2)
-
-#for altering my data into presence/absence???
+#for altering my data into presence/absence
 library(picante)
 
 UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv") 
@@ -36,7 +35,7 @@ ggplot(data = speciesrichness, aes(x = Year, y = Total_richness)) +
   theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
   labs(x = "Year", y = "Species richness") +
   geom_smooth() +
-  geom_line()
+  geom_point()
 
 
 #Plotting richness using 'species known'
@@ -48,7 +47,6 @@ ggplot(data = species_known, aes(x = Year)) +
 ggplot() +
 geom_line(data = speciesrichness, aes(x = Year, y = Total_richness)) +
   xlim(1913,2015)
-  
   
 write.csv(speciesrichness, file = "Richness.csv")
 
@@ -70,11 +68,15 @@ betadiver(whale.matrix, method = "j")
 betadiver(whale.matrix, method = "sor")
 betadiver(whale.matrix, method = "w")
 
+#Looking at species by year - a count of each species total
+speciestotal <- aggregate(n ~ Species, speciesyearcount, sum) %>%
+  na.omit()
+
 #Gamma diversity 
-length(unique(speciesbyyear$Name.Current.Sci))
+length(unique(speciesyearcount$Species))
 
 #This adds up species where abundance is not NA
-length(unique(speciesbyyear$Name.Current.Sci[!is.na(speciesbyyear$n) & speciesbyyear$n != 0]))
+length(unique(speciesyearcount$Species[!is.na(speciesbyyear$n) & speciesbyyear$n != 0]))
 
 #Species accumulation curves 
 whale.curve <- specaccum(whale.matrix, method = "random", permutations = 1000)

@@ -9,37 +9,34 @@ library(ggplot2)
 library(reshape) 
 
 
-data <- read.csv("cleandatesnames.csv")
-data$X.1 <- NULL
-data$X <- NULL
-
-#Getting rid of the extra X1 column - not sure where this comes from 
-cleaneddata <- select(data, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Year, Date) 
-levels(cleaneddata$Name.Current.Sci)
+UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
+UK_and_Irish$X <- NULL
 
 #write.csv(cleaneddata, file = "cleaneddata.csv")
 
 #Having a look at how many of each species 
-select(cleaneddata, Name.Current.Sci)
+select(UK_and_Irish, Name.Current.Sci)
+
+#Remove unknowns 
+Strandings_known_IRL_UK <- UK_and_Irish %>% 
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
+                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
+
+
 #'Species' just looking at Name.Current.Sci
-species <- dplyr::count(cleaneddata, Name.Current.Sci)
+Species <- dplyr::count(Strandings_known_IRL_UK, Name.Current.Sci)
 #'Speciesyearcount' cleaned data: a count of current scientific name and year 
-speciesyearcount <- dplyr::count(cleaneddata, Name.Current.Sci, Year) %>%
+speciesyearcount <- dplyr::count(Strandings_known_IRL_UK, Name.Current.Sci, Year) %>%
   na.omit()
 
-species_lat <- dplyr::count(cleaneddata, Name.Current.Sci, Latitude)
-
-
-View(species)
 #This is just species and the year - no counting or sorting 
-speciesyear <- select(cleaneddata, Year, Name.Current.Sci) %>%
-  na.omit()
+#speciesyear <- select(cleaneddata, Year, Name.Current.Sci) %>%
+  #na.omit()
 
 
 #Geom_line of all species for every year 
-
 speciesyearcount <- speciesyearcount %>%
-  rename(Species = Name.Current.Sci)
+  rename(Species = Name.Current.Sci) 
 
 ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Species))+
   theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
@@ -51,12 +48,14 @@ ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Species))+
   facet_wrap(~ Species) 
   
   
+#Looking at species by year - a count of each species per year
+  speciestotal <- aggregate(n ~ Species, speciesyearcount, sum) %>%
+    na.omit()
 
-  
 #The unknowns 
 unknowns <- speciesyearcount %>%
-  filter(Species %in% c("Unknown", "Unknown delphinid", "Unknown mysticete", 
-                                 "Unknown odontocete"))
+  filter(Species %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
+                        "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete"))
 
 #Geom_line of all species for every year 
 #Can plot unknowns using "unknowns" 
@@ -65,24 +64,6 @@ ggplot(data = unknowns, aes(x = Year, y = n, colour= Name.Current.Sci))+
   labs(x = "Year", y = "Species count") +
   geom_line() +
   scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE)
-
-
-#Removing unknowns 
-Strandings_known <- speciesyearcount[ !(speciesyearcount$Species %in% unknowns$Species), ]
-
-ggplot(data = Strandings_known, aes(x = Year, y = n, colour= Species))+
-  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
-  labs(x = "Year", y = "Count") +
-  geom_line() +
-  theme_bw() + 
-  theme(legend.position="bottom") +
-  scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE) + 
-  facet_wrap(~ Species)   
-
-
-
-
-
 
 
 #Plot of all species - ugly histogram 
@@ -102,15 +83,7 @@ ggplot(speciesyear, aes(x = Year)) +
 View(speciesyear)
 
 
-#Looking at species by year - a count of each species per year
-speciesbyyear <- aggregate(n ~ Name.Current.Sci, speciesyearcount, sum) %>%
-  na.omit()
 
-View(speciesbyyear)
-#Arranging species by year by count 
-speciesbyyear <- speciesyearcount %>%
-  group_by(n, Year, Name.Current.Sci) %>%
-  arrange(Year)
 
 
 #Can't get this to work

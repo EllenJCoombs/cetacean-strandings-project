@@ -116,7 +116,7 @@ UK_IRL_stranding_events_count <- UK_IRL_stranding_events_count %>%
 
 #Tying all of the data together 
 
-All_test <- bind_cols(speciesrichness, UK_IRL_stranding_events_count,Population, storms, Final_geom, 
+All_test <- bind_cols(speciesrichness, UK_IRL_stranding_events_count, Population, storms, Final_geom, 
                   orgs, SST_yearly_max)
 
 All_test$X <- NULL
