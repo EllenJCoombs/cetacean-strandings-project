@@ -104,10 +104,10 @@ SST_yearly_max <- SST_yearly_max %>%
 #Stranding events 
 #Using the stranding count data 
 
-UK_IRL_stranding_events_count <- read.csv("Stranding_events_count_IRL_UK.csv")
+UK_IRL_stranding_events_count <- read.csv("UK_IRL_stranding_events_count.csv")
 
 UK_IRL_stranding_events_count <- UK_IRL_stranding_events_count %>%
-  rename(Stranding_events = Count)
+  rename(Total_events = Count)
 
 
 #This model dataset has all stranding events (including stranding events and richness for the
@@ -126,6 +126,8 @@ All_test$Year3 <- NULL
 All_test$Year4 <- NULL 
 All_test$year <- NULL
 All_test$Year5 <- NULL
+All_test$X1 <- NULL 
+All_test$X2 <- NULL
 
 
 write.csv(All_test, file = "Model_data.csv")

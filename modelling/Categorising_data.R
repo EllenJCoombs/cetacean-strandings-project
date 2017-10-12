@@ -21,7 +21,7 @@ bmusculus <- filter(UK_and_Irish, Name.Current.Sci ==  "Balaenoptera musculus")
 unmysticete <- filter(UK_and_Irish, Name.Current.Sci ==  "Unknown mysticete") 
 mnovaeangliae <- filter(UK_and_Irish, Name.Current.Sci == "Megaptera novaeangliae") 
 
-
+#Selecting the mysticetes 
 Mysticetes <- combinedmysticetes <- rbind(bphysalus, bacutorostrata, bborealis, bmusculus, 
                                           unmysticete, mnovaeangliae)
 Mysticetes$X <- NULL

@@ -33,7 +33,7 @@ vis.gam(Big_rb, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
 
 
 #Big body size stranding count 
-Big_ed <- gam(Big_events ~ offset(log(Population)) +s(Year) +s(Max_SST) +s(Storms, k = 7) +s(Max_K_index, k=5), 
+Big_ea <- gam(Big_events ~ offset(log(Population)) +s(Year) +s(Max_SST) +s(Storms, k = 7) +s(Max_K_index, k=5), 
                 data=Big_model, method = "REML",
                 family=tw(a=1.2))
 
