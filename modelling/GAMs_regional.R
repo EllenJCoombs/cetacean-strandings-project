@@ -1,7 +1,6 @@
 
 #GAMs for North/South UK devide 
 
-North_model <- read.csv("North_model.csv")
 
 library(mgcv)
 library(broom)
@@ -9,10 +8,9 @@ library(broom)
 #+s(Year) +s(Max_SST_temp) 
 #+s(Storms, k = 4) +s(Max_K_index, k=4) +s(Organisations)
 
-#Small body size 
-#Small body size richness 
+#North richness and strandings (>55.5)
 North_model <- read.csv("North_model.csv")
-Small_model$X <- NULL
+North_model$X <- NULL
 
 North_ra <- gam(North_richness ~ offset(log(Population)) +s(Year, k = 100),
                 data=North_model, 
@@ -37,7 +35,7 @@ vis.gam(North_rc, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
 
 ################
 #North stranding events 
-North_ed <- gam(North_events ~ offset(log(Population)) +s(Year, k = 50) +s(Max_SST) +s(Storms, k = 7) +s(Max_K_index, k= 5), 
+North_ed <- gam(North_events ~ offset(log(Population)) +s(Year, k = 70) +s(Max_SST) +s(Storms, k = 7) +s(Max_K_index, k=5), 
                 data=North_model, method = "REML",
                 family=tw(a=1.2))
 

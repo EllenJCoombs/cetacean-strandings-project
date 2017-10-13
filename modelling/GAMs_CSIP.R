@@ -33,7 +33,7 @@ vis.gam(PreCSIP_ra, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
 
 
 #Stranding events 
-PreCSIP_ed <- gam(Pre_CSIP_events ~ offset(log(Population)) +s(Year, k = 50) +s(Max_SST) +s(Storms, k = 6) +s(Max_K_index, k= 5),
+PreCSIP_ed <- gam(Pre_CSIP_events ~ offset(log(Population)) +s(Year, k= 50) +s(Max_SST) +s(Storms, k = 6) +s(Max_K_index, k= 5),
                   data=Pre_CSIP_model, method = "REML", family=tw(a=1.2))
 #+s(Max_SST) +s(Storms, k = 4)
 #+s(Max_K_index, k= 4)
@@ -42,11 +42,11 @@ summary(PreCSIP_ed)
 plot(PreCSIP_ed)
 
 par(mfrow=c(2,2))
-gam.check(PreCSIP_ec)
+gam.check(PreCSIP_ed)
 #AIC (model comparison)
-AIC(PreCSIP_ec)
+AIC(PreCSIP_ed)
 #Visualisation 
-vis.gam(PreCSIP_rc)
+vis.gam(PreCSIP_ed)
 
 vis.gam(PreCSIP_ra, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
         ticktype = "detailed", color = "topo")
@@ -111,8 +111,9 @@ vis.gam(PostCSIP_ra, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
 
 #####
 #Stranding events 
-PostCSIP_ed <- gam(Post_CSIP_events ~ offset(log(Population)) +s(Year) +s(Max_SST) +s(Storms, k = 4) +s(Max_K_index, k= 5),
+PostCSIP_ed <- gam(Post_CSIP_events ~ offset(log(Population)) +s(Year) +s(Max_SST) +s(Storms, k = 4) +s(Max_K_index, k = 5),
                   data=Post_CSIP_model, method = "REML", family=tw(a=1.2))
+
 #+s(Max_SST) +s(Storms, k = 4)
 #+s(Max_K_index, k= 4)
 
@@ -124,7 +125,7 @@ gam.check(PostCSIP_ed)
 #AIC (model comparison)
 AIC(PostCSIP_ed)
 #Visualisation 
-vis.gam(PostCSIP_rc)
+vis.gam(PostCSIP_ec)
 
 vis.gam(PostCSIP_ra, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
         ticktype = "detailed", color = "topo")
