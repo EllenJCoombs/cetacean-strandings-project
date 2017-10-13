@@ -9,20 +9,21 @@ library(broom)
 
 All_model <- read.csv("Model_data.csv")
 All_model$X <- NULL
+All_model$X.1 <- NULL
 
-All_rd <- gam(Total_richness ~ offset(log(Population)) +s(Year) +s(Max_SST) +s(Storms, k = 7) +s(Max_K_index, k= 5), data=All_model, 
+All_ra <- gam(Total_richness ~ offset(log(Population)) +s(Year), data=All_model, 
                 method = "REML", family=tw(a=1.2))
 
 #+s(Max_SST) +s(Storms, k = 4)
 #+s(Max_K_index, k= 4)
 
-summary(All_rd)
-plot(All_rd)
+summary(All_ra)
+plot(All_ra)
 
 par(mfrow=c(2,2))
-gam.check(All_rd)
+gam.check(All_ra)
 #AIC (model comparison)
-AIC(All_rd)
+AIC(All_ra)
 #Visualisation 
 vis.gam(All_ra)
 
@@ -31,7 +32,7 @@ vis.gam(All_ra, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
 
 
 #All records stranding count 
-All_ed <- gam(Total_events ~ offset(log(Population)) +s(Year, k = 50) +s(Max_SST) +s(Storms, k = 7) +s(Max_K_index, k=5), data= All_model, method = "REML",
+All_ed <- gam(Total_events ~ offset(log(Population)) +s(Year, k = 80) +s(Max_SST) +s(Storms, k = 7) +s(Max_K_index, k=5), data= All_model, method = "REML",
               family=tw(a=1.2))
 
 

@@ -34,7 +34,7 @@ vis.gam(Mysticete_ra, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
 
 
 #Mysticete stranding count 
-Mysticete_ed <- gam(Mysticete_events ~ offset(log(Population)) +s(Year) +s(Max_SST) +s(Storms, k = 7) +s(Max_K_index, k = 5), 
+Mysticete_ec <- gam(Mysticete_events ~ offset(log(Population)) +s(Year) +s(Max_SST) +s(Storms, k = 7), 
               data=Mysticete_model, method = "REML",
               family=tw(a=1.2))
 
@@ -42,14 +42,14 @@ Mysticete_ed <- gam(Mysticete_events ~ offset(log(Population)) +s(Year) +s(Max_S
 #+s(Storms, k = 4) +s(Max_K_index, k=4)
 #+s(Max_SST) +s(Storms, k = 4)
 
-summary(Mysticete_ed)
-plot(Mysticete_ed)
+summary(Mysticete_ec)
+plot(Mysticete_ec)
 
 par(mfrow=c(2,2))
-gam.check(Mysticete_ed)
+gam.check(Mysticete_ec)
 
 #AIC (model comparison)
-AIC(Mysticete_ed)
+AIC(Mysticete_ec)
 
 #Broom to tidy model outputs 
 
@@ -92,7 +92,7 @@ library(broom)
 Odontocete_model <- read.csv("Odontocete_model.csv")
 Odontocete_model$X <- NULL
 
-Odontocete_rc <- gam(Odontocete_richness ~ offset(log(Population)) +s(Year) +s(Max_SST) +s(Storms, k = 7), data=Odontocete_model, 
+Odontocete_ra <- gam(Odontocete_richness ~ offset(log(Population)) +s(Year) +s(Max_SST) +s(Storms, k = 7), data=Odontocete_model, 
                     method = "REML",  family=tw(a=1.2))
 
 
@@ -129,7 +129,7 @@ par(mfrow=c(2,2))
 gam.check(Odontocete_ed)
 
 #AIC (model comparison)
-AIC(Odontocete_ed)
+AIC(Odontocete_eb)
 
 #Broom to tidy model outputs 
 

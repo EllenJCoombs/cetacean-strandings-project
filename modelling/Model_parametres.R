@@ -116,21 +116,22 @@ UK_IRL_stranding_events_count <- UK_IRL_stranding_events_count %>%
 
 #Tying all of the data together 
 
-All_test <- bind_cols(speciesrichness, UK_IRL_stranding_events_count, Population, storms, Final_geom, 
+All_model <- bind_cols(speciesrichness, UK_IRL_stranding_events_count, Population, storms, Final_geom, 
                   orgs, SST_yearly_max)
 
-All_test$X <- NULL
-All_test$Year1 <- NULL 
-All_test$Year2 <- NULL
-All_test$Year3 <- NULL
-All_test$Year4 <- NULL 
-All_test$year <- NULL
-All_test$Year5 <- NULL
-All_test$X1 <- NULL 
-All_test$X2 <- NULL
+All_model$X <- NULL
+All_model$Year1 <- NULL 
+All_model$Year2 <- NULL
+All_model$Year3 <- NULL
+All_model$Year4 <- NULL 
+All_model$year <- NULL
+All_model$Year5 <- NULL
+All_model$X1 <- NULL 
+All_model$X2 <- NULL
+All_model$X <- NULL 
 
 
-write.csv(All_test, file = "Model_data.csv")
+write.csv(All_model, file = "Model_data.csv")
 
 #Make a model parametre table for 1. Small body size (Richness, Stranding events)
 #same for medium and big 

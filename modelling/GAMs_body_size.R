@@ -24,16 +24,16 @@ plot(Big_rd)
 par(mfrow=c(2,2))
 gam.check(Big_rd)
 #AIC (model comparison)
-AIC(Big_rc)
+AIC(Big_rd)
 #Visualisation 
-vis.gam(Big_rc)
+vis.gam(Big_rd)
 
-vis.gam(Big_rb, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
+vis.gam(Big_rd, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
         ticktype = "detailed", color = "topo")
 
 
 #Big body size stranding count 
-Big_ea <- gam(Big_events ~ offset(log(Population)) +s(Year) +s(Max_SST) +s(Storms, k = 7) +s(Max_K_index, k=5), 
+Big_ed <- gam(Big_events ~ offset(log(Population)) +s(Year) +s(Max_SST) +s(Storms, k = 7) +s(Max_K_index, k=5), 
                 data=Big_model, method = "REML",
                 family=tw(a=1.2))
 
@@ -175,8 +175,7 @@ vis.gam(Small_d, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
         ticktype = "detailed", color = "topo")
 
 #Small body size stranding count 
-Small_ed <- gam(Small_events ~ offset(log(Population)) +s(Year, k = 50) +s(Max_SST) +s(Storms, k = 7) 
-                +s(Max_K_index, k=4), 
+Small_ed <- gam(Small_events ~ offset(log(Population)) +s(Year, k = 50) +s(Max_SST) +s(Storms, k = 7) +s(Max_K_index, k=5), 
                 data=Small_model, method = "REML",
                 family=tw(a=1.2))
                   

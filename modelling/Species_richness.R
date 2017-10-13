@@ -76,7 +76,7 @@ speciestotal <- aggregate(n ~ Species, speciesyearcount, sum) %>%
 length(unique(speciesyearcount$Species))
 
 #This adds up species where abundance is not NA
-length(unique(speciesyearcount$Species[!is.na(speciesbyyear$n) & speciesbyyear$n != 0]))
+length(unique(speciesyearcount$Species[!is.na(speciesyearcount$n) & speciesyearcount$n != 0]))
 
 #Species accumulation curves 
 whale.curve <- specaccum(whale.matrix, method = "random", permutations = 1000)
