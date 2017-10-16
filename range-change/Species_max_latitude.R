@@ -81,7 +81,7 @@ Lat_binary <- Lat_list %>%
 #Plot this by species 
 ggplot(data = Lat_binary,
        aes(x = Year, y = Binary, colour = Species, ylab = "South:North")) +
-  geom_point() + 
+  geom_point() +
   facet_wrap(~Species)
 
 

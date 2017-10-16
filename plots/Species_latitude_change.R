@@ -8,18 +8,20 @@ library(ggplot2)
 library(gridExtra)
 library(magrittr)
 
-cleaneddata <- read.csv("cleandatesnames.csv")
+UK_IRL_stranding_events <- read.csv("UK_IRL_stranding_events.csv")
+UK_and_Irish_stranding_events$X <- NULL
 
-species_lat <- dplyr::count(cleaneddata, Latitude, Name.Current.Sci, Year)
+
+Species_lat <- dplyr::count(UK_IRL_stranding_events, Latitude, Name.Current.Sci, Year)
 
 #removing the 0.0000 lats and 
-species_lat <- species_lat %>%
+Species_lat <- Species_lat %>%
   filter(Latitude > 49.00000) %>%
   filter(Latitude < 62.00000)
 
 
 #This bit is for playing around with specific species 
-L_albirostris_lat <- species_lat %>% 
+L_albirostris_lat <- Species_lat %>% 
   filter(Name.Current.Sci == "Lagenorhynchus albirostris")
 
 # Create a list for the start years of each decade
