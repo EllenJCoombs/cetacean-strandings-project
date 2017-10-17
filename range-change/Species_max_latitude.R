@@ -79,19 +79,21 @@ ggplot(data = Lat_change,
   facet_wrap(~Species)
 
 
+#Adding a new column to make N1, N5, N10 (change in degrees north (latidude year on year)
+#Not sure why I still get error messages: Stack overflow advised me to make a list of NAs as 
+#done here 
+Lat_change["N1"] <- NA
+Lat_change$N1 <- Lat_change$Latitude_change
 
+#Changing a lat change of 1 degree to a 1 and everything else to a 0 
 
-#Changing <55.5 = 0, >55.5 = 1 
-Lat_list$Binary[Lat_list$Binary < 55.5] <- 0
-Lat_list$Binary[Lat_list$Binary > 55.5] <- 1
-Lat_list$Binary[Lat_list$Binary == 55.5] <- 1
+Lat_change$N1[Lat_change$N1 > 2] <- 0
+Lat_change$N1[Lat_change$N1 == 1] <- 1
+Lat_change$N1[Lat_change$N1 < 1] <- 0
+Lat_change$N1[Lat_change$N1 > 1 & Lat_change$N1 < 2] <- 1
 
 
 library(zoo)
-
-
-
-
 
 
 #Split out max latitude per species per year 
