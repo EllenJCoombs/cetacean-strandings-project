@@ -81,10 +81,6 @@ ggplot(data = Lat_change,
 
 
 
-
-
-
-
 #Changing <55.5 = 0, >55.5 = 1 
 Lat_list$Binary[Lat_list$Binary < 55.5] <- 0
 Lat_list$Binary[Lat_list$Binary > 55.5] <- 1
