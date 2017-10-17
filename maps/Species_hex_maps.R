@@ -86,24 +86,24 @@ pg$data[[2]]$y
 #Filter species here too - filtering out by latitude 
 
 
-M_novaengliae <- cleaneddata %>%
-  filter(Name.Current.Sci == "Megaptera novaeangliae")
+S_coeruleoalba <- ds %>%
+  filter(Name.Current.Sci == "Stenella coeruleoalba")
 
 
-M_novaengliae <- M_novaengliae %>%
+S_coeruleoalba <- S_coeruleoalba %>%
   filter(!is.na(Latitude) & !is.na(Longitude)) %>%
   filter(Latitude < 65 & Latitude > 45) %>%
-  filter(Longitude < 3 & Latitude > -8) 
+  filter(Longitude < 3 & Latitude > -11) 
 
 # Basic plot using viridis colour scheme
 # Note that you can change bins and transparency
 gg1+
-  geom_hex(data = M_novaengliae, aes(y = Latitude, x= Longitude), bins = 25, alpha = 0.5) +
+  geom_hex(data = S_coeruleoalba, aes(y = Latitude, x= Longitude), bins = 25, alpha = 0.5) +
   scale_fill_gradientn(colours = viridis(4))
 
 # More complex plot, with axes removed, smaller bins, defined colours, and simpler legend
 gg1+
-  geom_hex(data = M_novaengliae, aes(y = Latitude, x= Longitude), bins = 100, alpha = 0.5) +
+  geom_hex(data = S_coeruleoalba, aes(y = Latitude, x= Longitude), bins = 100, alpha = 0.5) +
   scale_fill_gradientn(colours = c("blue", "red")) +
   theme(axis.line  = element_blank(),
         axis.text  = element_blank(),
@@ -116,7 +116,7 @@ gg1+
 # if you want to know the values for each of the hexagons...
 
 gg2 <- gg1+
-  geom_hex(data = L_albirostris, aes(y = Latitude, x= Longitude), bins = 100, alpha = 0.5) +
+  geom_hex(data = S_coeruleoalba, aes(y = Latitude, x= Longitude), bins = 100, alpha = 0.5) +
   scale_fill_gradientn(colours = viridis(4))
 
 pg <- ggplot_build(gg2)
@@ -165,7 +165,7 @@ base.map <-
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank())
 # Create a list for the start years of each decade
-decades <- c(seq(from = 1913, to = 2003, by = 20), 2013)
+decades <- c(seq(from = 1913, to = 2003, by = 10), 2013)
 # Make an empty list that you're going to put all your
 # ggplot maps into
 map.list <- list()
@@ -174,7 +174,7 @@ for(i in seq_along(decades)){
   
   # Define the start and end year of the decade
   start.year <- decades[i]
-  end.year <- decades[i] + 19
+  end.year <- decades[i] + 9
   # Add a short if statement so that you don't go into the future!
   if(end.year > 2017){
     end.year <- 2017
@@ -200,10 +200,10 @@ for(i in seq_along(decades)){
           axis.ticks = element_blank(),
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank(),
-          plot.background=element_rect(fill = "white"),
+          plot.background=element_rect(fill = "white"), #removes white background 
           panel.background=element_rect(fill= "white"),
           panel.border = element_rect(colour = "white", fill = NA, size = 0.25),
-          axis.title = element_blank()) +
+          axis.title = element_blank()) + #Removes axis 
     guides(fill = guide_colorbar(title = "Stranding intensity", ticks = TRUE)) +
     # Add title with years covered
     labs(title = paste(start.year, "-", end.year)) +
