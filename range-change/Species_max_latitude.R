@@ -95,7 +95,6 @@ Lat_change$N1[Lat_change$N1 > 1 & Lat_change$N1 < 2] <- 1
 
 library(zoo)
 
-
 #Split out max latitude per species per year 
 levels(Lat_list$Name.Current.Sci)[1]
 
