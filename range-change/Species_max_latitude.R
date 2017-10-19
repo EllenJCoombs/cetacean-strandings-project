@@ -60,16 +60,23 @@ library(reshape)
 library(reshape2)
 library(mvbutils)
 
-a <-melt(Lat_list,id.vars=c("Year", "Name.Current.Sci", "Latitude"))
 
-a <- melt(a, measure.vars=names(a)) 
+a <-melt(Lat_list,id.vars=c("Year", "Latitude"))
+
+dcast(a, formula = Year + Latitude ~ value)
+dcast(a, formula = Year + Latitude  ~ variable)
+
+a <- ddply(df2, .(cat), function(x){ x$id2 = 1:nrow(x); x})
+
+
+a <- dcast(Lat_list, Name.Current.Sci + Year + Latitude ~ Name.Current.Sci, value.var = "Latitude")
+a <- dcast(Lat_list, Year ~ Name.Current.Sci, value.var='Latitude', fun.aggregate=mean)
 
 #Have loaded the reshape package so need to be careful when using dplyr 
 iwc <- iwc %>% 
   dplyr::rename(Name.Current.Sci = variable) %>%
   dplyr::rename(Catch = value) %>% 
   arrange(Year)
-
 
 
 
