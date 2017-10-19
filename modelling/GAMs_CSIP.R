@@ -11,7 +11,7 @@ library(broom)
 #Pre CSIP 
 Pre_CSIP_model <- read.csv("Pre_CSIP_model.csv")
 
-PreCSIP_re <- gam(Pre_CSIP_richness ~ offset(log(Population)) +s(Max_SST) +s(Storms, k = 5) +s(Max_K_index, k= 5),
+PreCSIP_rd <- gam(Pre_CSIP_richness ~ offset(log(Population)) +s(Max_SST) +s(Storms, k = 5) +s(Max_K_index, k= 5),
                 data=Pre_CSIP_model, method = "REML", family=tw(a=1.2))
 
 #+s(Max_SST) +s(Storms, k = 4)
