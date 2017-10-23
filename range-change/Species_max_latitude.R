@@ -62,13 +62,18 @@ ggplot(data = Max_lat_species,
 UK_IRL_stranding_events <- read.csv("UK_IRL_stranding_events.csv")
 UK_and_Irish_stranding_events$X <- NULL
 
+#Remove duplicates so R doesn't take one species away from another 
+ff <- data.frame(dol = c("a", "a", "a", "b", "b","b"), h = 1:6)
+
+Max_lat_species$Copy[which(duplicated(Max_lat_species$Species) == FALSE)] <- NA
+
+
 
 #Adding a new column for 0s and 1s 
 Max_lat_species["Copy"] <- NA
 Max_lat_species$Copy <- Max_lat_species$Maximum_latitude
 
 
-#Remove duplicates so R doesn't take one species away from another 
 
 
 
