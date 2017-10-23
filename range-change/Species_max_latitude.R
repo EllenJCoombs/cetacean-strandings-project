@@ -196,11 +196,20 @@ Max_SST_max_lat <- Max_SST_max_lat[,c("Year", "Year_max_SST", "Balaenoptera acut
                         "Ziphius cavirostris")]
 
 #Want to plot all species against year max SST (which paper was this from??)
-ggplot(data = ,
-       aes(x = Year, y = N10, colour = Species, ylab = "Latitude change")) +
-  geom_line() +
-  facet_wrap(~Species)
+#There must be a better way of doing this....
+#Having to rename eveeyhing so it will plot 
+#Remove 0s?? 0s are messing up my plots 
+
+Max_SST_max_lat[Max_SST_max_lat == 0] <- NA
+
+Max_SST_max_lat <- Max_SST_max_lat %>%
+  dplyr::rename(Balaenoptera_acutorostrata = "Balaenoptera acutorostrata")
+
+ggplot() + 
+  geom_line(data = Max_SST_max_lat, aes(x = Year_max_SST, y = Balaenoptera_acutorostrata, colour = "Balaenoptera acutorostrata")) +
+  ylab("Max lat") +
+  theme_bw()
 
 
-
+Max_lat_species$SST<-NA
 

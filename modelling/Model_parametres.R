@@ -14,8 +14,8 @@ storms <- storms %>%
 #Counting up and keeping 0 as 0 
 storms <- storms %>% 
   complete(Year, fill = list(Count = 0)) %>% 
-  group_by(Year) %>% 
-  summarise(count = sum(Count))
+  dplyr::group_by(Year) %>% 
+  dplyr::summarise(count = sum(Count))
 
 #Renaming count to storms 
 storms <- storms %>%

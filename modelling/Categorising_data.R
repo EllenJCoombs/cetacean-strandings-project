@@ -218,12 +218,8 @@ Small_bs$X <- NULL
 #Try...
 
 Big_bs_year <- dplyr::count(Big_bs, Name.Current.Sci, Year)
-#This gives a count for every year 1913:2015 
-Big_bs_year <- Big_bs_year %>% 
-  complete(nesting(Name.Current.Sci), Year = seq(min(1913), max(2015), 1L))
-#This makes the NAs 0s
-Big_bs_year[is.na(Big_bs_year)] <- 0
 
+#Note - the following matrix does not show years with 0 records 
 #This is for the matrix 
 Big_bs_year <- Big_bs_year[c("Year","n", "Name.Current.Sci")]
 
@@ -233,61 +229,84 @@ Big.bs.matrix <- sample2matrix(Big_bs_year)
 #Number of species per year 
 specnumber(Big.bs.matrix)
 
+#The following code includes years which have 0 readings (important for richness)
+#Select data 
+Big_bs_year <- Big_bs_year %>% 
+  select(Year, n)
+
+Big_bs_year <- na.omit(Big_bs_year)
+
+Big_bs_year <- Big_bs_year %>%
+  dplyr::count(Year)
+
+#Adds an extra column with all the years in 
+Big_bs_year <- Big_bs_year %>% 
+  complete(Year = seq(min(1913), max(2015), 1L))
+
+#NAs -> 0 
+Big_bs_year[is.na(Big_bs_year)] <- 0
+
+Big_bs_year <- Big_bs_year %>%
+  dplyr::rename(Big_bs_richness = nn)
+
+Big_bs_richness <- Big_bs_year
+
+write.csv(Big_bs_year, file = "Big_bs_richness.csv")
+
+
 #Add a year colum to the matrix and then melt
-Big.bs.matrix <- cbind(Big.bs.matrix, Year = c(1913:2015))
+#Big.bs.matrix <- cbind(Big.bs.matrix, Year = c(1913:2015))
 
 #Convert the matrix into a dataframe 
-Big_bs_matrix <- melt(Big.bs.matrix, measure.vars=names(Big.bs.matrix)%except%"Year")
+#Big_bs_matrix <- melt(Big.bs.matrix, measure.vars=names(Big.bs.matrix)%except%"Year")
 
-Big_bs_matrix <- Big_bs_matrix %>%
-  rename(Name.Current.Sci = variable)
+#Big_bs_matrix <- Big_bs_matrix %>%
+  #dplyr::rename(Name.Current.Sci = variable)
   
-Big_bs_matrix <- Big_bs_matrix %>%
-  filter(Name.Current.Sci %in% c("Balaenoptera physalus", "Balaenoptera musculus", "Megaptera novaeangliae",
-                         "Physeter macrocephalus", "Physeter macrocephalus "))
-
-
-Big_bs_matrix <- Big_bs_matrix %>%
-  arrange(Year)
+#Big_bs_matrix <- Big_bs_matrix %>%
+  #filter(Name.Current.Sci %in% c("Balaenoptera physalus", "Balaenoptera musculus", "Megaptera novaeangliae",
+                         #"Physeter macrocephalus", "Physeter macrocephalus ", "Balaenoptera borealis"))
 
 
 #This uses count but doesn't get rid of the 0s - it counts years with 0 too 
-Big_bs_richness <- Big_bs_matrix %>% 
-  complete(Year, fill = list(value = 0)) %>% 
-  group_by() %>% 
-  summarise(count = sum(value))
-
-
-
-write.csv(Big_bs_richness, file = "Big_bs_richness.csv")
-
-#I've added in the extra data here as many years were 0 but I need to change this!
-#Need to read in new data 
-Big_bs_richness <- read.csv("Big_bs_richness.csv")
-Big_bs_richness$X <- NULL
-
+#Big_bs_richness <- Big_bs_matrix %>% 
+  #complete(Year, fill = list(value = 0)) %>% 
+  #group_by() %>% 
+  #summarise(count = sum(value))
 
 
 #Medium body size richness #######################################
 Medium_bs_year <- dplyr::count(Medium_bs, Name.Current.Sci, Year)
 Medium_bs_year <- Medium_bs_year[c("Year","n", "Name.Current.Sci")]
 
+#This misses out the years where 0s are recorded 
 Medium.bs.matrix <- sample2matrix(Medium_bs_year)
 #Number of species per year 
 specnumber(Medium.bs.matrix)
 
-#Richness double check 
-Medium_bs_richness <- Medium_bs_year %>%
-  count(Year)
 
-Medium_bs_richness <- Medium_bs_richness %>%
-  rename(Medium_richness = nn)
+#This code includes the 0s 
+Medium_bs_year <- Medium_bs_year %>% 
+  select(Year, n)
 
-write.csv(Medium_bs_richness, file = "Medium_bs_richness.csv")
+Medium_bs_year <- na.omit(Medium_bs_year)
 
-#Two years of data where there were 0 records - need to work out how to do the code for this 
+Medium_bs_year <- Medium_bs_year %>%
+  dplyr::count(Year)
 
-Medium_bs_richness <- read.csv("Medium_bs_richness.csv")
+#Adds an extra column with all the years in 
+Medium_bs_year <- Medium_bs_year %>% 
+  complete(Year = seq(min(1913), max(2015), 1L))
+
+#NAs -> 0 
+Medium_bs_year[is.na(Medium_bs_year)] <- 0
+
+Medium_bs_year <- Medium_bs_year %>%
+  dplyr::rename(Medium_bs_richness = nn)
+
+Medium_bs_richness <- Medium_bs_year
+
+write.csv(Medium_bs_year, file = "Medium_bs_richness.csv")
 
 
 #Small body size richness #######################################
@@ -368,18 +387,22 @@ Medium_bs_events$X.1 <- NULL
 Medium_bs_events$X <- NULL
 
 #Need to get a count of stranding events per year 
-#Small_body_stranding events 
+#Medium_body_stranding events 
 
-Medium_bs_events_count <- count(Medium_bs_events, Year)
+Medium_bs_events_count <- dplyr::count(Medium_bs_events, Year)
 Medium_bs_events_count <- Medium_bs_events_count %>% 
-  rename(Medium_events = n)
+  dplyr::rename(Medium_events = n)
+
+
+#Adds an extra column with all the years in 
+Medium_bs_events_count <- Medium_bs_events_count %>% 
+  complete(Year = seq(min(1913), max(2015), 1L))
+
+#NAs -> 0 
+Medium_bs_events_count[is.na(Medium_bs_events_count)] <- 0
 
 write.csv(Medium_bs_events_count, file = "Medium_bs_events_count.csv")
-Medium_bs_events_count$X <- NULL
 
-#Need to redo this as there were years where 0 
-
-Medium_bs_events_count <- read.csv("Medium_bs_events_count.csv")
 
 
 ##############
@@ -409,18 +432,21 @@ Big_bs_events$X <- NULL
 
 
 #Need to get a count of stranding events per year 
-#Small_body_stranding events 
+#Big_body_stranding events 
 
-Big_bs_events_count <- count(Big_bs_events, Year)
+Big_bs_events_count <- dplyr::count(Big_bs_events, Year)
 Big_bs_events_count <- Big_bs_events_count %>% 
-  rename(Big_events = n)
+  dplyr::rename(Big_events = n)
+
+
+#Adds an extra column with all the years in 
+Big_bs_events_count <- Big_bs_events_count %>% 
+  complete(Year = seq(min(1913), max(2015), 1L))
+
+#NAs -> 0 
+Big_bs_events_count[is.na(Big_bs_events_count)] <- 0
 
 write.csv(Big_bs_events_count, file = "Big_bs_events_count.csv")
-
-###I've had to redo the stranding events with added 0s - need to change this code!! 
-
-Big_bs_events_count <- read.csv("Big_bs_events_count.csv") 
-Big_bs_events_count$X <- NULL
 
 ################################################################################################
 #Splitting North and South 
@@ -477,19 +503,36 @@ specnumber(North.matrix)
 
 #Richness double check 
 North_richness <- North_year %>%
-  count(Year)
+  dplyr::count(Year)
 
 North_richness <- North_richness %>%
-  rename(North_richness = nn)
+  dplyr::rename(North_richness = nn)
+
+
+#The following code includes years which have 0 readings (important for richness)
+#Select data 
+North_year <- North_year %>% 
+  select(Year, n)
+
+North_year <- na.omit(North_year)
+
+North_year <- North_year %>%
+  dplyr::count(Year)
+
+#Adds an extra column with all the years in 
+North_year <- North_year %>% 
+  complete(Year = seq(min(1913), max(2015), 1L))
+
+#NAs -> 0 
+North_year[is.na(North_year)] <- 0
+
+North_year <- North_year %>%
+  dplyr::rename(North_richness = nn)
+
+North_richness <- North_year
 
 write.csv(North_richness, file = "North_richness.csv")
 
-
-#Needed to add data here for 1942 - need to work out how to do that properly 
-#rereading the new data 
-
-North_richness <- read.csv("North_richness.csv")
-North_richness$X <- NULL
 
 ####### South richness 
 South_strandings <- South_strandings %>% 
@@ -534,17 +577,18 @@ ggplot(North_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
 #Count for GAMs
-North_events_count <- count(North_events, Year) 
-North_events_count <- North_events_count %>%
-  rename(North_events = n)
+North_events_count <- dplyr::count(North_events, Year)
+North_events_count <- North_events_count %>% 
+  dplyr::rename(North_events = n)
+
+#Adds an extra column with all the years in 
+North_events_count <- North_events_count %>% 
+  complete(Year = seq(min(1913), max(2015), 1L))
+
+#NAs -> 0 
+North_events_count[is.na(North_events_count)] <- 0
 
 write.csv(North_events_count, file = "North_events_count.csv")
-
-
-#Needed to add data here for 1942 - need to work out how to do that properly 
-#rereading the new data 
-
-North_events_count <- read.csv("North_events_count.csv")
 
 
 ####South events 
