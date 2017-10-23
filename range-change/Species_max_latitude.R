@@ -54,34 +54,6 @@ ggplot(data = Max_lat_species,
   geom_smooth() +
   facet_wrap(~Species)
 
-#SST and latitude max??
-
-library(reshape)
-library(reshape2)
-library(mvbutils)
-
-
-a <-melt(Lat_list,id.vars=c("Year", "Latitude"))
-
-dcast(a, formula = Year + Latitude ~ value)
-dcast(a, formula = Year + Latitude  ~ variable)
-
-a <- ddply(df2, .(cat), function(x){ x$id2 = 1:nrow(x); x})
-
-
-a <- dcast(Lat_list, Name.Current.Sci + Year + Latitude ~ Name.Current.Sci, value.var = "Latitude")
-a <- dcast(Lat_list, Year ~ Name.Current.Sci, value.var='Latitude', fun.aggregate=mean)
-
-#Have loaded the reshape package so need to be careful when using dplyr 
-iwc <- iwc %>% 
-  dplyr::rename(Name.Current.Sci = variable) %>%
-  dplyr::rename(Catch = value) %>% 
-  arrange(Year)
-
-
-
-
-
 
 #################################################################################################
 #Range switch: 0s and 1s 
@@ -177,34 +149,57 @@ ggplot(data = Lat_change,
 
 
 
+##################################################################################################
+#A couple of cool papers have looked at max lat and max SST for each species 
+#How to turn a matrix into a 
+#SST and latitude max??
 
-library(zoo)
+library(reshape)
+library(reshape2)
+library(mvbutils)
+library(picante)
 
-#Split out max latitude per species per year 
-levels(Lat_list$Name.Current.Sci)[1]
+#Removign the copy list that I don't need 
+Max_lat_species$Copy <- NULL 
 
-Max_lat_species<-vector("list")
-for(i in 1:length(levels(Lat_list$Name.Current.Sci))){
-  #Specific species 
-  Species_lat <- Lat_list %>%
-    filter(Name.Current.Sci == levels(Lat_list$Name.Current.Sci)[i])
-  
-  
-  #Extracting max latitude per year 
-  Species_lat <- aggregate(Species_lat$Latitude, by = list(Species_lat$Year), max)%>%
-    mutate(Species=levels(Lat_list$Name.Current.Sci)[i])
-  
-  #Doing this for the ith species 
-  Max_lat_species[[i]]<-Species_lat
-}
+Max_lat_matrix <- sample2matrix(Max_lat_species)
 
-#Binding all ith species max lats per year 
-Max_lat_species<-tbl_df(do.call(rbind,Max_lat_species))
+#Add max SST to the dataframe 
+#This is in the clean data folder
 
+SST_yearly_max <- read.csv("SST_yearly_max.csv")
 
+#Bind
+Max_SST_max_lat <- bind_cols(Max_lat_matrix, SST_yearly_max)
 
+#Remove
+Max_SST_max_lat$X <- NULL 
+Max_SST_max_lat$year <- NULL 
 
+#Rename
+Max_SST_max_lat <- Max_SST_max_lat %>% 
+  dplyr::rename(Year_max_SST = year_max)
 
+#Add a year column 
+Max_SST_max_lat <- cbind(Max_SST_max_lat, Year = c(1913:2015))
+
+#This was really quick, I just did labels(Max_SST_max_lat) and copied it 
+Max_SST_max_lat <- Max_SST_max_lat[,c("Year", "Year_max_SST", "Balaenoptera acutorostrata", "Balaenoptera borealis", "Balaenoptera musculus",
+                        "Balaenoptera physalus", "Delphinapterus leucas", "Delphinus delphis",
+                        "Globicephala melas", "Grampus griseus", "Hyperoodon ampullatus",    
+                        "Kogia breviceps", "Kogia sima","Lagenodelphis hosei",     
+                        "Lagenorhynchus acutus", "Lagenorhynchus albirostris", "Megaptera novaeangliae",  
+                        "Mesoplodon bidens","Mesoplodon densirostris","Mesoplodon europaeus",      
+                        "Mesoplodon mirus", "Monodon monoceros", "Orcinus orca",         
+                        "Peponocephala electra", "Phocoena phocoena", "Physeter macrocephalus",    
+                        "Pseudorca crassidens", "Stenella coeruleoalba", "Tursiops truncatus",
+                        "Ziphius cavirostris")]
+
+#Want to plot all species against year max SST (which paper was this from??)
+ggplot(data = ,
+       aes(x = Year, y = N10, colour = Species, ylab = "Latitude change")) +
+  geom_line() +
+  facet_wrap(~Species)
 
 
 
