@@ -44,8 +44,8 @@ Max_lat_species<-tbl_df(do.call(rbind,Max_lat_species))
 
 #Rename the columns 
 Max_lat_species <- Max_lat_species %>%
-  rename(Year = Group.1) %>%
-  rename(Maximum_latitude = x)
+  dplyr::rename(Year = Group.1) %>%
+  dplyr::rename(Maximum_latitude = x)
 
 #Plot the data 
 ggplot(data = Max_lat_species,
@@ -67,10 +67,15 @@ UK_and_Irish_stranding_events$X <- NULL
 Max_lat_species["Copy"] <- NA
 Max_lat_species$Copy <- Max_lat_species$Maximum_latitude
 
-Lat_change <- mutate(Max_lat_species, D = Copy - lag(Maximum_latitude))
+
+#Remove duplicates so R doesn't take one species away from another 
+
+
+
+Lat_change <- dplyr::mutate(Max_lat_species, D = Copy - lag(Maximum_latitude))
 
 Lat_change <- Lat_change %>%
-  rename(Latitude_change = D)
+  dplyr::rename(Latitude_change = D)
 
 
 ggplot(data = Lat_change,
