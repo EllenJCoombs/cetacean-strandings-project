@@ -62,30 +62,27 @@ ggplot(data = Max_lat_species,
 UK_IRL_stranding_events <- read.csv("UK_IRL_stranding_events.csv")
 UK_and_Irish_stranding_events$X <- NULL
 
-#Remove duplicates so R doesn't take one species away from another 
-ff <- data.frame(dol = c("a", "a", "a", "b", "b","b"), h = 1:6)
-
-Max_lat_species$Copy[which(duplicated(Max_lat_species$Species) == FALSE)] <- NA
-
 
 
 #Adding a new column for 0s and 1s 
 Max_lat_species["Copy"] <- NA
 Max_lat_species$Copy <- Max_lat_species$Maximum_latitude
 
-
-
-
-
+#Taking the max lat from one year, away from the max lat from a previous year (latitude change)
 Lat_change <- dplyr::mutate(Max_lat_species, D = Copy - lag(Maximum_latitude))
+
+#Remove duplicates so R doesn't take one species away from another 
+#Means I lose the first value for 1913 for each species - is this a problem?
+Max_lat_species$Copy[which(duplicated(Max_lat_species$Species) == FALSE)] <- NA
 
 Lat_change <- Lat_change %>%
   dplyr::rename(Latitude_change = D)
 
 
 ggplot(data = Lat_change,
-       aes(x = Year, y = D, colour = Species, ylab = "Latitude change")) +
+       aes(x = Year, y = Latitude_change, colour = Species, ylab = "Latitude change")) +
   geom_line() +
+  geom_smooth() + 
   facet_wrap(~Species)
 
 
