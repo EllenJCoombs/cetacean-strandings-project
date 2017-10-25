@@ -96,14 +96,19 @@ Lat_change$N1 <- Lat_change$Latitude_change
 Lat_change <- Lat_change %>% 
   mutate(N1 = round(N1, 0))
 
+
+#The following code looks at any latitude increase, from 1 - 10 degrees 
+#Additive compared to the code below 
+
 #Changing a lat change of 1 degree to a 1 and everything else to a 0 
-#This is 1 degrees north
+#This is 1-2 degrees north
+#If you want to select between a range 
+Lat_change$N1[Lat_change$N1 > 1 & Lat_change$N1 < 2] <- 1
 Lat_change$N1[Lat_change$N1 > 2] <- 0
 Lat_change$N1[Lat_change$N1 == 1] <- 1
-Lat_change$N1[Lat_change$N1 > 1] <- 0
+Lat_change$N1[Lat_change$N1 == 2] <- 1
+Lat_change$N1[Lat_change$N1 < 1] <- 0
 
-#If you want to select between a range 
-#Lat_change$N1[Lat_change$N1 > 1 & Lat_change$N1 < 2] <- 1
 
 #1 - 5 degrees of movement north 
 Lat_change["N5"] <- NA
@@ -111,29 +116,32 @@ Lat_change$N5 <- Lat_change$Latitude_change
 
 #Rounding to 1DP
 Lat_change <- Lat_change %>% 
-  mutate(N5 = round(N5, 0))
+mutate(N5 = round(N5, 0))
 
-Lat_change$N5[Lat_change$N5 == 1] <- 0
+#A range of numbers 
+Lat_change$N5[Lat_change$N5 > 1 & Lat_change$N5 < 5] <- 1
+Lat_change$N5[Lat_change$N5 == 5] <- 1
+#Lat_change$N5[Lat_change$N5 == 1] <- 0
 Lat_change$N5[Lat_change$N5 < 1] <- 0
 Lat_change$N5[Lat_change$N5 > 5] <- 0
-Lat_change$N5[Lat_change$N5 > 1] <- 1
-Lat_change$N5[Lat_change$N5 == 5] <- 1
-Lat_change$N5[Lat_change$N5 > 2 & Lat_change$N5 < 5] <- 1
+#Lat_change$N5[Lat_change$N5 > 1] <- 1
 
 
-#6 - 10 degrees of movement north 
+#1 - 10 degrees of movement north 
 Lat_change["N10"] <- NA
 Lat_change$N10 <- Lat_change$Latitude_change
 
 #Rounding to 1DP
 Lat_change <- Lat_change %>% 
-  mutate(N10 = round(N10, 0))
+mutate(N10 = round(N10, 0))
 
+Lat_change$N10[Lat_change$N10 > 1 & Lat_change$N10 < 10] <- 1
 Lat_change$N10[Lat_change$N10 > 10] <- 0
-Lat_change$N10[Lat_change$N10 == 5] <- 0
-Lat_change$N10[Lat_change$N10 < 5] <- 0
-Lat_change$N10[Lat_change$N10 == 6] <- 1
-Lat_change$N10[Lat_change$N10 > 6 & Lat_change$N10 < 10] <- 1
+Lat_change$N10[Lat_change$N10 < 1] <- 0
+#Lat_change$N10[Lat_change$N10 == 5] <- 0
+#Lat_change$N10[Lat_change$N10 < 5] <- 0
+#Lat_change$N10[Lat_change$N10 == 6] <- 1
+
 Lat_change$N10[Lat_change$N10 == 10] <- 1
 
 #+10 degrees
@@ -142,17 +150,97 @@ Lat_change$`N10+` <- Lat_change$Latitude_change
 
 #Rounding to 1DP
 Lat_change <- Lat_change %>% 
-  mutate(`N10+` = round(`N10+`, 0))
+mutate(`N10+` = round(`N10+`, 0))
 
-Lat_change$`N10+`[Lat_change$`N10+` < 10] <- 0
-Lat_change$`N10+`[Lat_change$`N10+` == 10] <- 0
-Lat_change$`N10+`[Lat_change$`N10+` > 10] <- 1
+#Just shoving in 20 as I know non of the animals have moved 20 degrees 
+Lat_change$`N10+`[Lat_change$`N10+` > 1 & Lat_change$`N10+` < 20] <- 1
+Lat_change$`N10+`[Lat_change$`N10+` < 1] <- 0
+#Lat_change$`N10+`[Lat_change$`N10+` == 10] <- 0
+#Lat_change$`N10+`[Lat_change$`N10+` > 10] <- 1
+
+#The following code looks at each increment seperately 
+
+#Changing a lat change of 1 degree to a 1 and everything else to a 0 
+#This is 1 degrees north
+#Lat_change$N1[Lat_change$N1 > 2] <- 0
+#Lat_change$N1[Lat_change$N1 == 1] <- 1
+#Lat_change$N1[Lat_change$N1 > 1] <- 0
+
+#If you want to select between a range 
+#Lat_change$N1[Lat_change$N1 > 1 & Lat_change$N1 < 2] <- 1
+
+#1 - 5 degrees of movement north 
+#Lat_change["N5"] <- NA
+#Lat_change$N5 <- Lat_change$Latitude_change
+
+#Rounding to 1DP
+#Lat_change <- Lat_change %>% 
+  #mutate(N5 = round(N5, 0))
+
+#Lat_change$N5[Lat_change$N5 == 1] <- 0
+#Lat_change$N5[Lat_change$N5 < 1] <- 0
+#Lat_change$N5[Lat_change$N5 > 5] <- 0
+#Lat_change$N5[Lat_change$N5 > 1] <- 1
+#Lat_change$N5[Lat_change$N5 == 5] <- 1
+#Lat_change$N5[Lat_change$N5 > 2 & Lat_change$N5 < 5] <- 1
 
 
-ggplot(data = Lat_change,
-       aes(x = Year, y = N10, colour = Species, ylab = "Latitude change")) +
-  geom_line() +
-  facet_wrap(~Species)
+#6 - 10 degrees of movement north 
+#Lat_change["N10"] <- NA
+#Lat_change$N10 <- Lat_change$Latitude_change
+
+#Rounding to 1DP
+#Lat_change <- Lat_change %>% 
+  #mutate(N10 = round(N10, 0))
+
+#Lat_change$N10[Lat_change$N10 > 10] <- 0
+#Lat_change$N10[Lat_change$N10 == 5] <- 0
+#Lat_change$N10[Lat_change$N10 < 5] <- 0
+#Lat_change$N10[Lat_change$N10 == 6] <- 1
+#Lat_change$N10[Lat_change$N10 > 6 & Lat_change$N10 < 10] <- 1
+#Lat_change$N10[Lat_change$N10 == 10] <- 1
+
+#+10 degrees
+#Lat_change["N10+"] <- NA
+#Lat_change$`N10+` <- Lat_change$Latitude_change
+
+#Rounding to 1DP
+#Lat_change <- Lat_change %>% 
+  #mutate(`N10+` = round(`N10+`, 0))
+
+#Lat_change$`N10+`[Lat_change$`N10+` < 10] <- 0
+#Lat_change$`N10+`[Lat_change$`N10+` == 10] <- 0
+#Lat_change$`N10+`[Lat_change$`N10+` > 10] <- 1
+
+
+#ggplot(data = Lat_change,
+       #aes(x = Year, y = N10, colour = Species, ylab = "Latitude change")) +
+  #geom_line() +
+  #facet_wrap(~Species)
+
+
+
+#Plotting the above 
+
+Lat_change_N <- Lat_change %>%
+  dplyr::select(Year, Species, N1, N5, N10,`N10+`)
+
+#Measuring success (move north) and failure (move south or no move north) using binomial
+
+model1 <- glm(formula = `N10+` ~ Year * Latitude_change, family = binomial, data = Lat_change)
+          
+summary(model1)
+  
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -217,6 +305,7 @@ ggplot() +
   ylab("Max lat") +
   theme_bw()
 
-
+#Adding a column to Max_lat_species 
+#How do I make this so that each year has a specific SST?
 Max_lat_species$SST<-NA
 

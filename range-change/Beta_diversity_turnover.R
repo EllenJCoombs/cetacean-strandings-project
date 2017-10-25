@@ -30,8 +30,11 @@ species_known <- speciesyearcount %>%
   filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
+species_known <- species_known %>%
+  dplyr::rename(Species = Name.Current.Sci)
+
 #Data need to be reordered for putting into matrix 
-reordering <- species_known[c("Year", "n", "Name.Current.Sci")]
+reordering <- species_known[c("Year", "n", "Species")]
 whale.matrix <- sample2matrix(reordering)
 
 #Number of species per year 
@@ -39,7 +42,7 @@ specnumber(whale.matrix)
 
 #Doublecheck
 species_richness <- species_known %>%
-  count(Year) 
+  dplyr::count(Year) 
 
 species_richness <- species_richness %>%
   dplyr::rename(Total_richness = nn)
@@ -68,6 +71,7 @@ write.csv(species_richness, file = "Richness.csv")
 #Alpha diversity 
 #Simpson's diversity index 
 simpson <- diversity(whale.matrix, index = "simpson")
+simpson
 plot(simpson)
 
 #Shannon's diversity index 
@@ -84,14 +88,14 @@ betadiver(whale.matrix, method = "sor")
 betadiver(whale.matrix, method = "w")
 
 #Looking at species by year - a count of each species total
-speciestotal <- aggregate(n ~ Species, speciesyearcount, sum) %>%
+speciestotal <- aggregate(n ~ Species, species_known, sum) %>%
   na.omit()
 
 #Gamma diversity 
-length(unique(speciesyearcount$Species))
+length(unique(species_known$Species))
 
 #This adds up species where abundance is not NA
-length(unique(speciesyearcount$Species[!is.na(speciesyearcount$n) & speciesyearcount$n != 0]))
+length(unique(species_known$Species[!is.na(species_known$n) & species_known$n != 0]))
 
 #Species accumulation curves 
 whale.curve <- specaccum(whale.matrix, method = "random", permutations = 1000)
@@ -140,7 +144,7 @@ specpool(whale.matrix)
 reordering$Decade <- gsub("[0-9]$", "0", reordering$Year)
 
 decades <- reordering %>% 
-  dplyr::count(Name.Current.Sci, Decade)
+  dplyr::count(Species, Decade)
   
 decades <- decades %>%
   dplyr::count(Decade)
@@ -148,9 +152,10 @@ decades <- decades %>%
 decades <- decades %>% 
   dplyr::rename(Species_richness = n) 
 
-#Doing biodiversity stats per decade 
-reordering2 <- reordering[c("Decade", "n", "Name.Current.Sci")]
+#Biodiversity stats per decade 
+reordering2 <- reordering[c("Decade", "n", "Species")]
 whale.matrix2 <- sample2matrix(reordering2)
+
 
 #Number of species per year 
 specnumber(whale.matrix2)
@@ -171,36 +176,40 @@ write.csv(decades, file = "Decadal_richness.csv")
 simpson <- diversity(whale.matrix2, index = "simpson")
 simpson
 plot(simpson)
+hist(simpson)
+
+invsimpson
+
 
 #Shannon's diversity index 
 shannon <- diversity(whale.matrix2, index = "shannon")
 shannon
 plot(shannon)
+hist(shannon)
 
 #used decades as sites 
 rarecurve(whale.matrix2)
 
 #Beta diversity
 betadiver(help=TRUE)
+#Jaccard's index (similarity) different = 0 
 betadiver(whale.matrix2, method = "j")
+#Sorenson's index (similarity) different = 0 
 betadiver(whale.matrix2, method = "sor")
+#Whittaker's - dissimilarity (different communities get a value of 1)
 betadiver(whale.matrix2, method = "w")
 
-#Looking at species by year - a count of each species total
-speciestotal <- aggregate(n ~ Species, speciesyearcount, sum) %>%
-  na.omit()
-
 #Gamma diversity 
-length(unique(reordering2$Name.Current.Sci))
+length(unique(reordering2$Species))
 
 #This adds up species where abundance is not NA
-length(unique(reordering2$Name.Current.Sci[!is.na(Name.Current.Sci$n) & reordering2$n != 0]))
+length(unique(reordering2$Species[!is.na(Species$n) & reordering2$n != 0]))
 
 #Species accumulation curves 
-whale.curve <- specaccum(whale.matrix2, method = "random", permutations = 1000)
-whale.curve
+whale.curve2 <- specaccum(whale.matrix2, method = "random", permutations = 1000)
+whale.curve2
 
-plot(whale.curve, ci.type = "poly", col = "blue", ci.col = "lightblue", 
+plot(whale.curve2, ci.type = "poly", col = "blue", ci.col = "lightblue", 
      lwd = 2, ci.lty = 0, xlab = "Decades: 1913 - 2015", 
      ylab = "Cumulative number of whale species")
 
@@ -209,4 +218,23 @@ plot(whale.curve, ci.type = "poly", col = "blue", ci.col = "lightblue",
 #Chao2
 specpool(whale.matrix2)
 
+
+#Rarecurve with species 
+reordering3 <- reordering[c("Name.Current.Sci", "n", "Decade")]
+whale.matrix3 <- sample2matrix(reordering3)
+rarecurve(whale.matrix3)
  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
