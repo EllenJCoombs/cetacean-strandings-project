@@ -178,10 +178,12 @@ simpson
 plot(simpson)
 hist(simpson)
 
+#The inverse Simpson (1/D)
+invsimpson <- diversity(whale.matrix2, index = "invsimpson")
 invsimpson
 
-
 #Shannon's diversity index 
+#This looks at richness and adundance 
 shannon <- diversity(whale.matrix2, index = "shannon")
 shannon
 plot(shannon)
@@ -193,6 +195,7 @@ rarecurve(whale.matrix2)
 #Beta diversity
 betadiver(help=TRUE)
 #Jaccard's index (similarity) different = 0 
+#Similarity between sites, based on richness, not abundance
 betadiver(whale.matrix2, method = "j")
 #Sorenson's index (similarity) different = 0 
 betadiver(whale.matrix2, method = "sor")
