@@ -171,7 +171,7 @@ ggplot(data = decades, aes(x = Decade, y = Species_richness)) +
 
 write.csv(decades, file = "Decadal_richness.csv")
 
-#Alpha diversity 
+#Alpha diversity
 #Simpson's diversity index 
 simpson <- diversity(whale.matrix2, index = "simpson")
 simpson
