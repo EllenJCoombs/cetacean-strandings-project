@@ -100,7 +100,7 @@ length(unique(species_known$Species[!is.na(species_known$n) & species_known$n !=
 #Species accumulation curves 
 whale.curve <- specaccum(whale.matrix, method = "random", permutations = 1000)
 whale.curve
-
+#Plot
 plot(whale.curve, ci.type = "poly", col = "blue", ci.col = "lightblue", 
      lwd = 2, ci.lty = 0, xlab = "Years: 1913 - 2015", 
      ylab = "Cumulative number of whale species")
