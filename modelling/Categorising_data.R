@@ -535,7 +535,7 @@ write.csv(North_richness, file = "North_richness.csv")
 
 
 ####### South richness 
-South_strandings <- South_strandings %>% 
+South_strandings <- South_strandings %>%
   filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
