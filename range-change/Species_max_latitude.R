@@ -111,9 +111,7 @@ Model_data$X <- NULL
 
 Model_data_wlat <- full_join(All_lat_species, Model_data, by = "Year")
 
-
-
-
+write.csv(Model_data_wlat, file = "Model_data_wlat.csv")
 
 #################################################################################################
 #Range switch: 0s and 1s 
