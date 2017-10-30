@@ -55,6 +55,66 @@ ggplot(data = Max_lat_species,
   facet_wrap(~Species)
 
 
+#Mean lat per species 
+#Removing NAs (mostly missing Irish coordinates) as these end up giving the whole year an NA 
+#even when other values are recorded for that year. 
+#Which rows have NAs?
+row.has.na <- apply(Lat_list, 1, function(x){any(is.na(x))})
+#How many NAs
+sum(row.has.na)
+#Remove NAs
+Lat_list <- Lat_list[!row.has.na,]
+
+#Split out max latitude per species per year 
+levels(Lat_list$Name.Current.Sci)[1]
+
+Mean_lat_species<-vector("list")
+for(i in 1:length(levels(Lat_list$Name.Current.Sci))){
+  #Specific species 
+  Species_lat <- Lat_list %>%
+    filter(Name.Current.Sci == levels(Lat_list$Name.Current.Sci)[i])
+  
+  
+  #Extracting max latitude per year 
+  Species_lat <- aggregate(Species_lat$Latitude, by = list(Species_lat$Year), mean)%>%
+    mutate(Species=levels(Lat_list$Name.Current.Sci)[i])
+  
+  #Doing this for the ith species 
+  Mean_lat_species[[i]]<-Species_lat
+}
+
+#Binding all ith species max lats per year 
+Mean_lat_species<-tbl_df(do.call(rbind,Mean_lat_species))
+
+#Rename the columns 
+Mean_lat_species <- Mean_lat_species %>%
+  dplyr::rename(Year = Group.1) %>%
+  dplyr::rename(Mean_latitude = x)
+
+
+#Bind the two (Max and mean lat)
+
+All_lat_species <- bind_cols(Max_lat_species, Mean_lat_species)
+All_lat_species$Group.1 <- NULL
+All_lat_species$Species1 <- NULL 
+All_lat_species$Year1 <- NULL
+
+#Rearrange 
+All_lat_species <- All_lat_species %>% 
+  select(Year, Species, Maximum_latitude, Mean_latitude)
+
+#Bind to model dataset 
+#This is model_data.csv (in the modelling folder)
+
+Model_data <- read.csv("Model_data.csv")
+Model_data$X <- NULL
+
+Model_data_wlat <- full_join(All_lat_species, Model_data, by = "Year")
+
+
+
+
+
 #################################################################################################
 #Range switch: 0s and 1s 
 #This is per species per stranding event - looks awful! 
