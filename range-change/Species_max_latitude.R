@@ -120,16 +120,6 @@ ggplot()+
   theme_bw() + 
   facet_wrap(~ Species)
 
-
-
-
-
-
-
-
-
-
-
 #################################################################################################
 #Range switch: 0s and 1s 
 #This is per species per stranding event - looks awful! 
