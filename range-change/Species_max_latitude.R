@@ -93,7 +93,6 @@ Mean_lat_species <- Mean_lat_species %>%
 
 
 #Bind the two (Max and mean lat)
-
 All_lat_species <- bind_cols(Max_lat_species, Mean_lat_species)
 All_lat_species$Group.1 <- NULL
 All_lat_species$Species1 <- NULL 
@@ -112,6 +111,24 @@ Model_data$X <- NULL
 Model_data_wlat <- full_join(All_lat_species, Model_data, by = "Year")
 
 write.csv(Model_data_wlat, file = "Model_data_wlat.csv")
+
+
+#Plotting these - anything interesting? 
+
+ggplot()+ 
+  geom_point(data = Model_data_wlat, aes(x = Max_SST, y = Maximum_latitude)) + 
+  theme_bw() + 
+  facet_wrap(~ Species)
+
+
+
+
+
+
+
+
+
+
 
 #################################################################################################
 #Range switch: 0s and 1s 
@@ -288,18 +305,6 @@ Lat_change_N <- Lat_change %>%
 model1 <- glm(formula = `N10+` ~ Year * Latitude_change, family = binomial, data = Lat_change)
           
 summary(model1)
-  
-
-
-
-
-
-
-
-
-
-
-
 
 
 ##################################################################################################
