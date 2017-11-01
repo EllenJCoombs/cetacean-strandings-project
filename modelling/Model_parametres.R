@@ -100,6 +100,16 @@ SST_yearly_max <- SST_yearly_max %>%
 #test <- test %>% 
   #dplyr::rename(Max_SST_temp = year_max)
 
+
+############################################################################################
+#NAO Data
+#From cleaned data 
+#Cleaned already 
+
+NAO_data <- read.csv("NAO_data.csv")
+NAO_data$X <- NULL
+
+
 ###############################################################################################
 #Stranding events 
 #Using the stranding count data 
@@ -112,12 +122,9 @@ UK_IRL_stranding_events_count <- UK_IRL_stranding_events_count %>%
 
 #This model dataset has all stranding events (including stranding events and richness for the
 #whole dataset)
-
-
 #Tying all of the data together 
-
 All_model <- bind_cols(speciesrichness, UK_IRL_stranding_events_count, Population, storms, Final_geom, 
-                  orgs, SST_yearly_max)
+                  orgs, SST_yearly_max, NAO_data)
 
 All_model$X <- NULL
 All_model$Year1 <- NULL 

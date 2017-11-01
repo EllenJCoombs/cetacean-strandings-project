@@ -10,30 +10,35 @@
 #Read in the north and south data frames (from the modelling folder)
 #Stranding events and richness 
 
+library(mgcv)
+library(plyr)
+library(dplyr)
+
+
 North_model <- read.csv("North_model.csv")
 North_model$X <- NULL
 South_model <- read.csv("South_model.csv")
 South_model$X <- NULL
 
 #Adding a new column to both the north and south data 
-North_model["Northsouth"] <- "North"
-South_model["Northsouth"] <- "South"
+North_model["Northsouth"] <- "N"
+South_model["Northsouth"] <- "S"
 
 #Change the variable names so they will bind 
 North_model <- North_model %>% 
-  rename(Richness = North_richness) %>%
-  rename(Stranding_events = North_events)
+  dplyr::rename(Richness = North_richness) %>%
+  dplyr::rename(Stranding_events = North_events)
 
 South_model <- South_model %>% 
-  rename(Richness = South_richness) %>%
-  rename(Stranding_events = South_events)
+  dplyr::rename(Richness = South_richness) %>%
+  dplyr::rename(Stranding_events = South_events)
 
 
 #Bind the two datasets on top of one another 
 North_South_model <- bind_rows(North_model, South_model)
 
 
-#All records Richness 
+#All records Richness - GAM
 All_ns <- gam(Richness ~ offset(log(Population)) +s(Year, Northsouth, bs="fs"), data= North_South_model, method = "REML",
               family=tw(a=1.2))
 
@@ -43,6 +48,8 @@ View(North_South_model$Northsouth)
 View(data.frame(u = North_South_model$Northsouth))
 
 write.csv(North_South_model, file = "North_South_model.csv")
+
+ddply(North_South_model, .(Northsouth), "nrow")
 
 #+s(Storms, k = 4) +s(Max_K_index, k=4)
 
