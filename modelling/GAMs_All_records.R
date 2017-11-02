@@ -11,8 +11,8 @@ All_model <- read.csv("Model_data.csv")
 All_model$X <- NULL
 All_model$X.1 <- NULL
 
-All_ra <- gam(Total_richness ~ offset(log(Population)) +s(Year), data=All_model, 
-                method = "REML", family=tw(a=1.2))
+All_ra <- gam(Richness ~ offset(log(Population)) +s(NAO_index), data=All_model, 
+                method = "REML", family=quasipoisson())
 
 #+s(Max_SST) +s(Storms, k = 4)
 #+s(Max_K_index, k= 4)
@@ -71,22 +71,6 @@ write.csv(All_coefs_glance, file = "All_glance.csv")
 
 #check what type of models these are 
 sapply(Small_tidy, class)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #GAMs 

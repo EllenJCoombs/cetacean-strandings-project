@@ -21,8 +21,8 @@ South_model <- read.csv("South_model.csv")
 South_model$X <- NULL
 
 #Adding a new column to both the north and south data 
-North_model["Northsouth"] <- "N"
-South_model["Northsouth"] <- "S"
+North_model["Northsouth"] <- "North"
+South_model["Northsouth"] <- "South"
 
 #Change the variable names so they will bind 
 North_model <- North_model %>% 

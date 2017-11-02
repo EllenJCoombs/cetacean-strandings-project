@@ -62,9 +62,6 @@ Population <- Population %>%
 ##################################################################################################
 #Species richness 
 
-library(vegan)
-library(picante)
-
 #Or can just put: 
 #Richness <- read.csv("richness.csv")
 
@@ -109,8 +106,7 @@ SST_yearly_max <- SST_yearly_max %>%
 NAO_data <- read.csv("NAO_data.csv")
 NAO_data$X <- NULL
 
-
-###############################################################################################
+############################################################################################
 #Stranding events 
 #Using the stranding count data 
 
@@ -136,6 +132,7 @@ All_model$Year5 <- NULL
 All_model$X1 <- NULL 
 All_model$X2 <- NULL
 All_model$X <- NULL 
+All_model$Year6 <- NULL
 
 
 write.csv(All_model, file = "Model_data.csv")
