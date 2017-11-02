@@ -152,7 +152,7 @@ Mysticete_events_count <- read.csv("Mysticete_events_count.csv")  #Stranding eve
 Mysticete_richness <- read.csv("Mysticete_richness.csv")   #richness 
 
 Mysticete_model <- bind_cols(Mysticete_events_count, Mysticete_richness, Population, storms, Final_geom, 
-                       orgs, SST_yearly_max)
+                       orgs, SST_yearly_max, NAO_data)
 
 Mysticete_model$X <- NULL
 Mysticete_model$X1 <- NULL
@@ -163,6 +163,7 @@ Mysticete_model$Year4 <- NULL
 Mysticete_model$Year5 <- NULL
 Mysticete_model$X2 <- NULL
 Mysticete_model$year <- NULL 
+Mysticete_model$Year6 <- NULL
 
 write.csv(Mysticete_model, file = "Mysticete_model.csv")
 
@@ -172,7 +173,7 @@ Odontocete_events_count <- read.csv("Odontocete_events_count.csv")  #Stranding e
 Odontocete_richness <- read.csv("Odontocete_richness.csv")   #richness 
 
 Odontocete_model <- bind_cols(Odontocete_events_count, Odontocete_richness, Population, storms, Final_geom, 
-                             orgs, SST_yearly_max)
+                             orgs, SST_yearly_max, NAO_data)
 
 Odontocete_model$X <- NULL
 Odontocete_model$X1 <- NULL
@@ -183,6 +184,7 @@ Odontocete_model$Year4 <- NULL
 Odontocete_model$Year5 <- NULL
 Odontocete_model$X2 <- NULL
 Odontocete_model$year <- NULL 
+Odontocete_model$Year6 <- NULL
 
 write.csv(Odontocete_model, file = "Odontocete_model.csv")
 
@@ -196,7 +198,7 @@ Big_bs_events_count <- read.csv("Big_bs_events_count.csv")  #Stranding events
 Big_bs_richness <- read.csv("Big_bs_richness.csv")   #richness 
 
 Big_model <- bind_cols(Big_bs_events_count, Big_bs_richness, Population, storms, Final_geom, 
-                         orgs, SST_yearly_max)
+                         orgs, SST_yearly_max, NAO_data)
 
 Big_model$X <- NULL
 Big_model$X1 <- NULL
@@ -207,6 +209,7 @@ Big_model$Year4 <- NULL
 Big_model$Year5 <- NULL
 Big_model$X2 <- NULL
 Big_model$year <- NULL 
+Big_model$Year6 <- NULL
 
 write.csv(Big_model, file = "Big_model.csv")
 
@@ -216,7 +219,7 @@ Medium_bs_events_count <- read.csv("Medium_bs_events_count.csv")  #Stranding eve
 Medium_bs_richness <- read.csv("Medium_bs_richness.csv")   #richness 
 
 Medium_model <- bind_cols(Medium_bs_events_count, Medium_bs_richness, Population, storms, Final_geom, 
-                       orgs, SST_yearly_max)
+                       orgs, SST_yearly_max, NAO_data)
 
 Medium_model$X <- NULL
 Medium_model$X1 <- NULL
@@ -227,6 +230,7 @@ Medium_model$Year4 <- NULL
 Medium_model$Year5 <- NULL
 Medium_model$X2 <- NULL
 Medium_model$year <- NULL 
+Medium_model$Year6 <- NULL
 
 write.csv(Medium_model, file = "Medium_model.csv")
 
@@ -238,7 +242,7 @@ Small_bs_events_count <- read.csv("Small_bs_events_count.csv")  #Stranding event
 Small_bs_richness <- read.csv("Small_bs_richness.csv")   #richness 
 
 Small_model <- bind_cols(Small_bs_events_count, Small_bs_richness, Population, storms, Final_geom, 
-                  orgs, SST_yearly_max)
+                  orgs, SST_yearly_max, NAO_data)
 
 Small_model$X <- NULL
 Small_model$X1 <- NULL
@@ -249,6 +253,7 @@ Small_model$Year4 <- NULL
 Small_model$Year5 <- NULL
 Small_model$X2 <- NULL
 Small_model$year <- NULL 
+Small_model$Year6 <- NULL
 
 write.csv(Small_model, file = "Small_model.csv")
 
@@ -258,7 +263,7 @@ North_richness <- read.csv("North_richness.csv")
 North_events_count <- read.csv("North_events_count.csv")
 
 North_model <- bind_cols(North_richness, North_events_count, Population, storms, Final_geom, 
-                         orgs, SST_yearly_max)
+                         orgs, SST_yearly_max, NAO_data)
 
 North_model$X <- NULL
 North_model$X1 <- NULL
@@ -269,6 +274,7 @@ North_model$Year4 <- NULL
 North_model$Year5 <- NULL
 North_model$X2 <- NULL
 North_model$year <- NULL 
+North_model$Year6 <- NULL
 
 write.csv(North_model, file = "North_model.csv")
 
@@ -278,7 +284,7 @@ South_richness <- read.csv("South_richness.csv")
 South_events_count <- read.csv("South_events_count.csv")
 
 South_model <- bind_cols(South_richness, South_events_count, Population, storms, Final_geom, 
-                         orgs, SST_yearly_max)
+                         orgs, SST_yearly_max, NAO_data)
 
 South_model$X <- NULL
 South_model$X1 <- NULL
@@ -289,6 +295,7 @@ South_model$Year4 <- NULL
 South_model$Year5 <- NULL
 South_model$X2 <- NULL
 South_model$year <- NULL 
+South_model$Year6 <- NULL
 
 write.csv(South_model, file = "South_model.csv")
 
@@ -297,7 +304,7 @@ write.csv(South_model, file = "South_model.csv")
 #Pre and post CSIP 
 #Pre = 77 years (1913 - 1989)
 
-Pre_CSIP_events_count <- read.csv("Pre_CSIP_events_count.csv")
+Pre_CSIP_events_count <- read.csv("Pre_CSIP_event_count.csv")
 Pre_CSIP_richness <- read.csv("Pre_CSIP_richness.csv")
 
 #Filtering population to 1913-1989 
@@ -312,12 +319,15 @@ Storms_pre_CSIP <- storms %>%
 Geom_pre_CSIP <- Final_geom %>%
   filter(Year %in% c(1913:1989))
 
-SST_Pre_CSIP <- SST_yearly_max %>%
+SST_pre_CSIP <- SST_yearly_max %>%
   filter(year %in% c(1913:1989))
+
+NAO_pre_CSIP <- NAO_data %>%
+  filter(Year %in% c(1913:1989))
 
 
 Pre_CSIP_model <- bind_cols(Pre_CSIP_events_count, Pre_CSIP_richness, Pop_pre_CSIP, 
-                            Storms_pre_CSIP, Geom_pre_CSIP, SST_Pre_CSIP)
+                            Storms_pre_CSIP, Geom_pre_CSIP, SST_pre_CSIP, NAO_pre_CSIP)
 Pre_CSIP_model$X <- NULL
 Pre_CSIP_model$X1 <- NULL
 Pre_CSIP_model$Year1 <- NULL
