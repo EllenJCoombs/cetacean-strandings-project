@@ -363,9 +363,12 @@ Geom_post_CSIP <- Final_geom %>%
 SST_post_CSIP <- SST_yearly_max %>%
   filter(year %in% c(1990:2015))
 
+NAO_post_CSIP <- NAO_data %>% 
+  filter(Year %in% c(1990:2015))
+
 
 Post_CSIP_model <- bind_cols(Post_CSIP_events_count, Post_CSIP_richness, Pop_post_CSIP, 
-                            Storms_post_CSIP, Geom_post_CSIP, SST_post_CSIP)
+                            Storms_post_CSIP, Geom_post_CSIP, SST_post_CSIP, NAO_post_CSIP)
 
 Post_CSIP_model$X <- NULL
 Post_CSIP_model$X1 <- NULL
@@ -376,5 +379,6 @@ Post_CSIP_model$Year4 <- NULL
 Post_CSIP_model$Year5 <- NULL
 Post_CSIP_model$X2 <- NULL
 Post_CSIP_model$year <- NULL 
+
 
 write.csv(Post_CSIP_model, file = "Post_CSIP_model.csv")

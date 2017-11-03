@@ -14,7 +14,7 @@ library(mgcv)
 library(plyr)
 library(dplyr)
 
-
+#The models are currently in the modelling file 
 North_model <- read.csv("North_model.csv")
 North_model$X <- NULL
 South_model <- read.csv("South_model.csv")
@@ -59,7 +59,7 @@ gam.check(All_ns)
 #AIC (model comparison)
 AIC(All_ns)
 
-#######################################################################################
+##################################################################################################
 #Body size 
 #Body size models are in the modelling folder 
 Big_model <- read.csv("Big_model.csv")
@@ -122,7 +122,13 @@ gam.check(All_bs)
 AIC(All_bs)
 
 
+#Sometimes it is helpful to see how the linear predictor or expected response would 
+#vary with 2 predictors, if all the others were held fixed at some value. vis.gam allows this.
 
+vis.gam(All_bs)
+
+vis.gam(All_bs, n.grid = 50, theta = 35, phi = 32, zlab = "additional",
+        ticktype = "detailed", color = "topo")
 
 
 
