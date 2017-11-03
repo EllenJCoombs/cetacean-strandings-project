@@ -3,8 +3,9 @@
 library(ggplot2)
 library(dplyr)
 
+
 UK_IRL_stranding_events <- read.csv("UK_IRL_stranding_events.csv")
-UK_and_Irish_stranding_events$X <- NULL
+UK_IRL_stranding_events$X <- NULL
 
 Lat_list <- UK_IRL_stranding_events %>%
   select(Name.Current.Sci, Latitude, Year)
@@ -114,7 +115,6 @@ write.csv(Model_data_wlat, file = "Model_data_wlat.csv")
 
 
 #Plotting these - anything interesting? 
-
 ggplot()+ 
   geom_point(data = Model_data_wlat, aes(x = Max_SST, y = Maximum_latitude)) + 
   theme_bw() + 
@@ -126,8 +126,6 @@ ggplot()+
 
 UK_IRL_stranding_events <- read.csv("UK_IRL_stranding_events.csv")
 UK_and_Irish_stranding_events$X <- NULL
-
-
 
 #Adding a new column for 0s and 1s 
 Max_lat_species["Copy"] <- NA
@@ -343,7 +341,7 @@ Max_SST_max_lat <- Max_SST_max_lat[,c("Year", "Year_max_SST", "Balaenoptera acut
                         "Pseudorca crassidens", "Stenella coeruleoalba", "Tursiops truncatus",
                         "Ziphius cavirostris")]
 
-#Want to plot all species against year max SST (which paper was this from??)
+#Want to plot all species against year max SST (which paper was this from??) *See Chapter 1 draft
 #There must be a better way of doing this....
 #Having to rename eveeyhing so it will plot 
 #Remove 0s?? 0s are messing up my plots 

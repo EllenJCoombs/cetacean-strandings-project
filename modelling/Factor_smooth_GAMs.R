@@ -72,6 +72,7 @@ Medium_model$X <- NULL
 #Small 
 Small_model <- read.csv("Small_model.csv")
 Small_model$X <- NULL 
+Small_model$Year6 <- NULL 
 
 #Adding new columns to the above 
 Big_model["Bodysize"] <- "Big"
@@ -81,12 +82,12 @@ Small_model["Bodysize"] <- "Small"
 
 #Changing the names of the columns so that they can be bound 
 Big_model <- Big_model %>%
-  dplyr::rename(Richness = Big_richness) %>%
+  dplyr::rename(Richness = Big_bs_richness) %>%
   dplyr::rename(Stranding_events = Big_events)
 
 #Medium 
 Medium_model <- Medium_model %>%
-  dplyr::rename(Richness = Medium_richness) %>%
+  dplyr::rename(Richness = Medium_bs_richness) %>%
   dplyr::rename(Stranding_events = Medium_events)
 
 #Small 
@@ -96,17 +97,18 @@ Small_model <- Small_model %>%
 
 
 Body_size_model <- bind_rows(Big_model, Medium_model, Small_model)
+#Remove rouge columns 
+Body_size_model$Year6 <- NULL 
 #Turn body size into a factor - keep getting error messages as it was a character before 
 Body_size_model$Bodysize <- as.factor(Body_size_model$Bodysize)
 #check
 sapply(Body_size_model, class)
 
-write.csv(North_South_model, file = "North_South_model.csv")
-
+write.csv(Body_size_model, file = "Body_size_model.csv")
 
 #GAMs
 #All records Richness - GAM
-All_bs <- gam(Richness ~ offset(log(Population)) +s(Storms, k = 5, Bodysize, bs="fs"), data= Body_size_model, method = "REML",
+All_bs <- gam(Stranding_events ~ offset(log(Population)) +s(NAO_index, Bodysize, bs="fs"), data= Body_size_model, method = "REML",
               family=tw(a=1.2))
 
 #The following covariates can be inserted 
