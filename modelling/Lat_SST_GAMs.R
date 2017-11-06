@@ -97,6 +97,21 @@ L_Alb_lat <- gam(Maximum_latitude ~ +s(Year, Northsouth, bs="fs"), data = L_albi
               method = "REML", family=gaussian())
 
 
+L_albirostris <- UK_IRL_stranding_events %>%
+  filter(Name.Current.Sci == "Lagenorhynchus albirostris")
+
+L_albirostris_north <- L_albirostris %>%
+  filter(Latitude > 55.5)
+
+L_albirostris_south <- L_albirostris %>%
+  filter(Latitude < 55.5)
+
+ggplot() + 
+  geom_point(data = L_albirostris_north, aes(x = Year, y = Latitude, colour = "blue")) + 
+  geom_point(data = L_albirostris_south, aes(x = Year, y = Latitude, colour = "red")) + 
+  theme_bw()
+
+
 summary(L_Alb_lat)
 plot(L_Alb_lat)
 

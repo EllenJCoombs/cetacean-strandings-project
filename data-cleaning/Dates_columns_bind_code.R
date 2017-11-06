@@ -12,9 +12,9 @@ library(ggplot2)
 library(readr)
 
 #read.csv("EDITNHMdata.csv")
-nhm <- read_csv("EDITNHMdata.csv")
+nhm <- read.csv("EDITNHMdata.csv")
 #read.csv("EDITCSIPdata.csv")
-csip <- read_csv("EDITCSIPdata.csv")
+csip <- read.csv("EDITCSIPdata.csv")
 names(csip)
 names(nhm)
 
@@ -37,19 +37,15 @@ str(csip)
 
 names(csip)
 names(nhm)
-csip <- dplyr::rename(csip, County = "Local Authority")
-csip <- rename(csip, Name.Common = "Name common")
-nhm <- rename(nhm, Grid.Ref = "Grid ref")
+csip <- dplyr::rename(csip, County = Local.Authority)
+csip <- rename(csip, Name.Common = Name.common) 
+#nhm <- rename(nhm, Grid.Ref = "Grid ref")
 nhm <-rename(nhm, Year = year)
 csip <- rename(csip, Year = year)
-csip <- rename(csip, S.W.No. = "National Reference")
-nhm <- rename(nhm, Name.Current.Sci = "Name Current Sci")
-nhm <- rename(nhm, Name.Common = "Name Common")
-csip <- rename(csip, Name.Current.Sci = "Name Current Sci")
-
-
-
-names(csip)
+csip <- rename(csip, S.W.No. = National.Reference)
+#nhm <- rename(nhm, Name.Current.Sci = "Name Current Sci")
+#nhm <- rename(nhm, Name.Common = "Name Common")
+#csip <- rename(csip, Name.Current.Sci = "Name Current Sci")
 
 
 #Changing dates and names in the selectnhm
@@ -123,7 +119,6 @@ selectnhm$Date
 
 
 #Changing date format in the NHM dataset
-install.packages("lubridate")
 library(lubridate)
 library(dplyr)
 #Why is this adding 100 years???
@@ -167,11 +162,12 @@ csipfinal
 sapply(nhmfinal, class)
 sapply(csipfinal, class)
 
+#CSIP Longitude is a factor for some reason 
+csipfinal$Longitude <- as.numeric(csipfinal$Longitude)
+
 #Merging the two datasets 
 nhmcsip <- bind_rows(nhmfinal, csipfinal)
 View(nhmcsip)
-
-
 
 #Saving the new dataset 
 
