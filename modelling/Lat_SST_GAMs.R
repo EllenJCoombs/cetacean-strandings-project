@@ -3,6 +3,7 @@
 
 library(mgcv)
 library(broom)
+library(ggplot2)
 #+s(Storms, k = 4)
 #+s(Year) +s(Max_SST_temp) 
 #+s(Storms, k = 4) +s(Max_K_index, k=4) +s(Organisations)
@@ -61,5 +62,92 @@ par(mfrow=c(2,2))
 gam.check(All_lat)
 #AIC (model comparison)
 AIC(All_ra)
+
+
+#Species specifics ============================================================================
+#Strip out species from Model_data_wlat 
+
+#Striped dolphins first 
+
+S_coeruleoalba_wlat <- Model_data_wlat %>%
+  filter(Species == "Stenella coeruleoalba") 
+
+#Model the above
+SC_lat <- gam(Maximum_latitude ~ +s(Year, Northsouth, bs="fs"), data = S_coeruleoalba_wlat, 
+               method = "REML", family=gaussian())
+
+summary(SC_lat)
+plot(SC_lat)
+
+par(mfrow=c(2,2))
+gam.check(SC_lat)
+
+#Plot of max Striped latitude 
+ggplot() + 
+  geom_point(data = S_coeruleoalba_wlat, aes(x = Year, y = Maximum_latitude)) + 
+  theme_bw()
+
+
+#White beaked dolphins 
+L_albirostris_wlat <- Model_data_wlat %>%
+  filter(Species == "Lagenorhynchus albirostris")
+
+#Model the above 
+L_Alb_lat <- gam(Maximum_latitude ~ +s(Year, Northsouth, bs="fs"), data = L_albirostris_wlat, 
+              method = "REML", family=gaussian())
+
+
+summary(L_Alb_lat)
+plot(L_Alb_lat)
+
+par(mfrow=c(2,2))
+gam.check(L_Alb_lat)
+
+#Plot of max White beaked dolphin latitude 
+ggplot() + 
+  geom_point(data = L_albirostris_wlat , aes(x = Year, y = Maximum_latitude)) + 
+  theme_bw()
+
+
+#Fin whale 
+B_physalus_wlat <- Model_data_wlat %>%
+  filter(Species == "Balaenoptera physalus")
+
+#Model the above 
+BP_lat <- gam(Maximum_latitude ~ +s(Year, Northsouth, bs="fs"), data = B_physalus_wlat, 
+                 method = "REML", family=gaussian())
+
+
+summary(BP_lat)
+plot(BP_lat)
+
+par(mfrow=c(2,2))
+gam.check(BP_lat)
+
+#Plot of max Fin latitude 
+ggplot() + 
+  geom_point(data = B_physalus_wlat, aes(x = Year, y = Maximum_latitude)) + 
+  theme_bw()
+
+
+#Common dolphins 
+D_delphis_wlat <- Model_data_wlat %>%
+  filter(Species == "Delphinus delphis")
+
+#Model the above 
+DD_lat <- gam(Maximum_latitude ~ +s(Year, Northsouth, bs="fs"), data = D_delphis_wlat, 
+              method = "REML", family=gaussian())
+
+
+summary(DD_lat)
+plot(DD_lat)
+
+par(mfrow=c(2,2))
+gam.check(DD_lat)
+
+#Plot of max Fin latitude 
+ggplot() + 
+  geom_point(data = D_delphis_wlat, aes(x = Year, y = Maximum_latitude)) + 
+  theme_bw()
 
 

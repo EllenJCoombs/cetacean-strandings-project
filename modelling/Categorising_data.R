@@ -93,7 +93,7 @@ specnumber(Odontocetes.matrix)
 Odontocete_richness <- Odontocetes_year %>%
   count(Year)
 
-#Rename
+#Rename variables 
 Odontocete_richness <- Odontocete_richness %>%
   rename(Odontocete_richness = Richness)
 

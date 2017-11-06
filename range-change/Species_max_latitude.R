@@ -52,7 +52,6 @@ Max_lat_species <- Max_lat_species %>%
 ggplot(data = Max_lat_species,
        aes(x = Year, y = Maximum_latitude, colour = Species, ylab = "Maximum stranding latitude recorded for each species")) +
   geom_point() +
-  geom_smooth() +
   facet_wrap(~Species)
 
 
