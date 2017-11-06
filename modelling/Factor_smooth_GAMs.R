@@ -108,7 +108,7 @@ write.csv(Body_size_model, file = "Body_size_model.csv")
 
 #GAMs
 #All records Richness - GAM
-All_bs <- gam(Stranding_events ~ offset(log(Population)) +s(NAO_index, Bodysize, bs="fs"), data= Body_size_model, method = "REML",
+All_bs <- gam(Stranding_events ~ offset(log(Population)) +s(Storms, k = 5, Bodysize, bs="fs"), data= Body_size_model, method = "REML",
               family=tw(a=1.2))
 
 #The following covariates can be inserted 
