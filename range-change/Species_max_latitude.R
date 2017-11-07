@@ -75,7 +75,7 @@ for(i in 1:length(levels(Lat_list$Name.Current.Sci))){
     filter(Name.Current.Sci == levels(Lat_list$Name.Current.Sci)[i])
   
   
-  #Extracting max latitude per year 
+  #Extracting mean latitude per year 
   Species_lat <- aggregate(Species_lat$Latitude, by = list(Species_lat$Year), mean)%>%
     mutate(Species=levels(Lat_list$Name.Current.Sci)[i])
   

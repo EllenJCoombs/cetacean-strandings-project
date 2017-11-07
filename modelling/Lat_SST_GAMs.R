@@ -96,7 +96,7 @@ L_albirostris_wlat <- Model_data_wlat %>%
 L_Alb_lat <- gam(Maximum_latitude ~ +s(Year, Northsouth, bs="fs"), data = L_albirostris_wlat, 
               method = "REML", family=gaussian())
 
-
+#Playing around with north/south plots - visual interpretation 
 L_albirostris <- UK_IRL_stranding_events %>%
   filter(Name.Current.Sci == "Lagenorhynchus albirostris")
 
