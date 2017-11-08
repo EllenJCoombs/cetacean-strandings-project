@@ -40,15 +40,21 @@ North_South_model <- bind_rows(North_model, South_model)
 North_South_model$Northsouth <- as.factor(North_South_model$Northsouth)
 
 #All records Richness - GAM
-All_ns <- gam(Stranding_events ~ offset(log(Population)) +s(Year, Northsouth, bs="fs"), data= North_South_model, method = "REML",
+All_ns <- gam(Stranding_events ~ offset(log(Population)) +s(Year, Northsouth, bs="fs") +
+                s(Storms, k=5) +
+                s(Max_K_index, k=4) +
+                s(Max_SST) +
+                s(NAO_index), 
+              data= North_South_model, method = "REML",
               family=tw(a=1.2))
+              
 
 unique(North_South_model$Stranding_events)
 
 #Check 
 sapply(North_South_model, class)
 
-write.csv(North_South_model, file = "North_South_model.csv")
+#write.csv(North_South_model, file = "North_South_model.csv")
 
 #The following covariates can be inserted 
 #+s(Storms, k = 4) +s(Max_K_index, k=4)
@@ -113,8 +119,16 @@ Body_size_model <- read.csv("Body_size_model.csv")
 
 #GAMs
 #All records Richness - GAM
-All_bs <- gam(Stranding_events ~ offset(log(Population)) +s(Storms, k = 5, Bodysize, bs="fs") +s(Year), data= Body_size_model, method = "REML",
+All_bs <- gam(Stranding_events ~ offset(log(Population)) +s(Storms, k = 5, Bodysize, bs="fs") +
+                s(Year) +
+                s(Max_K_index, k=4) +
+                s(Max_SST) +
+                s(NAO_index), 
+              data= Body_size_model, method = "REML",
               family=tw(a=1.2))
+              
+#family=nb()) much worse fit (negative binomial) 
+
 
 #The following covariates can be inserted 
 #+s(Storms, k = 4) +s(Max_K_index, k=4)
@@ -124,6 +138,10 @@ plot(All_bs)
 
 par(mfrow=c(2,2))
 gam.check(All_bs)
+
+par(mfrow=c(1,1))
+#Having a look at residuals
+plot(Body_size_model$Year, residuals(All_bs))
 
 #AIC (model comparison)
 AIC(All_bs)
