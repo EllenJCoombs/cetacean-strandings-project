@@ -40,7 +40,7 @@ North_South_model <- bind_rows(North_model, South_model)
 North_South_model$Northsouth <- as.factor(North_South_model$Northsouth)
 
 #All records Richness - GAM
-All_ns <- gam(Stranding_events ~ offset(log(Population)) +s(Year, Northsouth, bs="fs") +
+All_ns <- gam(Richness ~ offset(log(Population)) +s(Year, Northsouth, bs="fs") +
                 s(Storms, k=5) +
                 s(Max_K_index, k=4) +
                 s(Max_SST) +
