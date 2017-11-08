@@ -11,8 +11,9 @@ library(ggplot2)
 #From the modelling folder 
 Model_data_wlat <- read.csv("Model_data_wlat.csv")
 Model_data_wlat$X <- NULL 
+Model_data_wlat$X.1 <- NULL
 #What would my offset be?
-All_lat <- gam(Maximum_latitude ~ +s(Max_SST) +s(Year), data = Model_data_wlat, 
+All_lat <- gam(Maximum_latitude ~ s(Year, Species, bs="fs"), data = Model_data_wlat, 
               method = "REML", family=gaussian())
 
 #+s(Max_SST) +s(Storms, k = 4)
@@ -166,3 +167,21 @@ ggplot() +
   theme_bw()
 
 
+#Harbour porpoise 
+P_phocoena_wlat <- Model_data_wlat %>%
+  filter(Species == "Phocoena phocoena") 
+
+#Model the above
+PP_lat <- gam(Maximum_latitude ~ +s(Year, Northsouth, bs="fs"), data = P_phocoena_wlat, 
+              method = "REML", family=gaussian())
+
+summary(SC_lat)
+plot(SC_lat)
+
+par(mfrow=c(2,2))
+gam.check(SC_lat)
+
+#Plot of max Striped latitude 
+ggplot() + 
+  geom_point(data = P_phocoena_wlat, aes(x = Year, y = Maximum_latitude)) + 
+  theme_bw()

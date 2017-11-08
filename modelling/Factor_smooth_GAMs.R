@@ -40,8 +40,11 @@ North_South_model <- bind_rows(North_model, South_model)
 North_South_model$Northsouth <- as.factor(North_South_model$Northsouth)
 
 #All records Richness - GAM
-All_ns <- gam(Richness ~ offset(log(Population)) +s(Year, Northsouth, bs="fs"), data= North_South_model, method = "REML",
+All_ns <- gam(Stranding_events ~ offset(log(Population)) +s(Year, Northsouth, bs="fs"), data= North_South_model, method = "REML",
               family=tw(a=1.2))
+
+unique(North_South_model$Stranding_events)
+
 #Check 
 sapply(North_South_model, class)
 
@@ -106,9 +109,11 @@ sapply(Body_size_model, class)
 
 write.csv(Body_size_model, file = "Body_size_model.csv")
 
+Body_size_model <- read.csv("Body_size_model.csv")
+
 #GAMs
 #All records Richness - GAM
-All_bs <- gam(Stranding_events ~ offset(log(Population)) +s(Storms, k = 5, Bodysize, bs="fs"), data= Body_size_model, method = "REML",
+All_bs <- gam(Stranding_events ~ offset(log(Population)) +s(Storms, k = 5, Bodysize, bs="fs") +s(Year), data= Body_size_model, method = "REML",
               family=tw(a=1.2))
 
 #The following covariates can be inserted 
