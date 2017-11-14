@@ -60,11 +60,12 @@ make_data <- function(ds, years, labs=FALSE){
     pp <- pp +
       theme(legend.position="none",
             axis.text=element_blank(),
+            strip.text=element_text(),
             plot.title=element_text(hjust=0.5, size=8))
   }else{
     pp <- pp +
       theme(legend.position="none",
-            strip.text=element_blank(),
+            strip.text=element_text(colour="white"),
             axis.text=element_blank(),
             plot.title=element_text(hjust=0.5, size=8))
   }
@@ -98,7 +99,6 @@ gr <- grid.arrange(plines,
                    make_data(ds, years=c(1976, 2000)),
                    make_data(ds, years=c(2001, 2016)),
                    layout_matrix = matrix(c(1,2,1,3,1,4,1,5,1,6), 2, 5))
-
-ggsave(gr, file="megaplot.pdf", height=9, width=7)
+ggsave(gr, file="megaplot.pdf", height=13, width=10)
 
 
