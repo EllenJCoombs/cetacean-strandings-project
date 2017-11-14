@@ -68,10 +68,9 @@ Irish_data <- Irish_data %>%
   select(Date, Year, Name.Common, Name.Current.Sci, Latitude, Longitude, County, S.W.No.)
 
 
-
+#Date format 
 Irish_data$Date <- Irish_data$Date <- lubridate::dmy(Irish_data$Date)
-cleaneddata$Date <- cleaneddata$Date <- lubridate::dmy(cleaneddata$Date)
-
+#As factor to make all data the same 
 Irish_data$Name.Common <- as.factor(Irish_data$Name.Common)
 Irish_data$Name.Current.Sci <- as.factor(Irish_data$Name.Current.Sci)
 
@@ -120,11 +119,8 @@ UK_and_Irish$Name.Current.Sci[UK_and_Irish$Name.Current.Sci %in%  "Physeter macr
 UK_and_Irish$Name.Current.Sci[UK_and_Irish$Name.Current.Sci %in%  "Pseudorca crassidens "] <- "Pseudorca crassidens"
 
 
-#for duplicates 
-UK_and_Irish[!(duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")]) | duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")], fromLast = TRUE)), ]
-
-#for duplicates 
-UK_and_Irish[!(duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")]) | duplicated(df[c("Date","Name.Current.Sci", "County")], fromLast = TRUE)), ]
+#for duplicates by date, name and county 
+UK_and_Irish <- UK_and_Irish[!(duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")]) | duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")], fromLast = TRUE)), ]
 
 
 write.csv(UK_and_Irish, file = "UK_and_Irish_strandings.csv")
