@@ -126,9 +126,6 @@ ggplot()+
 UK_IRL_stranding_events <- read.csv("UK_IRL_stranding_events.csv")
 UK_and_Irish_stranding_events$X <- NULL
 
-#Adding a new column for 0s and 1s 
-Max_lat_species["Copy"] <- NA
-Max_lat_species$Copy <- Max_lat_species$Maximum_latitude
 
 #Taking the max lat from one year, away from the max lat from a previous year (latitude change)
 Lat_change <- dplyr::mutate(Max_lat_species, D = Copy - lag(Maximum_latitude))
