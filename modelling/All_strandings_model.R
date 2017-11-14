@@ -5,17 +5,16 @@
 library(dplyr)
 library(mgcv)
 
-
+#Read in model data for adding to the GAM later on this script 
 Model_data <- read.csv("Model_data.csv")
 
 #Remove unknowns for species year count 
-Strandings_known_IRL_UK <- UK_and_Irish %>% 
+UK_and_Irish_known <- UK_and_Irish %>% 
   filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
-
 #'Speciesyearcount' cleaned data: a count of current scientific name and year 
-speciesyearcount <- dplyr::count(Strandings_known_IRL_UK, Name.Current.Sci, Year) %>%
+speciesyearcount <- dplyr::count(UK_and_Irish_known, Name.Current.Sci, Year) %>%
   na.omit()
 
 #This is making sure unknowns aren't factors in the data 
