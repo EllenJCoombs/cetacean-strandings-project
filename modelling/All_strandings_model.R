@@ -38,6 +38,58 @@ all_strandings <- all_strandings %>%
 all_strandings <- all_strandings %>%
   rename(Species = Name.Current.Sci)
 
+
+#Adding the factor smooth (there is a much better way of doing this...)
+#All strandings BIG 
+
+#Big 
+bphysalus <- filter(all_strandings, Species ==  "Balaenoptera physalus") 
+bborealis <- filter(all_strandings, Species ==  "Balaenoptera borealis")
+bmusculus <- filter(all_strandings, Species ==  "Balaenoptera musculus") 
+mnovaeangliae <- filter(all_strandings, Species == "Megaptera novaeangliae") 
+pmacrocephalus <- all_strandings %>%
+  filter(Species %in% c("Physeter macrocephalus", "Physeter macrocephalus "))  
+
+
+Big_bs <- rbind(bphysalus, bborealis, bmusculus, mnovaeangliae, pmacrocephalus)
+Big_bs$X.1 <- NULL
+Big_bs$X <- NULL
+
+#Medium body size 
+oorca <- all_strandings %>% 
+  filter(Species %in% c("Orcinus orca", "Orcinus orca "))
+hampullatus <- filter(all_strandings, Species ==  "Hyperoodon ampullatus")
+bacutorostrata <- filter(all_strandings, Species ==  "Balaenoptera acutorostrata") 
+
+Medium_bs <- rbind(oorca, hampullatus, bacutorostrata)
+Medium_bs$X.1 <- NULL
+Medium_bs$X <- NULL
+
+
+#Small - need to remove all of the uknowns as well 
+Small_bs_clean <- all_strandings[ !(all_strandings$Species %in% Big_bs$Species), ] 
+Small_bs_clean2 <- Small_bs_clean[ !(Small_bs_clean$Species %in% Medium_bs$Species), ] 
+
+#No unknowns 
+Small_bs <- Small_bs_clean2
+
+Small_bs$X.1 <- NULL
+Small_bs$X <- NULL 
+
+
+#Adding a new column for bodysize to each 
+#Adding new columns to the above 
+Big_bs["Body_size"] <- "Big"
+Medium_bs["Body_size"] <- "Medium"
+Small_bs["Body_size"] <- "Small"
+
+#Combine the three datasets 
+#This now has indivisual strandings, stranding richness and all the covariates as well as 
+#bodysize 
+
+all_strandings <- bind_rows(Big_bs, Medium_bs, Small_bs)
+
+
 #Removing Harbour porpoise from the dataset 
 No_porpoise <- all_strandings %>%
   filter(Species != "Phocoena phocoena")
