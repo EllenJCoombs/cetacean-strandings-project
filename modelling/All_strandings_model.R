@@ -8,13 +8,13 @@ library(mgcv)
 #Read in model data for adding to the GAM later on this script 
 Model_data <- read.csv("Model_data.csv")
 #Read in the raw data 
+#Or load "Uk_and_Irish_sp.csv" (just wanted to make sure this was all right)
 UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
 
 #Remove unknowns for species year count 
 UK_and_Irish_known <- UK_and_Irish %>% 
   filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
-
 
 #Removing species with only one or two records 
 #This has been done earlier for richness, but 
@@ -48,7 +48,7 @@ all_strandings <- all_strandings %>%
 all_strandings <- all_strandings %>%
   rename(Species = Name.Current.Sci)
 
-
+#Adding factor smooth 
 #Adding the factor smooth (there is a much better way of doing this...)
 #All strandings BIG 
 
@@ -98,27 +98,39 @@ Small_bs["Body_size"] <- "Small"
 #bodysize 
 
 all_strandings <- bind_rows(Big_bs, Medium_bs, Small_bs)
+#Turn body size into a factor - keep getting error messages as it was a character before 
+all_strandings$Body_size <- as.factor(all_strandings$Body_size)
+#sapply(all_strandings, class)
 
 #MODEL 1: No additional smooths (just Year, Species as standard)
 #GAM for the above with Species as the factor smooth 
-All_strand1 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                s(Storms, k=5, bs="ts") +
-                s(Max_K_index, k=4, bs="ts") +
+All_strand8 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                s(Storms, k=5, Species, bs="fs") +
+                s(Max_K_index, k=4, Species, bs="fs") +
                 s(Max_SST, bs="ts") +
                 s(NAO_index, bs="ts"), 
               data= all_strandings, method = "REML",
               family=tw(a=1.2))
 
-summary(All_strand)
-plot(All_strand)
+summary(All_strand8)
+par(mfrow = c(2,2))
+plot(All_strand8)
 
-
+#Gam.check
 par(mfrow=c(2,2))
-gam.check(All_strand)
+gam.check(All_strand8)
+
+
+
+
+
+
+
+
 
 
 par(mfrow=c(1,1))
-fitted_A <- fitted(All_strand)
+fitted_A <- fitted(All_strand1)
 response_A <-  All_strand$y
 plot(fitted_A[response_A<50], response_A[response_A<50], pch=19, cex=0.2, asp=1)
 abline(a=0,b=1)
