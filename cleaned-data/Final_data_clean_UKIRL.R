@@ -17,3 +17,5 @@ UK_and_Irish_sp <- UK_and_Irish_known %>%
   filter(!(Name.Current.Sci %in% c("Monodon monoceros", "Peponocephala electra", "Delphinapterus leucas", "Kogia sima",
                                    "Mesoplodon densirostris")))
 
+#This is the final cleaned dataset with unknowns removed and rare species removed
+write.csv(UK_and_Irish_sp, file = "UK_and_Irish_sp.csv")

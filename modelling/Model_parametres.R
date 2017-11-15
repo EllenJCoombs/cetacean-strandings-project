@@ -110,16 +110,17 @@ NAO_data$X <- NULL
 #Stranding events 
 #Using the stranding count data 
 
-UK_IRL_stranding_events_count <- read.csv("UK_IRL_stranding_events_count.csv")
+Stranding_events_count <- read.csv("Stranding_events_count.csv")
 
-UK_IRL_stranding_events_count <- UK_IRL_stranding_events_count %>%
-  rename(Total_events = Count)
+Stranding_events_count <- Stranding_events_count %>%
+  rename(Total_events = n)
+Stranding_events_count$X <- NULL
 
 
 #This model dataset has all stranding events (including stranding events and richness for the
 #whole dataset)
 #Tying all of the data together 
-All_model <- bind_cols(speciesrichness, UK_IRL_stranding_events_count, Population, storms, Final_geom, 
+All_model <- bind_cols(speciesrichness, Stranding_events_count, Population, storms, Final_geom, 
                   orgs, SST_yearly_max, NAO_data)
 
 All_model$X <- NULL

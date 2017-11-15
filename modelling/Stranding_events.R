@@ -1,21 +1,24 @@
 #Stranding events 
-
+library(dplyr) 
 #Looking at only stranding events (rather than individual strandings)
 #Based on S.W.No. 
 
-UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
-UK_and_Irish$X <- NULL
 
-duplicated(UK_and_Irish$S.W.No.)
+#Read in the cleaned UK and Irish data (with unknowns removed and rare species removed)
+UK_and_Irish_sp <- read.csv("UK_and_Irish_sp.csv")
+UK_and_Irish_sp$X <- NULL
+UK_and_Irish_sp$X.1 <- NULL
+
+duplicated(UK_and_Irish_sp$S.W.No.)
 #Or you can use unique 
-unique(UK_and_Irish$S.W.No.)
+unique(UK_and_Irish_SP$S.W.No.)
 
 #This works to get rid of e.g. 1932/14, 1932/14 
-UK_IRL_stranding_events <- UK_and_Irish[!duplicated(UK_and_Irish$S.W.No.), ]
+Stranding_events <- UK_and_Irish_sp[!duplicated(UK_and_Irish_sp$S.W.No.), ]
 
 #Removing duplicates from SW (CSIP data)
-UK_IRL_stranding_events$S.W.No. <- (sub("\\.\\d+$","",UK_IRL_stranding_events$S.W.No.))
-UK_IRL_stranding_events <- UK_IRL_stranding_events[!duplicated(UK_IRL_stranding_events$S.W.No.), ]
+Stranding_events$S.W.No. <- (sub("\\.\\d+$","",Stranding_events$S.W.No.))
+Stranding_events <- Stranding_events[!duplicated(Stranding_events$S.W.No.), ]
 
 #something like sub("\\.\\d+$","","SW1234.1")
 #substitute a . (\\.) followed by 1 or more digits (\\d+) followed by the end of the line ($) with nothing ("")
@@ -28,25 +31,25 @@ UK_IRL_stranding_events <- UK_IRL_stranding_events[!duplicated(UK_IRL_stranding_
 #UK_IRL_stranding_events <- UK_IRL_stranding_events[!(duplicated(UK_IRL_stranding_events[c("Date", "Name.Current.Sci", "Latitude", "Longitude")]) | duplicated(UK_IRL_stranding_events[c("Date", "Name.Current.Sci", "Latitude", "Longitude")], fromLast = TRUE)), ]
 
 #This deletes one of the duplicates and keeps the other 
-UK_IRL_stranding_events <- UK_IRL_stranding_events[!duplicated(UK_IRL_stranding_events[c("Name.Current.Sci", "Latitude", "Longitude", "Date")]), ]
+Stranding_events <- Stranding_events[!duplicated(Stranding_events[c("Name.Current.Sci", "Latitude", "Longitude", "Date")]), ]
 
 #Remove unknowns if wanted 
-UK_IRL_stranding_events <- UK_IRL_stranding_events %>% 
-  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
-                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
+#UK_IRL_stranding_events <- UK_IRL_stranding_events %>% 
+  #filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
+                                   #"Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
 
-ggplot(UK_IRL_stranding_events, aes(x = Year, fill = Name.Current.Sci)) +
+ggplot(Stranding_events, aes(x = Year, fill = Name.Current.Sci)) +
   geom_histogram(binwidth = 0.5)
 
 
-write.csv(UK_IRL_stranding_events, file = "UK_IRL_stranding_events.csv")
+write.csv(Stranding_events, file = "Stranding_events.csv")
 
 
 #Getting these ready for adding to the model data 
 #How many stranding events per year? 
-UK_IRL_stranding_events_count <- count(UK_IRL_stranding_events, Year)
-UK_IRL_stranding_events_count <- UK_IRL_stranding_events_count %>%
+Stranding_events_count <- count(Stranding_events, Year)
+Stranding_events_count <- Stranding_events_count %>%
   rename(Total_events = n)
 
-write.csv(UK_IRL_stranding_events_count, file = "UK_IRL_stranding_events_count.csv")
+write.csv(Stranding_events_count, file = "Stranding_events_count.csv")

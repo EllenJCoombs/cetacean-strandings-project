@@ -7,14 +7,24 @@ library(mgcv)
 
 #Read in model data for adding to the GAM later on this script 
 Model_data <- read.csv("Model_data.csv")
+#Read in the raw data 
+UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
 
 #Remove unknowns for species year count 
 UK_and_Irish_known <- UK_and_Irish %>% 
   filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
+
+#Removing species with only one or two records 
+#This has been done earlier for richness, but 
+UK_and_Irish_sp <- UK_and_Irish_known %>%
+  filter(!(Name.Current.Sci %in% c("Monodon monoceros", "Peponocephala electra", "Delphinapterus leucas", "Kogia sima",
+                                   "Mesoplodon densirostris")))
+
+
 #'Speciesyearcount' cleaned data: a count of current scientific name and year 
-speciesyearcount <- dplyr::count(UK_and_Irish_known, Name.Current.Sci, Year) %>%
+speciesyearcount <- dplyr::count(UK_and_Irish_sp, Name.Current.Sci, Year) %>%
   na.omit()
 
 #This is making sure unknowns aren't factors in the data 
@@ -89,18 +99,14 @@ Small_bs["Body_size"] <- "Small"
 
 all_strandings <- bind_rows(Big_bs, Medium_bs, Small_bs)
 
-
-#Removing Harbour porpoise from the dataset 
-No_porpoise <- all_strandings %>%
-  filter(Species != "Phocoena phocoena")
-
+#MODEL 1: No additional smooths (just Year, Species as standard)
 #GAM for the above with Species as the factor smooth 
-All_strand <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+All_strand1 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
                 s(Storms, k=5, bs="ts") +
                 s(Max_K_index, k=4, bs="ts") +
                 s(Max_SST, bs="ts") +
                 s(NAO_index, bs="ts"), 
-              data= No_porpoise, method = "REML",
+              data= all_strandings, method = "REML",
               family=tw(a=1.2))
 
 summary(All_strand)
@@ -120,6 +126,12 @@ abline(a=0,b=1)
 plot(fitted_A, response_A, pch=19, cex=0.2, asp=1)
 #points(fitted_A[all_strandings$Species=="Phocoena phocoena"], 
 #       response_A[all_strandings$Species=="Phocoena phocoena"], pch=19, cex=0.5, col="red")
+
+
+#Removing Harbour porpoise from the dataset 
+No_porpoise <- all_strandings %>%
+  filter(Species != "Phocoena phocoena")
+
 
 
 save(All_strand, all_strandings, file = "Model_for_Dave.Rdata")

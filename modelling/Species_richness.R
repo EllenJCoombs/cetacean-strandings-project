@@ -8,24 +8,32 @@ library(picante)
 UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv") 
 
 
-#Need to reorder the data
-speciesyearcount <- dplyr::count(UK_and_Irish, Name.Current.Sci, Year) %>%
-  na.omit()
-
 #Remove unknowns 
-species_known <- speciesyearcount %>% 
+UK_and_Irish_known <- UK_and_Irish %>% 
   filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
 
-reordering <- species_known[c("Year", "n", "Name.Current.Sci")]
+#Removing species with only one or two records 
+#This has been done earlier for richness, but 
+UK_and_Irish_sp <- UK_and_Irish_known %>%
+  filter(!(Name.Current.Sci %in% c("Monodon monoceros", "Peponocephala electra", "Delphinapterus leucas", "Kogia sima",
+                                   "Mesoplodon densirostris")))
+
+
+#speciesyearcount using data that had unknowns removed and rare species removed 
+speciesyearcount <- dplyr::count(UK_and_Irish_sp, Name.Current.Sci, Year) %>%
+  na.omit()
+
+
+reordering <- speciesyearcount[c("Year", "n", "Name.Current.Sci")]
 whale.matrix <- sample2matrix(reordering)
 
 #Number of species per year 
 specnumber(whale.matrix)
 
 #Doublecheck
-speciesrichness <- species_known %>%
+speciesrichness <- speciesyearcount %>%
   count(Year) %>%
   rename(Total_richness = nn)
 
@@ -38,8 +46,8 @@ ggplot(data = speciesrichness, aes(x = Year, y = Total_richness)) +
   geom_point()
 
 
-#Plotting richness using 'species known'
-ggplot(data = species_known, aes(x = Year)) +
+#Species_known
+ggplot(data = UK_and_Irish_sp, aes(x = Year)) +
   geom_histogram(binwidth = 0.5) +
   labs(x = "Year", y = "Species richness") +
   theme_bw()
