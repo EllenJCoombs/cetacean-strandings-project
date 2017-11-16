@@ -102,23 +102,22 @@ all_strandings <- bind_rows(Big_bs, Medium_bs, Small_bs)
 all_strandings$Body_size <- as.factor(all_strandings$Body_size)
 #sapply(all_strandings, class)
 
-#MODEL 1: No additional smooths (just Year, Species as standard)
-#GAM for the above with Species as the factor smooth 
-All_strand9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                s(Storms, k=5) +
-                s(Max_K_index, k=4) +
-                s(Max_SST) +
+#GAM for the above with Species as the factor smooth - added factor smooths in later models 
+All_strand8 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                s(Storms, k=5, Body_size, bs="fs") +
+                s(Max_K_index, k=4, Species, bs="fs") +
+                s(Max_SST, bs = "ts") +
                 s(NAO_index, bs="ts"), 
               data= all_strandings, method = "REML",
               family=tw(a=1.2))
 
-summary(All_strand9)
+summary(All_strand8)
 par(mfrow = c(2,2))
-plot(All_strand9)
+plot(All_strand8)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(All_strand9)
+gam.check(All_strand8)
 
 
 library(broom)
@@ -141,12 +140,8 @@ Tidy1_9 <- list(All_strand1 = All_strand1, All_strand2 = All_strand2, All_strand
 All_coefs_tidy1_9 <- plyr::ldply(Tidy1_9, tidy, .id = "model")
 All_coefs_glance1_9 <- plyr::ldply(Tidy1_9, glance, .id = "model")
 
-write.csv(All_coefs_tidy, file = "All_tidy.csv")
-write.csv(All_coefs_glance, file = "All_glance.csv")
-
-
-
-
+write.csv(All_coefs_tidy1_9, file = "All_tidy1_9.csv")
+write.csv(All_coefs_glance1_9, file = "All_glance1_9.csv")
 
 
 
@@ -179,16 +174,55 @@ all_strandings[response_A<50,][1885,]#Globicephala melas
 all_strandings[response_A<50,][2211,]#Globicephala melas 
 all_strandings[response_A<50,][2224,]#Globicephala melas 
 
-
-
+#Highlighting phocoena as possible outliers 
 plot(fitted_A, response_A, pch=19, cex=0.2, asp=1)
 points(fitted_A[all_strandings$Species=="Phocoena phocoena"], 
       response_A[all_strandings$Species=="Phocoena phocoena"], pch=19, cex=0.5, col="red")
+abline(a=0,b=1)
 
+
+#Melas
+plot(fitted_A, response_A, pch=19, cex=0.2, asp=1)
+points(fitted_A[all_strandings$Species=="Globicephala melas"], 
+       response_A[all_strandings$Species=="Globicephala melas"], pch=19, cex=0.5, col="green")
+abline(a=0,b=1)
+
+#Lagenorynchus acutus 
+plot(fitted_A, response_A, pch=19, cex=0.2, asp=1)
+points(fitted_A[all_strandings$Species=="Lagenorhynchus acutus"], 
+       response_A[all_strandings$Species=="Lagenorhynchus acutus"], pch=19, cex=0.5, col="green")
+abline(a=0,b=1)
+
+#Delphius 
+plot(fitted_A, response_A, pch=19, cex=0.2, asp=1)
+points(fitted_A[all_strandings$Species=="Delphinus delphis"], 
+       response_A[all_strandings$Species=="Delphinus delphis"], pch=19, cex=0.5, col="green")
+abline(a=0,b=1)
 
 #Removing Harbour porpoise from the dataset 
-No_porpoise <- all_strandings %>%
+No_phocoena <- all_strandings %>%
   filter(Species != "Phocoena phocoena")
+
+
+No_phocoena4 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                     s(Storms, k=5, Body_size, bs="fs") +
+                     s(Max_K_index, k=4, Species, bs="fs") +
+                     s(Max_SST, bs="ts") +
+                     s(NAO_index, bs="ts"), 
+                   data= No_phocoena, method = "REML",
+                   family=tw(a=1.2))
+
+summary(No_phocoena4)
+par(mfrow = c(2,2))
+plot(No_phocoena4)
+
+#Gam.check
+par(mfrow=c(2,2))
+gam.check(No_phocoena4)
+
+
+
+
 
 
 
