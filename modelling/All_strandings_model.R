@@ -104,24 +104,44 @@ all_strandings$Body_size <- as.factor(all_strandings$Body_size)
 
 #MODEL 1: No additional smooths (just Year, Species as standard)
 #GAM for the above with Species as the factor smooth 
-All_strand8 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                s(Storms, k=5, Species, bs="fs") +
-                s(Max_K_index, k=4, Species, bs="fs") +
-                s(Max_SST, bs="ts") +
+All_strand9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                s(Storms, k=5) +
+                s(Max_K_index, k=4) +
+                s(Max_SST) +
                 s(NAO_index, bs="ts"), 
               data= all_strandings, method = "REML",
               family=tw(a=1.2))
 
-summary(All_strand8)
+summary(All_strand9)
 par(mfrow = c(2,2))
-plot(All_strand8)
+plot(All_strand9)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(All_strand8)
+gam.check(All_strand9)
 
 
+library(broom)
+#Broom to tidy model outputs 
 
+#Tidy gives the neat model output - summarises the model statistical findings 
+#e.g. tidy(b_m)
+#construct a concise one-row summary of the model. This typically contains values such as R^2, 
+#adjusted R^2, and residual standard error that are computed once for the entire model.
+#e.g. glance(b_m)
+
+#Note: You can't use 'augment' on a GAM 
+
+#Tidy multiple models at once 
+All_tidy <- list(All_ra = All_ra, All_rb = All_rb, All_rc = All_rc, All_rd = All_rd,
+                 All_ea = All_ea, All_eb = All_eb, All_ec = All_ec, All_ed = All_ed) 
+
+#Saving the tidy and glance datasets 
+All_coefs_tidy <- plyr::ldply(All_tidy, tidy, .id = "model")
+All_coefs_glance <- plyr::ldply(All_tidy, glance, .id = "model")
+
+write.csv(All_coefs_tidy, file = "All_tidy.csv")
+write.csv(All_coefs_glance, file = "All_glance.csv")
 
 
 
@@ -131,13 +151,20 @@ gam.check(All_strand8)
 
 par(mfrow=c(1,1))
 fitted_A <- fitted(All_strand1)
-response_A <-  All_strand$y
+response_A <-  All_strand1$y
 plot(fitted_A[response_A<50], response_A[response_A<50], pch=19, cex=0.2, asp=1)
 abline(a=0,b=1)
 
+#Using identify
+identify(fitted_A[response_A<50], response_A[response_A<50])
+#What are the specific points? 
+all_strandings[response_A<50,][377,]
+
+
+
 plot(fitted_A, response_A, pch=19, cex=0.2, asp=1)
-#points(fitted_A[all_strandings$Species=="Phocoena phocoena"], 
-#       response_A[all_strandings$Species=="Phocoena phocoena"], pch=19, cex=0.5, col="red")
+points(fitted_A[all_strandings$Species=="Phocoena phocoena"], 
+      response_A[all_strandings$Species=="Phocoena phocoena"], pch=19, cex=0.5, col="red")
 
 
 #Removing Harbour porpoise from the dataset 
