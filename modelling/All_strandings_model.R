@@ -133,12 +133,13 @@ library(broom)
 #Note: You can't use 'augment' on a GAM 
 
 #Tidy multiple models at once 
-All_tidy <- list(All_ra = All_ra, All_rb = All_rb, All_rc = All_rc, All_rd = All_rd,
-                 All_ea = All_ea, All_eb = All_eb, All_ec = All_ec, All_ed = All_ed) 
+Tidy1_9 <- list(All_strand1 = All_strand1, All_strand2 = All_strand2, All_strand3 = All_strand3, All_strand4 = All_strand4,
+                All_strand5 = All_strand5, All_strand6 = All_strand6, All_strand7 = All_strand7, All_strand8 = All_strand8, 
+                All_strand9 = All_strand9) 
 
 #Saving the tidy and glance datasets 
-All_coefs_tidy <- plyr::ldply(All_tidy, tidy, .id = "model")
-All_coefs_glance <- plyr::ldply(All_tidy, glance, .id = "model")
+All_coefs_tidy1_9 <- plyr::ldply(Tidy1_9, tidy, .id = "model")
+All_coefs_glance1_9 <- plyr::ldply(Tidy1_9, glance, .id = "model")
 
 write.csv(All_coefs_tidy, file = "All_tidy.csv")
 write.csv(All_coefs_glance, file = "All_glance.csv")
@@ -158,7 +159,25 @@ abline(a=0,b=1)
 #Using identify
 identify(fitted_A[response_A<50], response_A[response_A<50])
 #What are the specific points? 
-all_strandings[response_A<50,][377,]
+all_strandings[response_A<50,][2202,]#Lagenorhynchus acutus   
+all_strandings[response_A<50,][995,]#Lagenorhynchus acutus
+all_strandings[response_A<50,][1025,]#Lagenorhynchus acutus
+all_strandings[response_A<50,][1069,]#Lagenorhynchus acutus 
+all_strandings[response_A<50,][1094,]#Delphinus delphis
+all_strandings[response_A<50,][1408,]#Globicephala melas 
+all_strandings[response_A<50,][1423,]#Globicephala melas                
+all_strandings[response_A<50,][1894,]#Phocoena phocoena 
+all_strandings[response_A<50,][1900,]#Globicephala melas
+all_strandings[response_A<50,][1954,]#Phocoena phocoena 
+all_strandings[response_A<50,][2001,]#Globicephala melas 
+all_strandings[response_A<50,][2040,]#Delphinus delphis  
+all_strandings[response_A<50,][2054,]#Delphinus delphis
+all_strandings[response_A<50,][2202,]#Lagenorhynchus acutus 
+all_strandings[response_A<50,][1364,]#Globicephala melas
+all_strandings[response_A<50,][1393,]#Globicephala melas
+all_strandings[response_A<50,][1885,]#Globicephala melas 
+all_strandings[response_A<50,][2211,]#Globicephala melas 
+all_strandings[response_A<50,][2224,]#Globicephala melas 
 
 
 
