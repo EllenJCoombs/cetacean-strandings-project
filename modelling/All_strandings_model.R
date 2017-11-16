@@ -221,7 +221,16 @@ par(mfrow=c(2,2))
 gam.check(No_phocoena4)
 
 
+#Tidy multiple models at once 
+Tidy_no_phocoena <- list(No_phocoena1 = No_phocoena1, No_phocoena2 = No_phocoena2, No_phocoena3 = No_phocoena3, No_phocoena4 = No_phocoena4,
+                         No_phocoena5 = No_phocoena5) 
 
+#Saving the tidy and glance datasets 
+All_coefs_No_phocoena <- plyr::ldply(Tidy_no_phocoena, tidy, .id = "model")
+All_coefs_glance_No_phocoena <- plyr::ldply(Tidy_no_phocoena, glance, .id = "model")
+
+write.csv(All_coefs_No_phocoena, file = "All_tidy_no_phocoena.csv")
+write.csv(All_coefs_glance_No_phocoena, file = "All_glance_no_phocoena.csv")
 
 
 
