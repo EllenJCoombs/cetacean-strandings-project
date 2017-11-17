@@ -9,6 +9,7 @@ library(maps)
 library(hexbin)
 library(ggmap)
 library(gridExtra)
+library(tidyverse)
 
 # Extract UK map
 #Added Ireland·
@@ -96,6 +97,10 @@ plines <- ggplot(linesdat) +
 
 
 #Adding events to the plot 
+plines <- plines + annotate("rect", xmin=1914, xmax=1918, ymin=0, ymax=800, alpha=.1, fill="gray44") +
+  geom_text(
+    aes(x = 1916, y = 780, label = "WWI"), size = 3)
+
 
 
 # put it all together

@@ -20,7 +20,7 @@ UK_and_Irish_known <- UK_and_Irish %>%
 #This has been done earlier for richness, but 
 UK_and_Irish_sp <- UK_and_Irish_known %>%
   filter(!(Name.Current.Sci %in% c("Monodon monoceros", "Peponocephala electra", "Delphinapterus leucas", "Kogia sima",
-                                   "Mesoplodon densirostris")))
+                                   "Mesoplodon densirostris", "Mesoplodon europaeus", "Lagenodelphis hosei")))
 
 
 #'Speciesyearcount' cleaned data: a count of current scientific name and year 

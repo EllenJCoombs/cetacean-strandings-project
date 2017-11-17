@@ -5,7 +5,7 @@ library(ggplot2)
 library(viridis)
 
 # load all the strandings data
-alls <- read.csv("all_standings.csv")
+alls <- read.csv("all_strandings.csv")
 
 
 # chance Total_strandings to Total_events to get # events
