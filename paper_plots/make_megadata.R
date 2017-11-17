@@ -1,5 +1,6 @@
-
-cleaneddata <- read.csv("UK_and_Irish_strandings.csv")
+#Reading in cleaned data with unknowns removed and rare species removed 
+#cleaneddata <- read.csv("UK_and_Irish_strandings.csv")
+cleaneddata <- read.csv("UK_and_Irish_sp.csv")
 
 
 library(maps)
@@ -12,13 +13,13 @@ bphysalus <- filter(latlong, Name.Current.Sci ==  "Balaenoptera physalus")
 bactorostrata <- filter(latlong, Name.Current.Sci ==  "Balaenoptera acutorostrata")
 bborealis <- filter(latlong, Name.Current.Sci ==  "Balaenoptera borealis")
 bmusculus <- filter(latlong, Name.Current.Sci ==  "Balaenoptera musculus")
-unmysticete <- filter(latlong, Name.Current.Sci ==  "Unknown mysticete")
-unbalaenopterid <- filter(latlong, Name.Current.Sci ==  "Unknown balaenoptera")
-mysticete <- filter(latlong, Name.Current.Sci == "Un. mystitcete")
+#unmysticete <- filter(latlong, Name.Current.Sci ==  "Unknown mysticete")
+#unbalaenopterid <- filter(latlong, Name.Current.Sci ==  "Unknown balaenoptera")
+#mysticete <- filter(latlong, Name.Current.Sci == "Un. mystitcete")
 mnovaeangliae <- filter(latlong, Name.Current.Sci == "Megaptera novaeangliae")
 
 #bind all mysticetes
-combinedmysticetes <- rbind(bphysalus, bactorostrata, bborealis, bmusculus, unmysticete, unbalaenopterid, mysticete, mnovaeangliae)
+combinedmysticetes <- rbind(bphysalus, bactorostrata, bborealis, bmusculus, mnovaeangliae)
 #arranging by year
 sortedmysticetes <- arrange(combinedmysticetes,(Year))
 #Stripping out odontocetes 

@@ -1,5 +1,7 @@
 # here is the code for the megaplot
 
+#Ellen - have changed the code for a slightly different dataset!
+
 library(ggplot2)
 library(viridis)
 library(dplyr)
@@ -20,8 +22,10 @@ gg1 <-
   coord_fixed(1.3)
 
 # Read in the strandings data
-#ds <- read.csv("UK_and_Irish_strandings.csv")
+#This is the cleaned data with unknowns and rare species removed
+ds <- read.csv("UK_and_Irish_sp.csv")
 
+#This dataset comes from "make_megadata.R"
 load("allparv.RData")
 
 ds <- allparv
@@ -89,6 +93,9 @@ plines <- ggplot(linesdat) +
   theme_minimal() +
   theme(legend.position=c(0.1, 0.8)) +
   labs(x="", y="Total stranded individuals", colour="Parvorder")
+
+
+#Adding events to the plot 
 
 
 # put it all together

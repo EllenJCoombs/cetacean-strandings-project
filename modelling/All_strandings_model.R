@@ -100,24 +100,28 @@ Small_bs["Body_size"] <- "Small"
 all_strandings <- bind_rows(Big_bs, Medium_bs, Small_bs)
 #Turn body size into a factor - keep getting error messages as it was a character before 
 all_strandings$Body_size <- as.factor(all_strandings$Body_size)
-#sapply(all_strandings, class)
+
+#save as all_strandings 
+
+write.csv(all_strandings, file = "all_strandings.csv")
+
 
 #GAM for the above with Species as the factor smooth - added factor smooths in later models 
-All_strand8 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                s(Storms, k=5, Body_size, bs="fs") +
-                s(Max_K_index, k=4, Species, bs="fs") +
-                s(Max_SST, bs = "ts") +
+All_strand9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                s(Storms, k=5, bs= "ts") +
+                s(Max_K_index, k=4, bs= "ts") +
+                s(Max_SST, Species, bs= "fs") +
                 s(NAO_index, bs="ts"), 
               data= all_strandings, method = "REML",
               family=tw(a=1.2))
 
-summary(All_strand8)
+summary(All_strand9)
 par(mfrow = c(2,2))
-plot(All_strand8)
+plot(All_strand9)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(All_strand8)
+gam.check(All_strand9)
 
 
 library(broom)
@@ -142,7 +146,6 @@ All_coefs_glance1_9 <- plyr::ldply(Tidy1_9, glance, .id = "model")
 
 write.csv(All_coefs_tidy1_9, file = "All_tidy1_9.csv")
 write.csv(All_coefs_glance1_9, file = "All_glance1_9.csv")
-
 
 
 par(mfrow=c(1,1))
