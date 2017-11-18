@@ -107,21 +107,21 @@ write.csv(all_strandings, file = "all_strandings.csv")
 
 
 #GAM for the above with Species as the factor smooth - added factor smooths in later models 
-All_strand9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                s(Storms, k=5, bs= "ts") +
-                s(Max_K_index, k=4, bs= "ts") +
-                s(Max_SST, Species, bs= "fs") +
+All_strand8 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                s(Storms, k=5, Body_size, bs="fs") +
+                s(Max_K_index, k=4, Species, bs="fs") +
+                s(Max_SST, bs= "ts") +
                 s(NAO_index, bs="ts"), 
               data= all_strandings, method = "REML",
               family=tw(a=1.2))
 
-summary(All_strand9)
+summary(All_strand8)
 par(mfrow = c(2,2))
-plot(All_strand9)
+plot(All_strand8)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(All_strand9)
+gam.check(All_strand8)
 
 
 library(broom)
