@@ -107,21 +107,21 @@ write.csv(all_strandings, file = "all_strandings.csv")
 
 
 #GAM for the above with Species as the factor smooth - added factor smooths in later models 
-All_strand9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+All_strand1 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
                 s(Storms, k=5, bs="ts") +
                 s(Max_K_index, k=4, bs="ts") +
-                s(Max_SST, Species, bs="fs") +
+                s(Max_SST, bs= "ts") +
                 s(NAO_index, bs="ts"), 
               data= all_strandings, method = "REML",
               family=tw(a=1.2))
 
-summary(All_strand9)
+summary(All_strand1)
 par(mfrow = c(2,2))
-plot(All_strand9)
+plot(All_strand1)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(All_strand9)
+gam.check(All_strand1)
 
 
 library(broom)
@@ -140,12 +140,17 @@ Tidy1_9 <- list(All_strand1 = All_strand1, All_strand2 = All_strand2, All_strand
                 All_strand5 = All_strand5, All_strand6 = All_strand6, All_strand7 = All_strand7, All_strand8 = All_strand8, 
                 All_strand9 = All_strand9) 
 
-#Saving the tidy and glance datasets 
-All_coefs_tidy1_9 <- plyr::ldply(Tidy1_9, tidy, .id = "model")
-All_coefs_glance1_9 <- plyr::ldply(Tidy1_9, glance, .id = "model")
+#Tidy multiple models at once 
+#This is for 1,6,7,8,9 (no backwards selection)
+Tidy1567 <- list(All_strand1 = All_strand1, All_strand6 = All_strand6, All_strand7 = All_strand7, All_strand8 = All_strand8,
+                All_strand9 = All_strand9) 
 
-write.csv(All_coefs_tidy1_9, file = "All_tidy1_9.csv")
-write.csv(All_coefs_glance1_9, file = "All_glance1_9.csv")
+#Saving the tidy and glance datasets 
+All_coefs_tidy1567 <- plyr::ldply(Tidy1567, tidy, .id = "model")
+All_coefs_glance1567 <- plyr::ldply(Tidy1567, glance, .id = "model")
+
+write.csv(All_coefs_tidy1567, file = "All_tidy1567.csv")
+write.csv(All_coefs_glance1567, file = "All_glance1567.csv")
 
 
 par(mfrow=c(1,1))
@@ -207,21 +212,21 @@ No_phocoena <- all_strandings %>%
   filter(Species != "Phocoena phocoena")
 
 
-No_phocoena4 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                     s(Storms, k=5, Body_size, bs="fs") +
-                     s(Max_K_index, k=4, Species, bs="fs") +
-                     s(Max_SST, bs="ts") +
+No_phocoena5 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                     s(Storms, k=5, bs= "ts") +
+                     s(Max_K_index, k=4, bs= "ts") +
+                     s(Max_SST, Species, bs= "fs") +
                      s(NAO_index, bs="ts"), 
                    data= No_phocoena, method = "REML",
                    family=tw(a=1.2))
 
-summary(No_phocoena4)
+summary(No_phocoena5)
 par(mfrow = c(2,2))
-plot(No_phocoena4)
+plot(No_phocoena5)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(No_phocoena4)
+gam.check(No_phocoena5)
 
 
 #Tidy multiple models at once 
