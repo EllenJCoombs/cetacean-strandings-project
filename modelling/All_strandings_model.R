@@ -107,22 +107,22 @@ write.csv(all_strandings, file = "all_strandings.csv")
 
 
 #GAM for the above with Species as the factor smooth - added factor smooths in later models 
-All_strand1 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                s(Storms, k=5, bs="ts") +
-                s(Max_K_index, k=4, bs="ts") +
-                s(Max_SST, bs= "ts") +
+All_stranda9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                s(Storms, k=5, bs= "ts") +
+                s(Max_K_index, k=4, bs= "ts") +
+                s(Max_SST, Species, bs= "fs") +
                 s(NAO_index, bs="ts"), 
               data= all_strandings, method = "REML",
-              family=tw(a=1.2))
+              family=poisson())
 
 
-summary(All_strand1)
+summary(All_stranda9)
 par(mfrow = c(2,2))
-plot(All_strand1)
+plot(All_stranda1)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(All_strand1)
+gam.check(All_stranda1)
 
 
 library(broom)
@@ -257,6 +257,12 @@ All_coefs_glance_tidyabc <- plyr::ldply(Tidy_abc, glance, .id = "model")
 write.csv(All_coefs_tidy_abc, file = "All_tidy_abc.csv")
 write.csv(All_coefs_glance_tidyabc, file = "All_glance_abc.csv")
 
+#Tidy for poisson models 
+Tidy_poisson <- list(All_stranda1 = All_stranda1, All_stranda6 = All_stranda6, All_stranda7 = All_stranda7, All_stranda8 = All_stranda8,
+                     All_stranda9 = All_stranda9)
+
+All_coefs_tidy_poisson <- plyr::ldply(Tidy_poisson, tidy, .id = "model")
+All_coefs_glance_poisson <- plyr::ldply(Tidy_poisson, glance, .id = "model")
 
 
 save(All_strand, all_strandings, file = "Model_for_Dave.Rdata")
