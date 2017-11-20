@@ -115,6 +115,7 @@ All_strand1 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, 
               data= all_strandings, method = "REML",
               family=tw(a=1.2))
 
+
 summary(All_strand1)
 par(mfrow = c(2,2))
 plot(All_strand1)
@@ -146,8 +147,8 @@ Tidy1567 <- list(All_strand1 = All_strand1, All_strand6 = All_strand6, All_stran
                 All_strand9 = All_strand9) 
 
 #Saving the tidy and glance datasets 
-All_coefs_tidy1567 <- plyr::ldply(Tidy1567, tidy, .id = "model")
-All_coefs_glance1567 <- plyr::ldply(Tidy1567, glance, .id = "model")
+All_coefs_tidy1_9 <- plyr::ldply(Tidy1_9, tidy, .id = "model")
+All_coefs_glance1_9 <- plyr::ldply(Tidy1_9, glance, .id = "model")
 
 write.csv(All_coefs_tidy1567, file = "All_tidy1567.csv")
 write.csv(All_coefs_glance1567, file = "All_glance1567.csv")
@@ -240,6 +241,21 @@ All_coefs_glance_No_phocoena <- plyr::ldply(Tidy_no_phocoena, glance, .id = "mod
 write.csv(All_coefs_No_phocoena, file = "All_tidy_no_phocoena.csv")
 write.csv(All_coefs_glance_No_phocoena, file = "All_glance_no_phocoena.csv")
 
+
+#Tidy and AICs for different model fits 
+#All_strand1 = Tweedie 
+#All_stranda = Poisson 
+#All_strandb = Quassipoisson 
+#All_strandc = Negative binomial 
+
+Tidy_abc <- list(All_strand1 = All_strand1, All_stranda = All_stranda, All_strandb = All_strandb, All_strandc = All_strandc)
+
+#Saving the tidy and glance datasets 
+All_coefs_tidy_abc <- plyr::ldply(Tidy_abc, tidy, .id = "model")
+All_coefs_glance_tidyabc <- plyr::ldply(Tidy_abc, glance, .id = "model")
+
+write.csv(All_coefs_tidy_abc, file = "All_tidy_abc.csv")
+write.csv(All_coefs_glance_tidyabc, file = "All_glance_abc.csv")
 
 
 
