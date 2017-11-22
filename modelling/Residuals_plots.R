@@ -1,7 +1,11 @@
 #Residual plots for covariates 
 
 
-load("Model_for_Dave.Rdata")
+load("Model_for_Dave.Rdata") #Not sure I need this??
+
+#From cleaned data 
+all_strandings <- read.csv("all_strandings.csv")
+par(mfrow=c(1,1))
 
 #SST
 sst_bins <- cut(all_strandings$Max_SST, c(14,15,16,17,18))

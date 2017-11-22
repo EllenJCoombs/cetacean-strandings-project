@@ -2,8 +2,7 @@
 
 library(dplyr)
 library(lubridate)
-#First of all my cleaned NHM/CSIP data 
-
+#First of all the cleaned NHM/CSIP data 
 cleaneddata <- read.csv("cleandatesnames.csv")
 
 levels(cleaneddata$Name.Current.Sci)

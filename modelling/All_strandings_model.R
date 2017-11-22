@@ -107,22 +107,22 @@ write.csv(all_strandings, file = "all_strandings.csv")
 
 
 #GAM for the above with Species as the factor smooth - added factor smooths in later models 
-All_stranda9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                s(Storms, k=5, bs= "ts") +
+All_stranda6 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                s(Storms, k=5, Body_size, bs="fs") +
                 s(Max_K_index, k=4, bs= "ts") +
-                s(Max_SST, Species, bs= "fs") +
+                s(Max_SST, bs= "ts") +
                 s(NAO_index, bs="ts"), 
               data= all_strandings, method = "REML",
               family=poisson())
 
 
-summary(All_stranda9)
+summary(All_strand8)
 par(mfrow = c(2,2))
-plot(All_stranda1)
+plot(All_stranda8)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(All_stranda1)
+gam.check(All_strand1)
 
 
 library(broom)
@@ -213,21 +213,22 @@ No_phocoena <- all_strandings %>%
   filter(Species != "Phocoena phocoena")
 
 
-No_phocoena5 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                     s(Storms, k=5, bs= "ts") +
-                     s(Max_K_index, k=4, bs= "ts") +
-                     s(Max_SST, Species, bs= "fs") +
+No_phocoena_a9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                     s(Storms, k=5, bs="ts") +
+                     s(Max_K_index, k=4, bs="ts") +
+                     s(Max_SST, Species, bs="fs") +
                      s(NAO_index, bs="ts"), 
-                   data= No_phocoena, method = "REML",
-                   family=tw(a=1.2))
+                   data= No_phocoena, 
+                   method= "REML",
+                   family=poisson())
 
-summary(No_phocoena5)
+summary(No_phocoena_a9)
 par(mfrow = c(2,2))
-plot(No_phocoena5)
+plot(No_phocoena_a9)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(No_phocoena5)
+gam.check(No_phocoena_a9)
 
 
 #Tidy multiple models at once 
@@ -263,6 +264,17 @@ Tidy_poisson <- list(All_stranda1 = All_stranda1, All_stranda6 = All_stranda6, A
 
 All_coefs_tidy_poisson <- plyr::ldply(Tidy_poisson, tidy, .id = "model")
 All_coefs_glance_poisson <- plyr::ldply(Tidy_poisson, glance, .id = "model")
+
+
+#Tidy for poisson models with no phocoena 
+
+
+
+
+
+
+
+
 
 
 save(All_strand, all_strandings, file = "Model_for_Dave.Rdata")
