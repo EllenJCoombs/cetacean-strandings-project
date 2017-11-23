@@ -93,7 +93,7 @@ plines <- ggplot(linesdat) +
   geom_line(aes(x=Year, y=total, group=whatareyou, colour=whatareyou)) +
   theme_minimal() +
   theme(legend.position= c("right")) +
-  labs(x="", y="Total stranded individuals", colour="Parvorder")
+  labs(x="", y="Total stranded individuals", colour="Suborder")
 
 
 #Adding events to the plot 
@@ -105,15 +105,17 @@ plines <- plines + annotate("rect", xmin=1914, xmax=1918, ymin=0, ymax=800, alph
     aes(x = 1942, y = 780, label = "WWII"), size = 3, colour = "gray38")+ 
   annotate("segment", x =1985, xend=1985, y=50, yend=740, colour = "gray38", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) +
   geom_text(
-    aes(x = 1988, y = 780, label = "Moratorium on whaling comes into
-effect: 1985/1986 season start"), size = 3, colour = "gray38") +
+    aes(x = 1988, y = 780, label = "1985/1986 season:
+        Moratorium on whaling comes into effect"), size = 3, colour = "gray38") +
   annotate("segment", x = 1990, xend = 1990, y = 50, yend = 580, colour="gray38", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) + 
   geom_text(
-    aes(x = 1992, y = 600, label = "CSIP programme starts"), size = 3, colour = "gray38") +
+    aes(x = 1990, y = 620, label = "1990: CSIP
+        programme starts"), size = 3, colour = "gray38") +
   annotate("segment", x = 1945, xend = 1945, y = 50, yend = 560, colour="gray38", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) + 
   geom_text(
-    aes(x = 1943, y = 600, label = "Increase in post-war
-        fishing & whaling effort"), size = 3, colour = "gray38") +
+    aes(x = 1945, y = 620, label = "1945: Increase in 
+        post-war fishing & 
+        whaling effort"), size = 3, colour = "gray38") +
   scale_x_continuous(expand = c(0.1,0.1))
 
 
