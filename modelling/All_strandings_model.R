@@ -100,30 +100,34 @@ Small_bs["Body_size"] <- "Small"
 all_strandings <- bind_rows(Big_bs, Medium_bs, Small_bs)
 #Turn body size into a factor - keep getting error messages as it was a character before 
 all_strandings$Body_size <- as.factor(all_strandings$Body_size)
-
+#Same with species - kept getting error message as it was a character 
+all_strandings$Species <- as.factor(all_strandings$Species)
+sapply(all_strandings, class)
 #save as all_strandings 
+all_strandings$X1 <- NULL
 
 write.csv(all_strandings, file = "all_strandings.csv")
 
 
 #GAM for the above with Species as the factor smooth - added factor smooths in later models 
-All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                s(Storms, k=5, bs="ts") +
-                s(Max_K_index, k=4, bs= "ts") +
-                s(Max_SST, bs= "ts") +
-                s(NAO_index, bs="ts"), 
-              data= all_strandings, method = "REML",
-              family=nb())
+All_strandc9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                      s(Storms, k=5, bs="ts") +
+                      s(Max_K_index, k=4, bs="ts") +
+                      s(Max_SST, Species, bs="fs") +
+                      s(NAO_index, bs="ts"), 
+                    data= all_strandings, 
+                    method = "REML",
+                    family=nb())
 
 
-summary(All_strandc)
+summary(All_strandc9)
 par(mfrow = c(2,2))
-plot(All_strandc)
+plot(All_strandc9)
 
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(All_strandc)
+gam.check(All_strandc9)
 
 
 library(broom)
@@ -143,7 +147,7 @@ Tidy1_9 <- list(All_strand1 = All_strand1, All_strand2 = All_strand2, All_strand
                 All_strand9 = All_strand9) 
 
 #Tidy multiple models at once 
-#This is for 1,6,7,8,9 (no backwards selection)
+#This is for 1,6,7,8,9 (no backwards selection) e.g. models with smooths 
 Tidy1567 <- list(All_strand1 = All_strand1, All_strand6 = All_strand6, All_strand7 = All_strand7, All_strand8 = All_strand8,
                 All_strand9 = All_strand9) 
 
@@ -156,8 +160,8 @@ write.csv(All_coefs_glance1567, file = "All_glance1567.csv")
 
 
 par(mfrow=c(1,1))
-fitted_A <- fitted(All_strand1)
-response_A <-  All_strand1$y
+fitted_A <- fitted(All_strandc1)
+response_A <-  All_strandc1$y
 plot(fitted_A[response_A<50], response_A[response_A<50], pch=19, cex=0.2, asp=1)
 abline(a=0,b=1)
 
@@ -183,6 +187,8 @@ all_strandings[response_A<50,][1393,]#Globicephala melas
 all_strandings[response_A<50,][1885,]#Globicephala melas 
 all_strandings[response_A<50,][2211,]#Globicephala melas 
 all_strandings[response_A<50,][2224,]#Globicephala melas 
+all_strandings[response_A<50,][2013,]#Lagenorynchus acutus
+all_strandings[response_A<50,][1036,]#Lagenorynchus acutus
 
 #Highlighting phocoena as possible outliers 
 plot(fitted_A, response_A, pch=19, cex=0.2, asp=1)
@@ -214,22 +220,22 @@ No_phocoena <- all_strandings %>%
   filter(Species != "Phocoena phocoena")
 
 
-No_phocoena_a9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+No_phocoena_c9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
                      s(Storms, k=5, bs="ts") +
                      s(Max_K_index, k=4, bs="ts") +
                      s(Max_SST, Species, bs="fs") +
                      s(NAO_index, bs="ts"), 
                    data= No_phocoena, 
                    method= "REML",
-                   family=poisson())
+                   family=nb())
 
-summary(No_phocoena_a9)
+summary(No_phocoena_c9)
 par(mfrow = c(2,2))
-plot(No_phocoena_a9)
+plot(No_phocoena_c9)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(No_phocoena_a9)
+gam.check(No_phocoena_c9)
 
 
 #Tidy multiple models at once 
@@ -267,8 +273,17 @@ All_coefs_tidy_poisson <- plyr::ldply(Tidy_poisson, tidy, .id = "model")
 All_coefs_glance_poisson <- plyr::ldply(Tidy_poisson, glance, .id = "model")
 
 
-#Tidy for poisson models with no phocoena 
+##################################################################################################
+#Negative binomial 
 
+All_strandc1 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                      s(Storms, k=5, bs="ts") +
+                      s(Max_K_index, k=4, bs="ts") +
+                      s(Max_SST, bs="ts") +
+                      s(NAO_index, bs="ts"), 
+                      data= all_strandings, 
+                      method= "REML",
+                      family=nb())
 
 
 
