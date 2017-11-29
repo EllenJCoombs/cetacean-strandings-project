@@ -51,6 +51,7 @@ make_data <- function(ds, years, labs=FALSE){
 
   # Basic plot using viridis colour scheme
   # Note that you can change bins and transparency
+  
   pp <- gg1+
     geom_hex(data = ds, aes(y = Latitude, x= Longitude), bins = 50, alpha = 0.75) +
     theme_minimal() +
@@ -63,7 +64,7 @@ make_data <- function(ds, years, labs=FALSE){
     ggtitle(paste0(years[1], "-", years[2]))
   if(labs){
     pp <- pp +
-      theme(legend.position="none",
+      theme(legend.position= c(13.2,1.25),
             axis.text=element_blank(),
             strip.text=element_text(),
             plot.title=element_text(hjust=0.5, size=8))
@@ -85,39 +86,43 @@ linesdat <- ds %>%
   group_by(Year, whatareyou) %>%
   summarize(total=n())
 
+
 # make the timeseries plot
 plines <- ggplot(linesdat) +
   scale_x_continuous(labels=seq(1900, 2025, by=25),
                      breaks=seq(1900, 2025, by=25),
                      expand=c(0, 0)) +
   geom_line(aes(x=Year, y=total, group=whatareyou, colour=whatareyou)) +
+  #scale_fill_viridis() +
+  scale_colour_manual(values=c("#D55E00", "#0072B2", "#73BFB8")) +
+  #position = "jitter" + 
   theme_minimal() +
   theme(legend.position= c("right")) +
-  labs(x="", y="Total stranded individuals", colour="Suborder")
+  labs(x="", y="Total stranded individuals", colour="Suborder") 
+  
 
 
 #Adding events to the plot 
 plines <- plines + annotate("rect", xmin=1914, xmax=1918, ymin=0, ymax=800, alpha=.1, fill="gray64") +
   geom_text(
-    aes(x = 1916, y = 780, label = "WWI"), size = 3, colour = "gray38")+ 
+    aes(x = 1916, y = 780, label = "WWI"), size = 4, colour = "gray38")+ 
   annotate("rect", xmin=1939, xmax=1945, ymin=0, ymax=800, alpha=.1, fill="gray64") +
   geom_text(
-    aes(x = 1942, y = 780, label = "WWII"), size = 3, colour = "gray38")+ 
-  annotate("segment", x =1985, xend=1985, y=50, yend=740, colour = "gray38", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) +
+    aes(x = 1942, y = 780, label = "WWII"), size = 4, colour = "gray38")+ 
+  annotate("segment", x =1985, xend=1985, y=50, yend=725, colour = "gray38", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) +
   geom_text(
     aes(x = 1988, y = 780, label = "1985/1986 season:
-        Moratorium on whaling comes into effect"), size = 3, colour = "gray38") +
-  annotate("segment", x = 1990, xend = 1990, y = 50, yend = 580, colour="gray38", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) + 
+        Moratorium on whaling comes into effect"), size = 4, colour = "gray38") +
+  annotate("segment", x = 1990, xend = 1990, y = 50, yend = 565, colour="gray38", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) + 
   geom_text(
     aes(x = 1990, y = 620, label = "1990: CSIP
-        programme starts"), size = 3, colour = "gray38") +
-  annotate("segment", x = 1945, xend = 1945, y = 50, yend = 560, colour="gray38", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) + 
+        programme starts"), size = 4, colour = "gray38") +
+  annotate("segment", x = 1945, xend = 1945, y = 50, yend = 540, colour="gray38", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) + 
   geom_text(
     aes(x = 1945, y = 620, label = "1945: Increase in 
         post-war fishing & 
-        whaling effort"), size = 3, colour = "gray38") +
-  scale_x_continuous(expand = c(0.1,0.1))
-
+        whaling effort"), size = 4, colour = "gray38")
+  
 
 
 # put it all together

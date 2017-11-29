@@ -258,39 +258,35 @@ write.csv(All_coefs_glance_No_phocoena, file = "All_glance_no_phocoena.csv")
 
 Tidy_abc <- list(All_strand1 = All_strand1, All_stranda = All_stranda, All_strandb = All_strandb, All_strandc = All_strandc)
 
-#Saving the tidy and glance datasets 
+#Tidy and glance datasets 
 All_coefs_tidy_abc <- plyr::ldply(Tidy_abc, tidy, .id = "model")
 All_coefs_glance_tidyabc <- plyr::ldply(Tidy_abc, glance, .id = "model")
 
-write.csv(All_coefs_tidy_abc, file = "All_tidy_abc.csv")
-write.csv(All_coefs_glance_tidyabc, file = "All_glance_abc.csv")
 
 #Tidy for poisson models 
 Tidy_poisson <- list(All_stranda1 = All_stranda1, All_stranda6 = All_stranda6, All_stranda7 = All_stranda7, All_stranda8 = All_stranda8,
                      All_stranda9 = All_stranda9)
 
+#Tidy and glance datasets 
 All_coefs_tidy_poisson <- plyr::ldply(Tidy_poisson, tidy, .id = "model")
 All_coefs_glance_poisson <- plyr::ldply(Tidy_poisson, glance, .id = "model")
 
 
-##################################################################################################
-#Negative binomial 
+#Negative binomial tidy 
+Tidy_negb <- list(All_strandc1 = All_strandc1, All_strandc6 = All_strandc6, All_strandc7 = All_strandc7, All_strandc8 = All_strandc8,
+                     All_strandc9 = All_strandc9)
 
-All_strandc1 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                      s(Storms, k=5, bs="ts") +
-                      s(Max_K_index, k=4, bs="ts") +
-                      s(Max_SST, bs="ts") +
-                      s(NAO_index, bs="ts"), 
-                      data= all_strandings, 
-                      method= "REML",
-                      family=nb())
+#Tidy and glance datasets 
+All_coefs_tidy_negb <- plyr::ldply(Tidy_negb, tidy, .id = "model")
+All_coefs_glance_negb <- plyr::ldply(Tidy_negb, glance, .id = "model")
 
 
+#Negative B with no harbour porpoise 
+Tidy_negb_no_pho <- list(No_phocoena_c1 = No_phocoena_c1, No_phocoena_c6 = No_phocoena_c6, No_phocoena_c7 = No_phocoena_c7, No_phocoena_c8 = No_phocoena_c8,
+                  No_phocoena_c9 = No_phocoena_c9)
 
-
-
-
-
-
+#Tidy and glance datasets 
+Tidy_negb_no_pho <- plyr::ldply(Tidy_negb_no_pho, tidy, .id = "model")
+Glance_negb_no_pho <- plyr::ldply(Tidy_negb_no_pho, glance, .id = "model")
 
 save(All_strand, all_strandings, file = "Model_for_Dave.Rdata")
