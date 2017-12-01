@@ -81,7 +81,7 @@ speciestotal <- aggregate(n ~ Species, speciesyearcount, sum) %>%
   na.omit()
 
 #Gamma diversity 
-length(unique(speciesyearcount$Species))
+length(unique(speciesyearcount$Name.Current.Sci))
 
 #This adds up species where abundance is not NA
 length(unique(speciesyearcount$Species[!is.na(speciesyearcount$n) & speciesyearcount$n != 0]))

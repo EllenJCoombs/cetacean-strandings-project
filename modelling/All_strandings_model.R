@@ -110,24 +110,23 @@ write.csv(all_strandings, file = "all_strandings.csv")
 
 
 #GAM for the above with Species as the factor smooth - added factor smooths in later models 
-All_strandc9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                      s(Storms, k=5, bs="ts") +
-                      s(Max_K_index, k=4, bs="ts") +
+All_strandc8 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                      s(Storms, k=5, Body_size, bs="fs") +
+                      s(Max_K_index, k=4, Species, bs="fs") +
                       s(Max_SST, Species, bs="fs") +
                       s(NAO_index, bs="ts"), 
                     data= all_strandings, 
                     method = "REML",
                     family=nb())
 
-
-summary(All_strandc9)
+summary(All_strandc8)
 par(mfrow = c(2,2))
-plot(All_strandc9)
+plot(All_strandc8)
 
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(All_strandc9)
+gam.check(All_strandc8)
 
 
 library(broom)
@@ -158,7 +157,7 @@ All_coefs_glance1_9 <- plyr::ldply(Tidy1_9, glance, .id = "model")
 write.csv(All_coefs_tidy1567, file = "All_tidy1567.csv")
 write.csv(All_coefs_glance1567, file = "All_glance1567.csv")
 
-
+#Having a look at the response plot (strandings)
 par(mfrow=c(1,1))
 fitted_A <- fitted(All_strandc1)
 response_A <-  All_strandc1$y
@@ -220,7 +219,7 @@ No_phocoena <- all_strandings %>%
   filter(Species != "Phocoena phocoena")
 
 
-No_phocoena_c9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+No_phocoena_c8 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
                      s(Storms, k=5, bs="ts") +
                      s(Max_K_index, k=4, bs="ts") +
                      s(Max_SST, Species, bs="fs") +
@@ -229,13 +228,20 @@ No_phocoena_c9 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Specie
                    method= "REML",
                    family=nb())
 
-summary(No_phocoena_c9)
+summary(No_phocoena_c8)
 par(mfrow = c(2,2))
-plot(No_phocoena_c9)
+plot(No_phocoena_c8)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(No_phocoena_c9)
+gam.check(No_phocoena_c8)
+
+#Having a look at the GAM plot 
+par(mfrow=c(1,1))
+fitted_A <- fitted(No_phocoena_c8)
+response_A <-  No_phocoena_c8$y
+plot(fitted_A[response_A<50], response_A[response_A<50], pch=19, cex=0.2, asp=1)
+abline(a=0,b=1)
 
 
 #Tidy multiple models at once 

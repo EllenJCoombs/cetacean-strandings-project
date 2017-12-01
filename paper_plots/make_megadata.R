@@ -20,8 +20,8 @@ mnovaeangliae <- filter(latlong, Name.Current.Sci == "Megaptera novaeangliae")
 
 #bind all mysticetes
 combinedmysticetes <- rbind(bphysalus, bactorostrata, bborealis, bmusculus, mnovaeangliae)
-#arranging by year
-sortedmysticetes <- arrange(combinedmysticetes,(Year))
+
+
 #Stripping out odontocetes 
 odontocetes <- latlong[ !(latlong$Name.Current.Sci %in% sortedmysticetes$Name.Current.Sci), ]
 
