@@ -8,6 +8,7 @@ library(maps)
 library(hexbin)
 library(ggmap)
 
+#This code plots one map with all strandings on it 
 # Extract UK map
 #Added Ireland 
 uk <- map_data("world", regions = c('UK', 'Ireland', 'Guernsey', 'Jersey', 'Isle of Man'))
@@ -20,7 +21,8 @@ gg1 <-
   coord_fixed(1.3) 
 
 # Read in the strandings data
-ds <- read.csv("UK_and_Irish_strandings.csv")
+#This dataset has all unknowns removed and all rare species removed 
+ds <- read.csv("UK_and_Irish_sp.csv")
 
 # Remove NAs from coordinates
 # And restrict to things in UK waters
@@ -65,6 +67,7 @@ gg2 <- gg1+
 
 gg2
 
+#This gives you information on the plots 
 pg <- ggplot_build(gg2)
 
 # Look at this object
@@ -84,12 +87,10 @@ pg$data[[2]]$y
 # Remove NAs from coordinates
 # And restrict to things in UK waters
 #Filter species here too - filtering out by latitude 
-
-
 S_coeruleoalba <- ds %>%
   filter(Name.Current.Sci == "Stenella coeruleoalba")
 
-
+#Soecies filtered out by latitude 
 S_coeruleoalba <- S_coeruleoalba %>%
   filter(!is.na(Latitude) & !is.na(Longitude)) %>%
   filter(Latitude < 65 & Latitude > 45) %>%
@@ -133,12 +134,11 @@ library(maps)
 library(mapdata)
 #Install gridExtra if using grid arrange - if not, use facet_wrap
 library(gridExtra)
-#Had to install this to get it running - no idea why - was running fine before without 
 library(mapproj)
 library(lubridate)
 
 
-ds <- read.csv("UK_and_Irish_strandings.csv")
+ds <- read.csv("UK_and_Irish_sp.csv")
 
 #Set limits 
 ds <- ds %>%
@@ -176,8 +176,8 @@ for(i in seq_along(decades)){
   start.year <- decades[i]
   end.year <- decades[i] + 9
   # Add a short if statement so that you don't go into the future!
-  if(end.year > 2017){
-    end.year <- 2017
+  if(end.year > 2015){
+    end.year <- 2015
   }
   
   
@@ -194,7 +194,7 @@ for(i in seq_along(decades)){
     geom_hex(data = one.decade, aes(y = Latitude, x= Longitude), bins = 50, alpha = 0.5) +
     coord_equal() + 
     stat_binhex() +
-    scale_fill_gradientn(colours = c("blue1", "red1"), limits=c(1,100)) +
+    scale_fill_gradientn(colours = viridis(4), limits=c(1,100)) +
     theme(axis.line  = element_blank(),
           axis.text  = element_blank(),
           axis.ticks = element_blank(),

@@ -119,6 +119,8 @@ All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, 
                     method = "REML",
                     family=nb())
 
+#this was for checking how high to make the k value (k-1)
+#k (almost always k-1)
 unique(all_strandings$Max_SST)
 
 summary(All_strandc)
@@ -223,18 +225,18 @@ No_phocoena <- all_strandings %>%
   filter(Species != "Phocoena phocoena")
 
 
-No_phocoena_c8 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                     s(Storms, k=5, bs="ts") +
+No_phocoena_c1 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                     s(Storms, k=7, bs="ts") +
                      s(Max_K_index, k=4, bs="ts") +
-                     s(Max_SST, Species, bs="fs") +
+                     s(Max_SST, bs="ts") +
                      s(NAO_index, bs="ts"), 
                    data= No_phocoena, 
                    method= "REML",
                    family=nb())
 
-summary(No_phocoena_c8)
+summary(No_phocoena_c1)
 par(mfrow = c(2,2))
-plot(No_phocoena_c8)
+plot(No_phocoena_c1)
 
 #Gam.check
 par(mfrow=c(2,2))
