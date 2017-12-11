@@ -165,8 +165,8 @@ write.csv(All_coefs_glance1567, file = "All_glance1567.csv")
 
 #Having a look at the response plot (strandings)
 par(mfrow=c(1,1))
-fitted_A <- fitted(All_strandc1)
-response_A <-  All_strandc1$y
+fitted_A <- fitted(All_strandc)
+response_A <-  All_strandc$y
 plot(fitted_A[response_A<50], response_A[response_A<50], pch=19, cex=0.2, asp=1)
 abline(a=0,b=1)
 
@@ -194,6 +194,7 @@ all_strandings[response_A<50,][2211,]#Globicephala melas
 all_strandings[response_A<50,][2224,]#Globicephala melas 
 all_strandings[response_A<50,][2013,]#Lagenorynchus acutus
 all_strandings[response_A<50,][1036,]#Lagenorynchus acutus
+all_strandings[response_A<50,][1016,]#Stenella coeruleoalba
 
 #Highlighting phocoena as possible outliers 
 plot(fitted_A, response_A, pch=19, cex=0.2, asp=1)
@@ -242,12 +243,21 @@ plot(No_phocoena_c1)
 par(mfrow=c(2,2))
 gam.check(No_phocoena_c8)
 
-#Having a look at the GAM plot 
+#Having a look at the plot with no phocoena 
 par(mfrow=c(1,1))
-fitted_A <- fitted(No_phocoena_c8)
-response_A <-  No_phocoena_c8$y
-plot(fitted_A[response_A<50], response_A[response_A<50], pch=19, cex=0.2, asp=1)
+fitted_A <- fitted(No_phocoena_c1)
+response_A <-  No_phocoena_c1$y
+plot(fitted_A[response_A<200], response_A[response_A<200], pch=19, cex=0.2, asp=1)
 abline(a=0,b=1)
+
+#Highlighting g.melas and d.delphis
+plot(fitted_A, response_A, pch=19, cex=0.2, asp=1)
+points(fitted_A[No_phocoena$Species=="Globicephala melas"], 
+       response_A[No_phocoena$Species=="Globicephala melas"], pch=19, cex=0.5, col="green")
+abline(a=0,b=1)
+points(fitted_A[No_phocoena$Species=="Delphinus delphis"], 
+       response_A[No_phocoena$Species=="Delphinus delphis"], pch=19, cex=0.5, col="blue")
+
 
 
 #Tidy multiple models at once 
