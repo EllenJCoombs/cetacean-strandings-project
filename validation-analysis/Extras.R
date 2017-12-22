@@ -93,6 +93,7 @@ S_coeruleoalba_wlat50 <- scoeruleoalba %>%
 
 
 #Filtering out snd plotting orcas
+#Or whichever species 
 oorca <- UK_and_Irish_sp %>%
   filter(Name.Current.Sci == "Orcinus orca")
 
