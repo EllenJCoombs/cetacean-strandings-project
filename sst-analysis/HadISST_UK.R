@@ -279,7 +279,7 @@ ggplot() +
         x = "time") +
   ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
           subtitle = "At model grid point nearest several Irish locations") + 
-  theme_classic()
+  theme_classic() 
 
 
 #Plots of the UK and Ireland
