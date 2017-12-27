@@ -16,6 +16,7 @@ plotdat <- plotdat[plotdat$total != 0,]
 # reverse sp. order alphabetically
 plotdat$Species <- factor(plotdat$Species, levels = rev(levels(plotdat$Species)))
 
+
 # what should the upper limit be?
 #> max(plotdat$total)
 #[1] 501
@@ -32,9 +33,12 @@ p <- ggplot(plotdat) +
                      breaks = c(1, 10, 20, 50, 100, 250, 500),
                      labels = c(1, 10, 20, 50, 100, 250, 500)) +
   theme(legend.position="bottom", legend.key.width=unit(0.1, "npc"),
-        axis.text.y=element_text(face="italic"))
+        axis.text.y=element_text(face="italic")) +
+  theme(axis.text.y=element_text(face=ifelse(levels(plotdat$Species)=="Balaenoptera acutorostrata","bold","italic")))
+
 
 print(p)
 
 ggsave(p, filename="measles.pdf", width=10, height=6)
 
+axis.text.y=element_text(face="italic")) +
