@@ -105,4 +105,7 @@ ggplot() +
   theme_bw()
 
 
-
+#To find out which versio of a package 
+packageVersion("mgcv")
+#Version of R
+getRversion()
