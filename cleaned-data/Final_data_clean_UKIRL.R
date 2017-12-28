@@ -1,6 +1,6 @@
 #Final clean of the data 
 #Making sure all unknowns are removed 
-#Removing rare species e.g Belugs, Narwhal, Melon-headed 
+#Removing rare species e.g Belugas, Narwhal, Melon-headed 
 
 library(dplyr)
 
