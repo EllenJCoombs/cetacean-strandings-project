@@ -5,22 +5,26 @@ library(lubridate)
 #First of all the cleaned NHM/CSIP data 
 cleaneddata <- read.csv("cleandatesnames.csv")
 
+#Check species names
 levels(cleaneddata$Name.Current.Sci)
 
 Irish_data <- read.csv("Irish_strandings_raw.csv")
 Irish_data$X. <- NULL
 
+#Rename columns so that I can bind the datasets
 Irish_data <- Irish_data %>%
-  rename(Date = Event.Date)
+  dplyr::rename(Date = Event.Date)
 
 #Remove non cetaceans 
 Irish_data <- Irish_data %>% 
   filter(!(Species %in% c("leatherback turtle", "basking shark", "loggerhead turtle", "Kemp's ridley turtle")))
 
+#Double check we just have cetaceans 
 levels(Irish_data$Species)
 
 #Unknowns 
-#These are listed as "whale species in the Irish data 
+#These are listed as "whale species" in the Irish data 
+#Changing to the same names as the NHM/CSIP
 Irish_data$Species<-as.character(Irish_data$Species)
 Irish_data$Species[Irish_data$Species %in% "cetacean species"] <- "Unknown" 
 Irish_data$Species[Irish_data$Species %in% "whale species"] <- "Unknown" 
@@ -54,28 +58,31 @@ Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in%  "common or Stenell
 Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in%  "Pseudorca crassidens "] <- "Pseudorca crassidens"
 
 
-#Need to rename the variables to be the same as NHM/CSIP 
+#Need to rename the variables to be the same as NHM/CSIP for binding
 Irish_data <- Irish_data %>% 
-  rename(Name.Common = Species) %>%
-  rename(County = County.Region) %>%
-  rename(Latitude = GPS.Lat) %>%
-  rename(Longitude = GPS.Long) %>%
-  rename(S.W.No. = Stranding.ID)
+  dplyr::rename(Name.Common = Species) %>%
+  dplyr::rename(County = County.Region) %>%
+  dplyr::rename(Latitude = GPS.Lat) %>%
+  dplyr::rename(Longitude = GPS.Long) %>%
+  dplyr::rename(S.W.No. = Stranding.ID)
 
 #Select out the columns
 Irish_data <- Irish_data %>%
   select(Date, Year, Name.Common, Name.Current.Sci, Latitude, Longitude, County, S.W.No.)
 
 
-#Date format 
+#Change date format - same as NHM/CSIP
 Irish_data$Date <- Irish_data$Date <- lubridate::dmy(Irish_data$Date)
 #As factor to make all data the same 
 Irish_data$Name.Common <- as.factor(Irish_data$Name.Common)
 Irish_data$Name.Current.Sci <- as.factor(Irish_data$Name.Current.Sci)
 
+#Double check all 
 sapply(cleaneddata, class)
 sapply(Irish_data, class)
 
+#Cleaneddata Date = factor (may nnot have to run this - but needed to here)
+cleaneddata <- mutate(cleaneddata, Date = dmy(Date))
 
 #Bind cleanedata with Irish data 
 UK_and_Irish <- bind_rows(cleaneddata, Irish_data)
@@ -87,7 +94,7 @@ UK_and_Irish <- UK_and_Irish %>%
 arrange(UK_and_Irish, Date)
 
 
-#Filtering out the EIRE data (these are duplicates) EIRE appears in the NHM/CSIP data 
+#Filtering out the EIRE data (these are duplicates) EIRE appears in the NHM data 
 #Remove EIRE and Antrim 
 #Be aware that Antrim is also written "Antrim N. Ireland" 
 #Down = Co.Down 
@@ -95,11 +102,11 @@ arrange(UK_and_Irish, Date)
 #Delete all N.I then rename Derry to Co. Derry 
 #Londonderry to Co. Derry 
 UK_and_Irish <- UK_and_Irish %>% 
-  dplyr::filter(UK_and_Irish, !grepl("EIRE",County))
+  dplyr::filter(UK_and_Irish, !grepl("EIRE", County))
 
 #Remove N.I numbers - this removes most duplicates 
 UK_and_Irish <- UK_and_Irish %>% 
-  filter(!(S.W.No. %in% c("N.I.\\.\\d+")))
+  dplyr::filter(!(S.W.No. %in% c("N.I.\\.\\d+")))
 
 UK_and_Irish$County[UK_and_Irish$County %in%  "Down"] <- "Co. Down"
 UK_and_Irish$County[UK_and_Irish$County %in%  "Antrim"] <- "Co. Antrim"

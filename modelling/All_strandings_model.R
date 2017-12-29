@@ -311,4 +311,4 @@ Tidy_negb_no_pho <- list(No_phocoena_c1 = No_phocoena_c1, No_phocoena_c6 = No_ph
 Tidy_negb_no_pho <- plyr::ldply(Tidy_negb_no_pho, tidy, .id = "model")
 Glance_negb_no_pho <- plyr::ldply(Tidy_negb_no_pho, glance, .id = "model")
 
-save(All_strand, all_strandings, file = "Model_for_Dave.Rdata")
+save(All_strandC, all_strandings, file = "Model_for_Dave.Rdata")
