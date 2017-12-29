@@ -141,6 +141,7 @@ library(lubridate)
 ds <- read.csv("UK_and_Irish_sp.csv")
 
 #Set limits 
+#This removes 53 NAs (lat long) as well 
 ds <- ds %>%
   filter(!is.na(Latitude) & !is.na(Longitude)) %>%
   filter(Latitude < 62 & Latitude > 45) %>%
@@ -194,7 +195,7 @@ for(i in seq_along(decades)){
     geom_hex(data = one.decade, aes(y = Latitude, x= Longitude), bins = 50, alpha = 0.5) +
     coord_equal() + 
     stat_binhex() +
-    scale_fill_gradientn(colours = viridis(4), limits=c(1,100)) +
+    scale_fill_gradientn(colours = viridis(4), limits=c(1,200)) +
     theme(axis.line  = element_blank(),
           axis.text  = element_blank(),
           axis.ticks = element_blank(),
