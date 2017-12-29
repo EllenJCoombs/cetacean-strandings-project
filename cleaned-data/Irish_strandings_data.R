@@ -156,7 +156,7 @@ Count_known_IRL_UK <- Strandings_count_IRL_UK %>%
   filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
-
+#Having a quick look at all species counts (with unknowns removed)
 ggplot(data = Count_known_IRL_UK, aes(x = Year, y = n, colour= Name.Current.Sci))+
   theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
   labs(x = "Year", y = "Count") +

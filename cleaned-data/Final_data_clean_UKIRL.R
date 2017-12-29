@@ -11,8 +11,7 @@ UK_and_Irish_known <- UK_and_Irish %>%
                                    "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
 
-#Removing species 
-
+#Removing rare species 
 UK_and_Irish_sp <- UK_and_Irish_known %>%
   filter(!(Name.Current.Sci %in% c("Monodon monoceros", "Peponocephala electra", "Delphinapterus leucas", "Kogia sima",
                                    "Mesoplodon densirostris", "Mesoplodon europaeus", "Lagenodelphis hosei")))
