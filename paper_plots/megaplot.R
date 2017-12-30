@@ -12,7 +12,7 @@ library(gridExtra)
 library(tidyverse)
 
 # Extract UK map
-#Added Ireland·
+#Added Ireland
 uk <- map_data("world", regions = c('UK', 'Ireland', 'Guernsey', 'Jersey', 'Isle of Man'))
 
 # Create base map
@@ -64,7 +64,7 @@ make_data <- function(ds, years, labs=FALSE){
     ggtitle(paste0(years[1], "-", years[2]))
   if(labs){
     pp <- pp +
-      theme(legend.position= c(10.5,1.35),
+      theme(legend.position= c(10.1,1.35),
             axis.text=element_blank(),
             strip.text=element_text(),
             plot.title=element_text(hjust=0.5, size=8))
@@ -75,6 +75,7 @@ make_data <- function(ds, years, labs=FALSE){
     
     pp <- pp + 
       theme(legend.text= element_text(colour="black", size=7))
+
   
   }else{
     pp <- pp +
