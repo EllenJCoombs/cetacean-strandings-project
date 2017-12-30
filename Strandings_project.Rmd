@@ -407,7 +407,7 @@ ggplot(data = Count_known_IRL_UK, aes(x = Year, y = n, colour= Name.Current.Sci)
 ```
 
 ### Removing unknown and rare species from the final NHM, CSIP, IWDG combined dataset 
-```{r, echo=FALSE}
+```{r, echo=TRUE}
 UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
 
 UK_and_Irish_known <- UK_and_Irish %>%
@@ -427,5 +427,21 @@ UK_and_Irish_sp <- UK_and_Irish_known %>%
 write.csv(UK_and_Irish_sp, file = "UK_and_Irish_sp.csv")
 
 ```
+
+## Temporal and spatial analysis and plotting 
+### Code for plotting temporal plot 
+```{r, echo=TRUE}
+
+Measles 
+
+```
+
+### Code for plotting temporal plot with key events and decadal spatial plots 
+```{r, echo=TRUE}
+
+Mega - needs all of the initial data manipulation 
+
+```
+
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
