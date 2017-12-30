@@ -1,4 +1,6 @@
 #Irish data 
+#Cleaning dataes and names to be the same as the "cleandatesnames")
+#Removing duplicates that appear in both the NHM and IWDG datasets 
 
 library(dplyr)
 library(lubridate)
@@ -134,13 +136,14 @@ write.csv(UK_and_Irish, file = "UK_and_Irish_strandings.csv")
 #Quick plot of Data, including Irish counts 
 UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
 
-Strandings_IRL_UK <- UK_and_Irish %>%
-  select(Name.Current.Sci, Year)
+#Species per year 
+#Strandings_IRL_UK <- UK_and_Irish %>%
+  #select(Name.Current.Sci, Year)
 
 #A count per year of each species (with unknowns)
 Strandings_count_IRL_UK <- count(Strandings_IRL_UK, Year, Name.Current.Sci)
 
-#Plotting the above 
+#Plotting the above if required 
 ggplot(data = Strandings_count_IRL_UK, aes(x = Year, y = n, colour= Name.Current.Sci))+
   theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
   labs(x = "Year", y = "Count") +
@@ -149,12 +152,6 @@ ggplot(data = Strandings_count_IRL_UK, aes(x = Year, y = n, colour= Name.Current
   theme(legend.position="bottom") +
   scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE) + 
   facet_wrap(~ Species)   
-
-
-#Remove unknowns 
-Count_known_IRL_UK <- Strandings_count_IRL_UK %>% 
-  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
-                                   "Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
 #Having a quick look at all species counts (with unknowns removed)
 ggplot(data = Count_known_IRL_UK, aes(x = Year, y = n, colour= Name.Current.Sci))+

@@ -1,7 +1,7 @@
 
 
-#Code for cleaning up messy dates and latitudes in the NHM dataset 
-#Code for cleaning the dates in the CSIP dataset 
+#Code for cleaning up messy dates in the NHM dataset 
+#Code for standardising dates in the CSIP dataset 
 #Code for renaming columns so that both datsets have the same variables 
 #Code for binding the two datasets together 
 
@@ -11,38 +11,38 @@ library(tidyr)
 library(ggplot2)
 library(readr)
 
-#read.csv("EDITNHMdata.csv")
+#read in raw data 
 nhm <- read.csv("EDITNHMdata.csv")
-#read.csv("EDITCSIPdata.csv")
+#read in raw data 
 csip <- read.csv("EDITCSIPdata.csv")
 names(csip)
 names(nhm)
 
+#What class is everything? (important when binding)
 sapply(csip, class)
 sapply(nhm, class)
 
 str(nhm)#returns the structure of the dataset
 str(csip)
 
-#Cleaning column names to keep:
+#Cleaning column names to keep and rename where necessary:
 #Name Common
 #Name Current Sci
 #Date (NHM) Date found (CSIP)
 #Location
 #Grid ref
-#County (NHM) Local authority (CSIP); change to county?
+#County (NHM) Local authority (CSIP); change to county
 
-#Names of counties
-#Need to make them all the same as with species names
-
+#Check all names are the same for binding
+#Code for renaming if not 
 names(csip)
 names(nhm)
 csip <- dplyr::rename(csip, County = Local.Authority)
-csip <- rename(csip, Name.Common = Name.common) 
+csip <- dplyr::rename(csip, Name.Common = Name.common) 
 #nhm <- rename(nhm, Grid.Ref = "Grid ref")
-nhm <-rename(nhm, Year = year)
-csip <- rename(csip, Year = year)
-csip <- rename(csip, S.W.No. = National.Reference)
+nhm <-dplyr::rename(nhm, Year = year)
+csip <- dplyr::rename(csip, Year = year)
+csip <- dplyr::rename(csip, S.W.No. = National.Reference)
 #nhm <- rename(nhm, Name.Current.Sci = "Name Current Sci")
 #nhm <- rename(nhm, Name.Common = "Name Common")
 #csip <- rename(csip, Name.Current.Sci = "Name Current Sci")
@@ -170,18 +170,6 @@ nhmcsip <- bind_rows(nhmfinal, csipfinal)
 View(nhmcsip)
 
 #Saving the new dataset 
-
 write.csv(nhmcsip, file = "cleandatesnames.csv") 
 
 
-#Notes to think about 
-#105 fail to parse - was 130, am still missing some - need to work out how to change 'June 1929" etc
-View(selectnhm$Date)
-selectnhm
-labels(selectnhm$Date)
-selectnhm$Date
-selectnhm
-
-View(selectnhm)
-
-nhm$Date

@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown for stranding project 
+# R Markdown for stranding project 
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
@@ -43,16 +43,389 @@ vi. Total strandings
 2. GAM code 
 
 
-```{r cars}
-summary(cars)
+## Data cleaning and binding 
+### This code cleans and binds the NHM and CSIP datasets 
+```{r, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+#Code for cleaning up messy dates in the NHM dataset 
+#Code for standardising dates in the CSIP dataset 
+#Code for renaming columns so that both datsets have the same variables 
+#Code for binding the two datasets together 
+
+#Load libraries/packages
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(readr)
+
+#read in raw data 
+nhm <- read.csv("EDITNHMdata.csv")
+#read in raw data 
+csip <- read.csv("EDITCSIPdata.csv")
+names(csip)
+names(nhm)
+
+#What class is everything? (important when binding)
+sapply(csip, class)
+sapply(nhm, class)
+
+str(nhm)#returns the structure of the dataset
+str(csip)
+
+#Cleaning column names to keep and rename where necessary:
+#Name Common
+#Name Current Sci
+#Date (NHM) Date found (CSIP)
+#Location
+#Grid ref
+#County (NHM) Local authority (CSIP); change to county
+
+#Check all names are the same for binding
+#Code for renaming if not 
+names(csip)
+names(nhm)
+csip <- dplyr::rename(csip, County = Local.Authority)
+csip <- dplyr::rename(csip, Name.Common = Name.common) 
+#nhm <- rename(nhm, Grid.Ref = "Grid ref")
+nhm <-dplyr::rename(nhm, Year = year)
+csip <- dplyr::rename(csip, Year = year)
+csip <- dplyr::rename(csip, S.W.No. = National.Reference)
+#nhm <- rename(nhm, Name.Current.Sci = "Name Current Sci")
+#nhm <- rename(nhm, Name.Common = "Name Common")
+#csip <- rename(csip, Name.Current.Sci = "Name Current Sci")
+
+
+#Changing dates and names in the selectnhm
+
+csip$Date #all dates appear in the same format...
+nhm$Date #some dates appear as August 1929 or Summer 1929, code below to clean
+View(nhm)
+
+
+#attempt using mutate to change "beg" "mid" "end" and "Summer" "Winter" etc
+#Beg and early = 1
+#Mid = 14
+#End = 27
+#wk 1 = 1
+#wk 2 = 8
+#wk 3 = 15
+#wk 4 = 22
+#Spring = 20 Mar
+#Summer = 21 Jun
+#Autumn = 22 Sep
+#Winter = 21 Dec
+
+#16-17 range of dates to take earliest date
+#what shall I do with 4-5 etc, ?, 'c' and mm yyyy? How? Also Jun 1929 etc
+
+
+
+#embedding commands
+nhm$Date <- gsub("Summer", "1 Jun",
+            gsub("Winter", "1 Dec",
+            gsub("Spring", "1 Mar",
+            gsub("Autumn", "1 Sept",
+            gsub("beg", "1",
+            gsub("Beg", "1",
+            gsub("mid", "14",
+            gsub("Mid", "14",
+            gsub("end", "27",
+            gsub("End", "27",
+            gsub("Early", "1",
+            gsub("Ely", "1",
+            gsub("Early", "1",
+            gsub("wk1", "1",
+            gsub("wk2", "8",
+            gsub("wk3", "15",
+            gsub("wk4", "22",
+            gsub("Wk4", "22",
+                 nhm$Date))))))))))))))))))
+
+
+#more specific changes - might have to do each at a time?
+
+
+View(nhm)
+
+#checking if the above has worked
+nhm$Date
+head(nhm$Date)
+tail(nhm$Date)
+View(nhm)
+
+nhm$Date
+
+
+#Select specific coloumns
+selectnhm <- select(nhm, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
+selectcsip <- select(csip, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
+
+#Checking that the above has worked 
+View(selectnhm)
+selectnhm$Date
+
+
+#Changing date format in the NHM dataset
+library(lubridate)
+library(dplyr)
+#Why is this adding 100 years???
+selectnhm <- mutate(selectnhm, Date = dmy(Date))
+
+#Trying this instead - works by changing all 2000s to 1900s
+nhmdates <- select(nhm, Date)
+selectnhm <- mutate(nhmdates, Date = format(as.Date(Date, "%d-%b-%y"), "19%y-%m-%d"))
+selectnhm
+
+#Changing selectnhm to a 'Date' rather than a 'character'
+selectnhm <- mutate(selectnhm, Date = as.Date(Date)) 
+
+sapply(selectnhm, class)
+
+#Double checking
+View(selectnhm)
+
+#Adding the mutated date column 
+#Changing the Latitudes to 'numeric' 
+nhmnew <- select(nhm, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Year)
+#nhmnew <- mutate(nhmnew, Latitude = as.numeric(Latitude))
+nhmfinal <- bind_cols(nhmnew, selectnhm, .id = NULL)
+nhmfinal$Date
+
+nhmfinal
+
+
+#Changing CSIP date to YYYYMMMDD
+csip$Date
+csip <- mutate(csip, Date = dmy(Date))
+
+#Selecting all of the variables 
+csipfinal <- select(csip, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
+csipfinal
+
+
+#merging the two datasets
+#Checking that both have the same classes
+
+sapply(nhmfinal, class)
+sapply(csipfinal, class)
+
+#CSIP Longitude is a factor for some reason 
+csipfinal$Longitude <- as.numeric(csipfinal$Longitude)
+
+#Merging the two datasets 
+nhmcsip <- bind_rows(nhmfinal, csipfinal)
+View(nhmcsip)
+
+#Saving the new dataset 
+write.csv(nhmcsip, file = "cleandatesnames.csv") 
+
 ```
 
-## Including Plots
+### This code cleans the IWDG data and binds it to the NHM and CSIP ("cleandatesnames")
+
 
 You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r, echo= TRUE}
+
+#Irish data 
+#Cleaning dataes and names to be the same as the "cleandatesnames")
+#Removing duplicates that appear in both the NHM and IWDG datasets 
+
+library(dplyr)
+library(lubridate)
+#First of all the cleaned NHM/CSIP data 
+cleaneddata <- read.csv("cleandatesnames.csv")
+
+#Check species names
+levels(cleaneddata$Name.Current.Sci)
+
+Irish_data <- read.csv("Irish_strandings_raw.csv")
+Irish_data$X. <- NULL
+
+#Rename columns so that I can bind the datasets
+Irish_data <- Irish_data %>%
+  dplyr::rename(Date = Event.Date)
+
+#Remove non cetaceans 
+Irish_data <- Irish_data %>% 
+  filter(!(Species %in% c("leatherback turtle", "basking shark", "loggerhead turtle", "Kemp's ridley turtle")))
+
+#Double check we just have cetaceans 
+levels(Irish_data$Species)
+
+#Unknowns 
+#These are listed as "whale species" in the Irish data 
+#Changing to the same names as the NHM/CSIP
+Irish_data$Species<-as.character(Irish_data$Species)
+Irish_data$Species[Irish_data$Species %in% "cetacean species"] <- "Unknown" 
+Irish_data$Species[Irish_data$Species %in% "whale species"] <- "Unknown" 
+Irish_data$Species[Irish_data$Species %in% "large whale species"] <- "Unknown" 
+Irish_data$Species[Irish_data$Species %in% "lagenorhynchus species"] <- "Unknown delphinid" 
+Irish_data$Species[Irish_data$Species %in% "common or striped dolphin"] <- "Unknown delphinid" 
+Irish_data$Species[Irish_data$Species %in% "dolphin species"] <- "Unknown delphinid" 
+Irish_data$Species[Irish_data$Species %in% "pilot/false killer whale"] <- "Unknown odontocete" 
+Irish_data$Species[Irish_data$Species %in%  "dolphin species possibly harbour porpoise"] <- "Unknown"
+Irish_data$Species[Irish_data$Species %in%  "sei fin or blue whale"] <- "Unknown mysticete" 
+Irish_data$Species[Irish_data$Species %in%  "beaked whale species"] <- "Unknown odontocete"
+
+#Filter out the years (1913:2015)
+Irish_data <- Irish_data %>%
+  filter(Year %in% c(1913:2015))
+
+#Cleaning Scientific names 
+Irish_data$Name.Current.Sci<-as.character(Irish_data$Name.Current.Sci)
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in% "cetacean species"] <- "Unknown" 
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in% "whale species"] <- "Unknown" 
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in% "large whale species"] <- "Unknown" 
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in% "lagenorhynchus species"] <- "Unknown delphinid" 
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in% "common or striped dolphin"] <- "Unknown delphinid" 
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in% "dolphin species"] <- "Unknown delphinid" 
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in% "pilot/false killer whale"] <- "Unknown odontocete" 
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in%  "dolphin species possibly harbour porpoise"] <- "Unknown"
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in%  "sei fin or blue whale"] <- "Unknown mysticete" 
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in%  "beaked whale species"] <- "Unknown odontocete"
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in%  "dolphin species possibly Phocoena phocoena"] <- "Unknown"
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in%  "common or Stenella coeruleoalba"] <- "Unknown delphinid"
+Irish_data$Name.Current.Sci[Irish_data$Name.Current.Sci %in%  "Pseudorca crassidens "] <- "Pseudorca crassidens"
+
+
+#Need to rename the variables to be the same as NHM/CSIP for binding
+Irish_data <- Irish_data %>% 
+  dplyr::rename(Name.Common = Species) %>%
+  dplyr::rename(County = County.Region) %>%
+  dplyr::rename(Latitude = GPS.Lat) %>%
+  dplyr::rename(Longitude = GPS.Long) %>%
+  dplyr::rename(S.W.No. = Stranding.ID)
+
+#Select out the columns
+Irish_data <- Irish_data %>%
+  select(Date, Year, Name.Common, Name.Current.Sci, Latitude, Longitude, County, S.W.No.)
+
+
+#Change date format - same as NHM/CSIP
+Irish_data$Date <- Irish_data$Date <- lubridate::dmy(Irish_data$Date)
+#As factor to make all data the same 
+Irish_data$Name.Common <- as.factor(Irish_data$Name.Common)
+Irish_data$Name.Current.Sci <- as.factor(Irish_data$Name.Current.Sci)
+
+#Double check all 
+sapply(cleaneddata, class)
+sapply(Irish_data, class)
+
+#Cleaneddata Date = factor (may nnot have to run this - but needed to here)
+cleaneddata <- mutate(cleaneddata, Date = dmy(Date))
+
+#Bind cleanedata with Irish data 
+UK_and_Irish <- bind_rows(cleaneddata, Irish_data)
+
+#Arrange by date 
+UK_and_Irish <- UK_and_Irish %>%
+  arrange(Date)
+
+arrange(UK_and_Irish, Date)
+
+
+#Filtering out the EIRE data (these are duplicates) EIRE appears in the NHM data 
+#Remove EIRE and Antrim 
+#Be aware that Antrim is also written "Antrim N. Ireland" 
+#Down = Co.Down 
+#Antrim = Co. Antrim 
+#Delete all N.I then rename Derry to Co. Derry 
+#Londonderry to Co. Derry 
+UK_and_Irish <- UK_and_Irish %>% 
+  dplyr::filter(UK_and_Irish, !grepl("EIRE", County))
+
+#Remove N.I numbers - this removes most duplicates 
+UK_and_Irish <- UK_and_Irish %>% 
+  dplyr::filter(!(S.W.No. %in% c("N.I.\\.\\d+")))
+
+UK_and_Irish$County[UK_and_Irish$County %in%  "Down"] <- "Co. Down"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Antrim"] <- "Co. Antrim"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Londonderry"] <- "Co. Derry"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Derry, N.Ireland"] <- "Co. Derry"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Down, N.Ireland"] <- "Co. Down"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Antrim, N.Ireland"] <- "Co. Antrim"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Londonderry"] <- "Co. Derry"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Co.Derry, N.Ireland"] <- "Co. Derry"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Donegal"] <- "Co. Donegal"
+UK_and_Irish$County[UK_and_Irish$County %in%  "Cork"] <- "Co. Cork"
+
+UK_and_Irish$Name.Current.Sci<-as.character(UK_and_Irish$Name.Current.Sci) 
+UK_and_Irish$Name.Current.Sci[UK_and_Irish$Name.Current.Sci %in%  "Orcinus orca "] <- "Orcinus orca"
+UK_and_Irish$Name.Current.Sci[UK_and_Irish$Name.Current.Sci %in%  "Physeter macrocephalus "] <- "Physeter macrocephalus"
+UK_and_Irish$Name.Current.Sci[UK_and_Irish$Name.Current.Sci %in%  "Pseudorca crassidens "] <- "Pseudorca crassidens"
+
+
+#for duplicates by date, name and county 
+UK_and_Irish <- UK_and_Irish[!(duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")]) | duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")], fromLast = TRUE)), ]
+
+
+write.csv(UK_and_Irish, file = "UK_and_Irish_strandings.csv")
+
+#Quick plot of Data, including Irish counts 
+UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
+
+#Species per year 
+#Strandings_IRL_UK <- UK_and_Irish %>%
+  #select(Name.Current.Sci, Year)
+
+#A count per year of each species (with unknowns)
+Strandings_count_IRL_UK <- count(Strandings_IRL_UK, Year, Name.Current.Sci)
+
+#Plotting the above if required 
+ggplot(data = Strandings_count_IRL_UK, aes(x = Year, y = n, colour= Name.Current.Sci))+
+  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
+  labs(x = "Year", y = "Count") +
+  geom_line() +
+  theme_bw() + 
+  theme(legend.position="bottom") +
+  scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE) + 
+  facet_wrap(~ Species)   
+
+
+#Remove unknowns 
+Count_known_IRL_UK <- Strandings_count_IRL_UK %>% 
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ",
+                                   "Unknown delphinid ", "Unknown delphinid", "Unknown delphinid",
+                                   "Unknown mysticete")))
+
+#Having a quick look at all species counts (with unknowns removed)
+ggplot(data = Count_known_IRL_UK, aes(x = Year, y = n, colour= Name.Current.Sci))+
+  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
+  labs(x = "Year", y = "Count") +
+  geom_line() +
+  theme_bw() + 
+  theme(legend.position="bottom") +
+  scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE) + 
+  facet_wrap(~ Species)   
+
+
+
+```
+
+### Removing unknown and rare species from the final NHM, CSIP, IWDG combined dataset 
+```{r, echo=FALSE}
+UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
+
+UK_and_Irish_known <- UK_and_Irish %>%
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ",
+                                   "Unknown delphinid ",
+                                   "Unknown delphinid", "Unknown delphinid ", 
+                                   "Unknown mysticete")))
+
+#Removing rare species - this is now the final dataset for analysis 
+UK_and_Irish_sp <- UK_and_Irish_known %>%
+  filter(!(Name.Current.Sci %in% c("Monodon monoceros", "Peponocephala electra", 
+                                   "Delphinapterus leucas", "Kogia sima",
+                                   "Mesoplodon densirostris", "Mesoplodon europaeus",
+                                   "Lagenodelphis hosei")))
+
+#This is the final cleaned dataset with unknowns removed and rare species removed
+write.csv(UK_and_Irish_sp, file = "UK_and_Irish_sp.csv")
+
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
