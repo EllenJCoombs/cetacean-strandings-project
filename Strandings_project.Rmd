@@ -98,10 +98,8 @@ csip <- dplyr::rename(csip, S.W.No. = National.Reference)
 
 
 #Changing dates and names in the selectnhm
-
 csip$Date #all dates appear in the same format...
 nhm$Date #some dates appear as August 1929 or Summer 1929, code below to clean
-View(nhm)
 
 
 #attempt using mutate to change "beg" "mid" "end" and "Summer" "Winter" etc
@@ -146,16 +144,10 @@ nhm$Date <- gsub("Summer", "1 Jun",
 
 #more specific changes - might have to do each at a time?
 
-
-View(nhm)
-
 #checking if the above has worked
 nhm$Date
 head(nhm$Date)
 tail(nhm$Date)
-View(nhm)
-
-nhm$Date
 
 
 #Select specific coloumns
@@ -163,7 +155,6 @@ selectnhm <- select(nhm, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longi
 selectcsip <- select(csip, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
 
 #Checking that the above has worked 
-View(selectnhm)
 selectnhm$Date
 
 
@@ -224,9 +215,6 @@ write.csv(nhmcsip, file = "cleandatesnames.csv")
 ```
 
 ### This code cleans the IWDG data and binds it to the NHM and CSIP ("cleandatesnames")
-
-
-You can also embed plots, for example:
 
 ```{r, echo= TRUE}
 
@@ -372,7 +360,7 @@ UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
 #Strandings_IRL_UK <- UK_and_Irish %>%
   #select(Name.Current.Sci, Year)
 
-#A count per year of each species (with unknowns)
+#A count per year of each species (with unknowns) - if required 
 Strandings_count_IRL_UK <- count(Strandings_IRL_UK, Year, Name.Current.Sci)
 
 #Plotting the above if required 
@@ -386,27 +374,10 @@ ggplot(data = Strandings_count_IRL_UK, aes(x = Year, y = n, colour= Name.Current
   facet_wrap(~ Species)   
 
 
-#Remove unknowns 
-Count_known_IRL_UK <- Strandings_count_IRL_UK %>% 
-  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ",
-                                   "Unknown delphinid ", "Unknown delphinid", "Unknown delphinid",
-                                   "Unknown mysticete")))
-
-#Having a quick look at all species counts (with unknowns removed)
-ggplot(data = Count_known_IRL_UK, aes(x = Year, y = n, colour= Name.Current.Sci))+
-  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
-  labs(x = "Year", y = "Count") +
-  geom_line() +
-  theme_bw() + 
-  theme(legend.position="bottom") +
-  scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE) + 
-  facet_wrap(~ Species)   
-
-
-
 ```
 
 ### Removing unknown and rare species from the final NHM, CSIP, IWDG combined dataset 
+#### Creation of final dataset for analysis 
 ```{r, echo=TRUE}
 UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
 
@@ -428,11 +399,11 @@ write.csv(UK_and_Irish_sp, file = "UK_and_Irish_sp.csv")
 
 ```
 
-## Temporal and spatial analysis and plotting 
+## Temporal and spatial analysis and plotting - Figure 1 
 ### Code for plotting temporal plot 
 ```{r, echo=TRUE}
 
-#Make a measles plot - plot of individual species stranding through time 
+#Make Figure 1 - plot of individual species stranding through time 
 
 library(plyr)
 library(ggplot2)
@@ -479,8 +450,8 @@ ggsave(p, filename="measles.pdf", width=10, height=6)
 
 ```
 
-### Code for plotting temporal plot (Megaplot) with key events and decadal spatial plots 
-#### This code is needed to make the dataset to plot Megaplot (Change name!)
+### Code for plotting temporal plot (Figure 2) with key events and decadal spatial plots 
+#### This code is needed to make the dataset to plot Figure 2. 
 ```{r, echo=TRUE}
 
 library(maps)
@@ -532,10 +503,10 @@ save(allparv, file="allparv.RData")
 ```
 
 
-### Plotting Megaplot 
+### Plotting Figure 2 
 ```{r, echo=TRUE}
 
-#Here is the code for the megaplot
+#Here is the code for Figure 2 
 #Ellen - have changed the code for a slightly different dataset!
 
 library(ggplot2)
@@ -685,6 +656,48 @@ ggsave(gr, file="megaplot.pdf", height=13, width=10)
 
 ```
 
+
+## Model creation 
+### Data collection for Generalised Additive Models (GAMs)
+
+```{r, echo=TRUE}
+
+i. Sea Surface Temperature (SST) - ncdf file and maximum values 
+ii. Geomagnetic data 
+iii. North Atlantic Oscillation 
+iv. Storms 
+v. Population 
+vi. Total strandings 
+
+```
+
+
+### Creation of data table for model - bind 
+```{r, echo=TRUE}
+
+```
+
+## Generalised Additive Models 
+```{r, echo=TRUE}
+1. Running GAMs for All_strandc (all records) and No_phocoena 
+2. GAM code 
+```
+
+
+
+
+
+```{r, echo=TRUE}
+
+#Plot all species stranding - facet_wrap 
+#Using all_strandings 
+
+ggplot() + 
+  geom_line(data = all_strandings, aes(x = Year, y = Total_strandings, colour = Species)) + 
+  theme_bw() +
+  facet_wrap(~ Species, scales = "free")
+
+```
 
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

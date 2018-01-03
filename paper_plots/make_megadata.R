@@ -1,12 +1,11 @@
-#Reading in cleaned data with unknowns removed and rare species removed 
-#cleaneddata <- read.csv("UK_and_Irish_strandings.csv")
-cleaneddata <- read.csv("UK_and_Irish_sp.csv")
-
 
 library(maps)
 library(mapdata)
 library(dplyr)
 
+#Reading in cleaned data with unknowns removed and rare species removed 
+#cleaneddata <- read.csv("UK_and_Irish_strandings.csv")
+cleaneddata <- read.csv("UK_and_Irish_sp.csv")
 
 latlong <- select(cleaneddata, Year, Name.Current.Sci, Longitude, Latitude)
 bphysalus <- filter(latlong, Name.Current.Sci ==  "Balaenoptera physalus")
@@ -20,7 +19,6 @@ mnovaeangliae <- filter(latlong, Name.Current.Sci == "Megaptera novaeangliae")
 
 #bind all mysticetes
 combinedmysticetes <- rbind(bphysalus, bactorostrata, bborealis, bmusculus, mnovaeangliae)
-
 
 #Stripping out odontocetes 
 odontocetes <- latlong[ !(latlong$Name.Current.Sci %in% sortedmysticetes$Name.Current.Sci), ]
