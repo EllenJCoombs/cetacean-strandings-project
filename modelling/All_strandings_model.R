@@ -1,6 +1,4 @@
-7
 
-#Species year count (just done 'speciesyearcount')
 
 library(dplyr)
 library(mgcv)

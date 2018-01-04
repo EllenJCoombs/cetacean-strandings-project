@@ -1,11 +1,12 @@
-#Bringing all the model parameters together 
+#Bringing all the model parameters together to create one dataset for modelling 
+#Should all be saved in "modelling" folder 
 
 library(dplyr)
 library(tidyr)
 library(zoo)
 
 #1 - Storm data 
-
+#Read from "Modelling" folder 
 storms <- read.csv("Storm_data.csv")
 #Select data 
 storms <- storms %>% 
@@ -21,8 +22,9 @@ storms <- storms %>%
 storms <- storms %>%
   rename(Storms = count)
 
-###################################################################################################
+#------------------------------------------------------------------------------------------------
 #Population data UK
+#Also in the "modelling' folder 
 #This is a data file that is combined with yearly strandings 
 
 Population <- read.csv("Population_UK.csv")
@@ -31,7 +33,7 @@ Population <- Population %>%
   rename(Population = POPULATION)
 
 
-###################################################################################################
+#------------------------------------------------------------------------------------------------
 #Global max magnetic data 
 
 #library(zoo)
@@ -58,8 +60,7 @@ Population <- Population %>%
   #plyr::rename(Year = Group.1)
 
 
-
-##################################################################################################
+#------------------------------------------------------------------------------------------------
 #Species richness 
 
 #Or can just put: 
@@ -69,13 +70,13 @@ speciesrichness <- read.csv("Richness.csv")
 speciesrichness$X <- NULL 
 
 
-#################################################################################################
+#------------------------------------------------------------------------------------------------
 #Geomagnetic max daily, max yearly, max station 
 
 Final_geom <- read.csv("Geom_mean_max.csv")
 Final_geom$X <- NULL
 
-##################################################################################################
+#------------------------------------------------------------------------------------------------
 #Organisational counts 
 
 orgs <- read.csv("Organisations.csv")
@@ -84,7 +85,7 @@ orgs <- orgs %>%
   filter(Year %in% c(1913:2015)) %>%
   rename(Organisations = Count)
 
-###############################################################################################
+#------------------------------------------------------------------------------------------------
 #SST
 #Yearly max recorded temperature taken from 14 different places around the UK and Ireland 
 
@@ -98,7 +99,7 @@ SST_yearly_max <- SST_yearly_max %>%
   #dplyr::rename(Max_SST_temp = year_max)
 
 
-############################################################################################
+#------------------------------------------------------------------------------------------------
 #NAO Data
 #From cleaned data 
 #Cleaned already 
@@ -106,7 +107,7 @@ SST_yearly_max <- SST_yearly_max %>%
 NAO_data <- read.csv("NAO_data.csv")
 NAO_data$X <- NULL
 
-############################################################################################
+#------------------------------------------------------------------------------------------------
 #Stranding events 
 #Using the stranding count data 
 
