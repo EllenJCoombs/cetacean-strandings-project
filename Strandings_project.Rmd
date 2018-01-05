@@ -662,13 +662,99 @@ ggsave(gr, file="megaplot.pdf", height=13, width=10)
 
 ```{r, echo=TRUE}
 
-i. Sea Surface Temperature (SST) - ncdf file and maximum values 
-ii. Geomagnetic data 
-iii. North Atlantic Oscillation 
-iv. Storms 
-v. Population 
-vi. Total strandings 
 
+#Bringing all the model parameters together to create one dataset for modelling 
+#Should all be saved in "modelling" folder 
+
+library(dplyr)
+library(tidyr)
+library(zoo)
+
+#------------------------------------------------------------------------------------------------
+#Storm data 
+#Read from "Modelling" folder 
+storms <- read.csv("Storm_data.csv")
+#Select data 
+storms <- storms %>% 
+  select(Year, Count)
+
+#Counting up and keeping 0 as 0 
+storms <- storms %>% 
+  complete(Year, fill = list(Count = 0)) %>% 
+  dplyr::group_by(Year) %>% 
+  dplyr::summarise(count = sum(Count))
+
+#Renaming count to storms 
+Storms <- storms %>%
+  rename(Storms = count)
+
+#------------------------------------------------------------------------------------------------
+#Population data UK
+#Also in the "modelling' folder 
+#This is a data file that is combined with yearly strandings 
+
+Population <- read.csv("Population_UK.csv")
+Population <- Population %>%
+  rename(Year = YEAR) %>%
+  rename(Population = POPULATION)
+
+#------------------------------------------------------------------------------------------------
+#Geomagnetic max daily, max yearly, max station 
+
+Final_geom <- read.csv("Geom_mean_max.csv")
+Final_geom$X <- NULL
+
+#-------------------------------------------------------------------------------------------------
+#SST
+#Yearly max recorded temperature taken from 14 different places around the UK and Ireland 
+
+SST_yearly_max <- read.csv("SST_yearly_max.csv")
+SST_yearly_max <- SST_yearly_max %>% 
+  rename(Max_SST = year_max)
+
+#-------------------------------------------------------------------------------------------------
+#NAO Data
+#From cleaned data 
+#Cleaned already 
+
+NAO_data <- read.csv("NAO_data.csv")
+NAO_data$X <- NULL
+
+
+
+
+```
+
+
+###Adding total stranding number to the dataset 
+###Binding wth Model_data 
+```{r, echo=TRUE}
+#'Speciesyearcount' cleaned data: a count of current scientific name and year 
+speciesyearcount <- dplyr::count(UK_and_Irish_sp, Name.Current.Sci, Year) %>%
+  na.omit()
+
+#This is making sure unknowns aren't factors in the data 
+speciesyearcount$Name.Current.Sci <- droplevels(speciesyearcount$Name.Current.Sci)
+
+#Adding a 0 to each year without a record 
+speciesyearcount <- speciesyearcount %>% 
+  complete(Year = seq(min(1913), max(2015), 1L), Name.Current.Sci = unique(speciesyearcount$Name.Current.Sci))
+
+#NAs -> 0 
+speciesyearcount[is.na(speciesyearcount)] <- 0
+
+#join the two datasets
+all_strandings <- full_join(speciesyearcount, Model_data, by = "Year")
+all_strandings$X <- NULL
+
+#Rename 
+all_strandings <- all_strandings %>% 
+  rename(Total_strandings = n)
+
+all_strandings <- all_strandings %>%
+  rename(Species = Name.Current.Sci)
+
+write.csv(all_strandings, file = "all_strandings.csv")
 ```
 
 

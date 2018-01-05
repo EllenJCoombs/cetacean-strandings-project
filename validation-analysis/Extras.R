@@ -105,6 +105,17 @@ ggplot() +
   theme_bw()
 
 
+#Total count of all strandings per year 
+All_count <- UK_and_Irish_sp %>%
+  count(Year)
+
+#Plot the above 
+ggplot() + 
+  geom_line(data = All_count, aes(x = Year, y = n)) +
+  theme_bw()
+
+
+
 
 
 #To find out which versio of a package 
