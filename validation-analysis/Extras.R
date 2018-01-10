@@ -1,5 +1,6 @@
 
 
+library(ggplot2)
 
 csip_ireland <- csip %>% 
   filter(Country %in% c("Ireland"))
@@ -115,7 +116,42 @@ ggplot() +
   theme_bw()
 
 
+#Quick plot of SST 
+ggplot() + 
+  geom_line(data = SST_yearly_max, aes(x = year, y = Max_SST)) +
+  labs(y = "Maximum yearly SST ("~degree~"C)",
+       x = "Year") +
+  theme_bw() 
 
+#Quick plot for storms 
+ggplot() + 
+  geom_line(data = storms, aes(x = Year, y = Storms)) +
+  labs(y = "Yearly storm count",
+       x = "Year") +
+  theme_bw() 
+
+
+#NAO plot 
+ggplot() + 
+  geom_line(data = NAO_data, aes(x = Year, y = NAO_index)) +
+  labs(y = "NAO index",
+       x = "Year") +
+  theme_bw() 
+
+
+#Geomagnetic plot 
+ggplot() + 
+  geom_line(data = Final_geom, aes(x = Year, y = Max_K_index)) +
+  labs(y = "Geomagnetic K-index",
+       x = "Year") +
+  theme_bw() 
+
+#Population 
+ggplot() + 
+  geom_line(data = Population, aes(x = Year, y = Population)) +
+  labs(y = "UK and Irish population",
+       x = "Year") +
+  theme_bw() 
 
 
 #To find out which versio of a package 
