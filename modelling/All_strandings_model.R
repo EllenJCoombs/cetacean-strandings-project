@@ -122,8 +122,6 @@ All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, 
 unique(all_strandings$Max_SST)
 
 summary(All_strandc)
-par(mfrow = c(2,2))
-plot(All_strandc)
 
 AIC(All_strandc1)
 AIC(All_strandc)
