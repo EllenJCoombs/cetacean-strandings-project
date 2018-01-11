@@ -107,9 +107,9 @@ all_strandings$X1 <- NULL
 write.csv(all_strandings, file = "all_strandings.csv")
 
 
-#GAM for the above with Species as the factor smooth - added factor smooths in later models 
+#GAM for the above with Species as the factor smooth 
 All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                      s(Storms, k=7, bs="ts") +
+                      s(Storms, k=5, bs="ts") +
                       s(Max_K_index, k=4, bs="ts") +
                       s(Max_SST, bs="ts") +
                       s(NAO_index, bs="ts"), 
@@ -122,9 +122,11 @@ All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, 
 unique(all_strandings$Max_SST)
 
 summary(All_strandc)
+par(mfrow = c(2,2))
+plot(All_strandc)
 
-AIC(All_strandc1)
-AIC(All_strandc)
+#AIC(All_strandc)
+#AIC(All_strandc)
 
 #Gam.check
 par(mfrow=c(2,2))
@@ -223,7 +225,7 @@ No_phocoena <- all_strandings %>%
 
 
 No_phocoena_c1 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                     s(Storms, k=7, bs="ts") +
+                     s(Storms, k=5, bs="ts") +
                      s(Max_K_index, k=4, bs="ts") +
                      s(Max_SST, bs="ts") +
                      s(NAO_index, bs="ts"), 
@@ -237,7 +239,7 @@ plot(No_phocoena_c1)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(No_phocoena_c8)
+gam.check(No_phocoena_c1)
 
 #Having a look at the plot with no phocoena 
 par(mfrow=c(1,1))

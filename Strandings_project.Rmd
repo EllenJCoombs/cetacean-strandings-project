@@ -728,6 +728,8 @@ NAO_data$X <- NULL
 
 ###Adding total stranding number to the dataset 
 ###Binding wth Model_data 
+
+Creation of data table for models
 ```{r, echo=TRUE}
 #'Speciesyearcount' cleaned data: a count of current scientific name and year 
 speciesyearcount <- dplyr::count(UK_and_Irish_sp, Name.Current.Sci, Year) %>%
@@ -758,18 +760,139 @@ write.csv(all_strandings, file = "all_strandings.csv")
 ```
 
 
+## Generalised Additive Models 
+```{r, echo=TRUE}
+
+#Running GAM for all strand 
+library(mgcv)
+library(broom) #for getting a tidy data output 
+
+#This is to check how high to make the k value (k-1)
+#k (almost always k-1)
+unique(all_strandings$Max_SST)
+unique(all_strandings$Storms)
+unique(all_strandings$Max_K_index)
+
+#GAM for the above with Species as the factor smooth
+#Family is neg b 
+All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                      s(Storms, k=5, bs="ts") +
+                      s(Max_K_index, k=4, bs="ts") +
+                      s(Max_SST, bs="ts") +
+                      s(NAO_index, bs="ts"), 
+                    data= all_strandings, 
+                    method = "REML",
+                    family=nb())
+
+#GAM summary 
+summary(All_strandc)
+
+#Plots of different predictors 
+par(mfrow = c(2,2))
+plot(All_strandc)
+
+#Gam.check
+par(mfrow=c(2,2))
+gam.check(All_strandc)
+
+
+#Tidy gives the neat model output - summarises the model statistical findings 
+#e.g. tidy(b_m)
+#construct a concise one-row summary of the model. This typically contains values such as R^2, 
+#adjusted R^2, and residual standard error that are computed once for the entire model.
+#e.g. glance(b_m)
+
+Tidy_All_strand <- list(All_strandc = All_strandc) 
+
+#Saving the tidy and glance datasets 
+All_strand_tidy <- plyr::ldply(Tidy_All_strand, tidy, .id = "model")
+All_strand_glance <- plyr::ldply(Tidy_All_strand, glance, .id = "model")
+
+#Save to csv if required 
+write.csv(All_strand_tidy, file = "All_tidy1567.csv")
+write.csv(All_strand_glance, file = "All_glance1567.csv")
+
+
+#This next chunk of code looks at point specifics to determine outliers (in this case
+#it led to removing harbour porpoises) 
+
+#Having a look at the response plot (strandings)
+par(mfrow=c(1,1))
+fitted_A <- fitted(All_strandc)
+response_A <-  All_strandc$y
+plot(fitted_A[response_A<50], response_A[response_A<50], pch=19, cex=0.2, asp=1)
+abline(a=0,b=1)
+
+#Using identify
+identify(fitted_A[response_A<50], response_A[response_A<50])
+
+#Pick out any remaining outliers if needed: 
+#Example: all_strandings[response_A<50,][1894,]#Phocoena phocoena 
+
+#Highlighting phocoena as possible outliers (can do this with any species)
+plot(fitted_A, response_A, pch=19, cex=0.2, asp=1)
+points(fitted_A[all_strandings$Species=="Phocoena phocoena"], 
+      response_A[all_strandings$Species=="Phocoena phocoena"], pch=19, cex=0.5, col="red")
+abline(a=0,b=1)
+
+```
+
+
+
+###Running GAMs for data with Phocoena phocoena (Harbour porpoise) removed 
+```{r, echo=TRUE}
+
+#Removing Harbour porpoise from the dataset 
+No_phocoena <- all_strandings %>%
+  filter(Species != "Phocoena phocoena")
+
+No_phocoena_c1 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                     s(Storms, k=5, bs="ts") +
+                     s(Max_K_index, k=4, bs="ts") +
+                     s(Max_SST, bs="ts") +
+                     s(NAO_index, bs="ts"), 
+                   data= No_phocoena, 
+                   method= "REML",
+                   family=nb())
+
+#Summary and predictor plots 
+summary(No_phocoena_c1)
+par(mfrow = c(2,2))
+plot(No_phocoena_c1)
+
+#Gam.check 
+par(mfrow=c(2,2))
+gam.check(No_phocoena_c1)
+
+
+#Plot with no Phocoena 
+par(mfrow=c(1,1))
+fitted_A <- fitted(No_phocoena_c1)
+response_A <-  No_phocoena_c1$y
+plot(fitted_A[response_A<200], response_A[response_A<200], pch=19, cex=0.2, asp=1)
+abline(a=0,b=1)
+
+
+#Using broom to tidy 
+
+#Tidy multiple models at once 
+Tidy_no_phocoena <- list(No_phocoena1 = No_phocoena1)
+
+#Tidy and glance datasets 
+No_phocoena_tidy <- plyr::ldply(Tidy_no_phocoena, tidy, .id = "model")
+No_phocoena_glance <- plyr::ldply(Tidy_no_phocoena, glance, .id = "model")
+
+#Save to csv
+#write.csv(No_phocoena_tidy, file = "No_phocoena_tidy.csv")
+#write.csv(No_phocoena_glance, file = "No_phocoena_glance.csv")
+
+```
+
+
 ### Creation of data table for model - bind 
 ```{r, echo=TRUE}
 
 ```
-
-## Generalised Additive Models 
-```{r, echo=TRUE}
-1. Running GAMs for All_strandc (all records) and No_phocoena 
-2. GAM code 
-```
-
-
 
 
 
