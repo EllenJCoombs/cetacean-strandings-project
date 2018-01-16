@@ -62,16 +62,31 @@ names(csip)
 sapply(csip, class)
 sapply(nhm, class)
 
-
 ```
 
-#What class is everything? (important when binding)
-sapply(csip, class)
-sapply(nhm, class)
+## Data cleaning 
+### Variable names 
+The first chunk of code renames some of the column names - making them uniform across the datsets
+The second chunk of code cleans up the date format in the NHM dataset and makes date format uniform in both (i.e. NHM and CSIP datasets)
 
-str(nhm)#returns the structure of the dataset
-str(csip)
+## Date cleaning and uniformity 
+Use 'mutuate' (dplyr package) to change "beg" "mid" "end" and "Summer" "Winter" etc. which appear in some records in the NHM dataset. The dates are mutated as follows: 
 
+Beg and early = 1
+Mid = 14
+End = 27
+wk 1 = 1
+wk 2 = 8
+wk 3 = 15
+wk 4 = 22
+Spring = 20 Mar
+Summer = 21 Jun
+Autumn = 22 Sep
+Winter = 21 Dec
+Range of dates becomes NA
+
+
+```{r, include=TRUE}
 #Cleaning column names to keep and rename where necessary:
 #Name Common
 #Name Current Sci
@@ -86,37 +101,15 @@ names(csip)
 names(nhm)
 csip <- dplyr::rename(csip, County = Local.Authority)
 csip <- dplyr::rename(csip, Name.Common = Name.common) 
-#nhm <- rename(nhm, Grid.Ref = "Grid ref")
 nhm <-dplyr::rename(nhm, Year = year)
 csip <- dplyr::rename(csip, Year = year)
 csip <- dplyr::rename(csip, S.W.No. = National.Reference)
-#nhm <- rename(nhm, Name.Current.Sci = "Name Current Sci")
-#nhm <- rename(nhm, Name.Common = "Name Common")
-#csip <- rename(csip, Name.Current.Sci = "Name Current Sci")
 
 
 #Changing dates and names in the selectnhm
+#First check the data format 
 csip$Date #all dates appear in the same format...
 nhm$Date #some dates appear as August 1929 or Summer 1929, code below to clean
-
-
-#attempt using mutate to change "beg" "mid" "end" and "Summer" "Winter" etc
-#Beg and early = 1
-#Mid = 14
-#End = 27
-#wk 1 = 1
-#wk 2 = 8
-#wk 3 = 15
-#wk 4 = 22
-#Spring = 20 Mar
-#Summer = 21 Jun
-#Autumn = 22 Sep
-#Winter = 21 Dec
-
-#16-17 range of dates to take earliest date
-#what shall I do with 4-5 etc, ?, 'c' and mm yyyy? How? Also Jun 1929 etc
-
-
 
 #embedding commands
 nhm$Date <- gsub("Summer", "1 Jun",
@@ -140,21 +133,29 @@ nhm$Date <- gsub("Summer", "1 Jun",
                  nhm$Date))))))))))))))))))
 
 
-#more specific changes - might have to do each at a time?
-
-#checking if the above has worked
+#Checking the above has worked
 nhm$Date
 head(nhm$Date)
 tail(nhm$Date)
+```
 
 
-#Select specific coloumns
+## Selecting specific columns of the dataset for binding 
+These are the specific variables of the dataset that we are interested in 
+
+```{r, include=TRUE}
+#Select specific coloumns for binding 
 selectnhm <- select(nhm, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
 selectcsip <- select(csip, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
 
 #Checking that the above has worked 
 selectnhm$Date
+```
 
+
+## Date format
+This code changes the data format in the NHM dataset first and creates and NHM final dataset (nhmfinal). This proves difficult when the dataset spans two centuries, for example the 1900s to the 2000s (see code). The code then formats the CSIP date to the same format (YYYY-MM-DD)
+```{r, include=TRUE}
 
 #Changing date format in the NHM dataset
 library(lubridate)
@@ -170,19 +171,14 @@ selectnhm
 #Changing selectnhm to a 'Date' rather than a 'character'
 selectnhm <- mutate(selectnhm, Date = as.Date(Date)) 
 
+#Double check that this has worked i.e. the date is now in Date format rather than a chracter 
 sapply(selectnhm, class)
-
-#Double checking
-View(selectnhm)
 
 #Adding the mutated date column 
 #Changing the Latitudes to 'numeric' 
 nhmnew <- select(nhm, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Year)
 #nhmnew <- mutate(nhmnew, Latitude = as.numeric(Latitude))
-nhmfinal <- bind_cols(nhmnew, selectnhm, .id = NULL)
-nhmfinal$Date
-
-nhmfinal
+nhmfinal <- bind_cols(nhmnew, selectnhm, .id = NULL) #The final nhm dataset 
 
 
 #Changing CSIP date to YYYYMMMDD
@@ -195,14 +191,20 @@ csipfinal
 
 
 #merging the two datasets
-#Checking that both have the same classes
-
+#Checking that both have the same classes - important for binding the columns 
 sapply(nhmfinal, class)
 sapply(csipfinal, class)
 
-#CSIP Longitude is a factor for some reason 
+#CSIP Longitude is a factor 
+#Change to numeric (as is the same for latitude, and lat/long in the NHM data)
 csipfinal$Longitude <- as.numeric(csipfinal$Longitude)
 
+#Now have nhmfinal and csip final 
+```
+
+## Merging the two datasets 
+This merges the two datasets into a dataset called "cleandatesnames"
+```{r, include=TRUE}
 #Merging the two datasets 
 nhmcsip <- bind_rows(nhmfinal, csipfinal)
 View(nhmcsip)
@@ -212,12 +214,3 @@ write.csv(nhmcsip, file = "cleandatesnames.csv")
 
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
