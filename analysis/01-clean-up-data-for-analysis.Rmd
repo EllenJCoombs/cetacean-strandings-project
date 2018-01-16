@@ -5,7 +5,7 @@ date: "10/01/2018"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=TRUE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -16,19 +16,15 @@ knitr::opts_chunk$set(echo = TRUE)
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
 ## Data cleaning and binding 
+This code cleans up the raw data for analysis in the strandings paper 
 
-1. Cleaning and standardising the Natural History Museum (NHM), Cetacean Stranding Investigation Programme (CSIP) and Irish Whale and Dolphin Group (IWDG) datasets for binding 
-2. Binding the 3 datasets (NHM + CSIP first, followed by IWDG which was aquired at a later date)
+1. Cleaning and standardising variables the Natural History Museum (NHM), Cetacean Stranding Investigation Programme (CSIP) and Irish Whale and Dolphin Group (IWDG) datasets for binding 
+2. Cleaning and foramtting dates in the NHM and CSIP datasets
+3. Binding the 3 datasets (NHM + CSIP first, followed by IWDG which was aquired at a later date)
 
-
-1. Code for cleaning up messy dates in the NHM dataset 
-   Code for standardising dates in the CSIP dataset 
-   Code for renaming columns so that both datsets have the same variables 
-   Code for binding the two datasets together 
 
 ## Load libraries/packages
-```{r, include=TRUE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
 
 library(dplyr)
 library(tidyr)
@@ -38,8 +34,8 @@ library(readr)
 ```
 
 
-## Loading the data 
-```{r, include=TRUE}
+## Loading the NHM and CSIP data 
+```{r}
 #Read in raw data for NHM and CSIP
 nhm <- read.csv("EDITNHMdata.csv")
 #read in raw data 
@@ -49,9 +45,8 @@ names(nhm)
 ```
 
 ## Initial exploration of data
-
 This initial exploration is valuable for checking which variables we have across the datasets, as wekk as their class. This is important for binding the datasets later 
-```{r, include=TRUE}
+```{r}
 
 #What variables have we got? Check the data imported correctly 
 
@@ -69,8 +64,8 @@ sapply(nhm, class)
 The first chunk of code renames some of the column names - making them uniform across the datsets
 The second chunk of code cleans up the date format in the NHM dataset and makes date format uniform in both (i.e. NHM and CSIP datasets)
 
-## Date cleaning and uniformity 
-Use 'mutuate' (dplyr package) to change "beg" "mid" "end" and "Summer" "Winter" etc. which appear in some records in the NHM dataset. The dates are mutated as follows: 
+### Date cleaning and uniformity 
+Use `mutuate` form the `dplyr` package to change "beg" "mid" "end" and "Summer" "Winter" etc. which appear in some records in the NHM dataset. The dates are mutated as follows: 
 
 Beg and early = 1
 Mid = 14
@@ -86,7 +81,7 @@ Winter = 21 Dec
 Range of dates becomes NA
 
 
-```{r, include=TRUE}
+```{r}
 #Cleaning column names to keep and rename where necessary:
 #Name Common
 #Name Current Sci
@@ -143,7 +138,7 @@ tail(nhm$Date)
 ## Selecting specific columns of the dataset for binding 
 These are the specific variables of the dataset that we are interested in 
 
-```{r, include=TRUE}
+```{r}
 #Select specific coloumns for binding 
 selectnhm <- select(nhm, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
 selectcsip <- select(csip, S.W.No., Name.Current.Sci, Name.Common, Latitude, Longitude, County, Date, Year)
@@ -155,7 +150,7 @@ selectnhm$Date
 
 ## Date format
 This code changes the data format in the NHM dataset first and creates and NHM final dataset (nhmfinal). This proves difficult when the dataset spans two centuries, for example the 1900s to the 2000s (see code). The code then formats the CSIP date to the same format (YYYY-MM-DD)
-```{r, include=TRUE}
+```{r}
 
 #Changing date format in the NHM dataset
 library(lubridate)
@@ -204,7 +199,7 @@ csipfinal$Longitude <- as.numeric(csipfinal$Longitude)
 
 ## Merging the two datasets 
 This merges the two datasets into a dataset called "cleandatesnames"
-```{r, include=TRUE}
+```{r}
 #Merging the two datasets 
 nhmcsip <- bind_rows(nhmfinal, csipfinal)
 View(nhmcsip)
