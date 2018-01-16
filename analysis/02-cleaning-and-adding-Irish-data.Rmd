@@ -178,7 +178,7 @@ UK_and_Irish$Name.Current.Sci[UK_and_Irish$Name.Current.Sci %in%  "Pseudorca cra
 UK_and_Irish <- UK_and_Irish[!(duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")]) | duplicated(UK_and_Irish[c("Date","Name.Current.Sci", "County")], fromLast = TRUE)), ]
 
 #Dataset is saved as the following csv: 
-write.csv(UK_and_Irish, file = "UK_and_Irish_strandings.csv")
+#write.csv(UK_and_Irish, file = "UK_and_Irish_strandings.csv")
 ```
 
 

@@ -1,0 +1,35 @@
+---
+title: "03-Final-data-clean"
+author: "Ellen Coombs"
+date: "10/01/2018"
+output: html_document 
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Final data clean
+
+This script requires the output from `02-cleaning-and-adding-Irish-data.Rmd`. This is the final stage of the data cleaning before analysis
+
+'UK_and_Irish_sp' is the final dataset used for analysis 
+
+```{r cars}
+#If you have saved your dataset as a csv, read in the data 
+#UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
+
+UK_and_Irish_known <- UK_and_Irish %>%
+  filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ",
+                                   "Unknown delphinid ",
+                                   "Unknown delphinid", "Unknown delphinid ", 
+                                   "Unknown mysticete")))
+
+#Removing rare species - this is now the final dataset for analysis 
+UK_and_Irish_sp <- UK_and_Irish_known %>%
+  filter(!(Name.Current.Sci %in% c("Monodon monoceros", "Peponocephala electra", 
+                                   "Delphinapterus leucas", "Kogia sima",
+                                   "Mesoplodon densirostris", "Mesoplodon europaeus",
+                                   "Lagenodelphis hosei")))
+
+```
