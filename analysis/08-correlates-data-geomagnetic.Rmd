@@ -210,19 +210,15 @@ geomag_1940_2015 <- geomag_1940_2015 %>%
 
 #write.csv(geomag_1940_2015, file = "Geomag_1940_2015.csv")
 
-#Slimming the data down 
-geomag_1940_2015 <- read.csv("Geomag_1940_2015.csv")
-
 
 ```
 
 ## Taking the mean maximum Kp value 
+Taking the mean of all the maxes from each of the geomagnetic stations, rather than the 
+absolute max 
 ```{r}
 
-#This is doing the same as the above but taking the mean of all the maxes, rather than the 
-#absolute max 
-
-#Need geomag_1940_2015 andtake mean max from this + geomag_had1913 as these are the only records for 
+#Need geomag_1940_2015 and take mean max from this + geomag_had1913 as these are the only records for 
 #1913 - 1939 (so no mean can be taken)
 
 #Get the mean max values from geomag_1940_2015 
