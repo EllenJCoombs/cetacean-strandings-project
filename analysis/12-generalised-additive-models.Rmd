@@ -117,6 +117,7 @@ abline(a=0,b=1)
 
 
 ## Running GAMs for data with Phocoena phocoena (Harbour porpoise) removed 
+This code runs the GAMs without harbour porpoises and then tidies up the output with `broom`
 ```{r, echo=TRUE}
 
 #Removing Harbour porpoise from the dataset 
