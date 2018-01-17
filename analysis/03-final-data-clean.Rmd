@@ -5,7 +5,7 @@ date: "10/01/2018"
 output: html_document 
 ---
 
-```{r setup, include=TRUE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -22,7 +22,7 @@ library(dplyr)
 ```
 
 
-##Final data clean 
+## Final data clean 
 Remove unknowns and rare species (these are species that only occur 1-2 times in the stranding dataset)
 ```{r cars}
 #If you have saved your dataset as a csv, read in the data 

@@ -18,8 +18,6 @@ Extracting data from the HadISST (Met Office)dataset was done first. This was ca
 These data are from the UK Met Office, they are monthly SST readings. 
 ## Load packages 
 ```{r}
-library(chron) #Provides chronological order for dates and times 
-library(RColorBrewer) #If you want to plot SST maps 
 library(lattice) #If you want to plot SST maps - visuals 
 library(ncdf4) #Reading in netcdf data 
 library(readr)
