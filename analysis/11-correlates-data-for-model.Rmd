@@ -11,35 +11,60 @@ knitr::opts_chunk$set(echo = FALSE)
 
 
 ## Combining correlates data 
-This script requires the output from 
-
-
-This script requires the output from `02-cleaning-and-adding-Irish-data.Rmd`. This is the final stage of the data cleaning before analysis.
-
+This script requires the outputs from: 
+`04-temporal-analysis-figure-1.Rmd`
+`06-correlates-data-population.Rmd`
+`07-correlates-data-storms.Rmd`
+`08-correlates-data-geomagnetic.Rmd`
+`09-correlates-data-SST.Rmd`
+`10-correlates-data-NAO.Rmd`
 
 ## Load packages 
-```{r cars}
+```{r}
 library(dplyr)
 library(tidyr)
 ```
 
-## Read in the datafiles 
+## Load correlates data 
+```{r}
 
+#Read in species yearly strandings data 
+all_strandings <- read.csv( "all_strandings.csv")
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+#Read in UK and Irish population data 
+Population <- read.csv("Population_UK.csv")
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+#Read in storms data 
+Storms <- read.csv("Storm_data.csv")
 
-```{r cars}
-summary(cars)
+#Read in geomagnetic data 
+Final_geom <- read.csv ("Geom_mean_max.csv")
+Final_geom$X <- NULL
+
+#Read in SST data 
+SST_yearly_max <- read.csv("SST_yearly_max.csv")
+
+#Read in NAO data 
+NAO_data <- read.csv("NAO_data.csv")
+NAO_data$X <- NULL
+
 ```
 
-## Including Plots
+## Combining all of the data for final model dataset 
+The All_stranding dataset needs to be read back in for all cetacean strandings: this is created in `04-temporal-analysis-figure-1.Rmd`
+```{r}
 
-You can also embed plots, for example:
+All_model <- bind_cols(Population, Storms, Final_geom, SST_yearly_max, NAO_data)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+Model_data <- All_model
+#Save if required 
+#write.csv(All_model, file = "Model_data.csv")
+
+#join the two datasets
+all_strandings <- full_join(all_strandings, Model_data, by = "Year")
+all_strandings$X <- NULL
+
+#Dataset should now have all above correlates + Species + Total_strandings 
+
 ```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+ 
