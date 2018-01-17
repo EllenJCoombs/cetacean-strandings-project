@@ -1,0 +1,31 @@
+---
+title: "10-correlates-data-NAO"
+author: "Ellen Coombs"
+date: "10/01/2018"
+output: html_document 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Collecting North Atlantic Oscillation (NAO) data for the model 
+No prerequisites are required for this code to run. This code reads in NOA data from University Corporation for Atmospheric Research.
+
+## Load packages 
+```{r}
+library(dplyr)
+```
+
+## Load data 
+This is in the raw data file, and does not require cleaning - it is a yearly NAO reading. 
+```{r}
+NAO_data <- read.csv("NAO_data.csv")
+NAO_data$X <- NULL
+
+#Rename the columns if required 
+#NAO_data <- NAO_data %>%
+  #dplyr::rename(NAO_index = n)
+
+```
+
