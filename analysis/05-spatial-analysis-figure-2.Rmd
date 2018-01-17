@@ -1,0 +1,221 @@
+---
+title: "05-spatial-analysis-figure-2"
+author: "Ellen Coombs"
+date: "10/01/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Code for plotting temporal plot (Figure 2) with key events and decadal spatial plots 
+The first section of code is needed to make the dataset to plot Figure 2.
+
+This markdown document requires the output from `03-final-data-clean.Rmd`
+
+## Load packages
+```{r}
+library(dplyr)
+```
+
+## Load and manipulate data for plotting 
+```{r}
+
+#Reading in cleaned data with unknowns removed and rare species removed 
+#cleaneddata <- read.csv("UK_and_Irish_strandings.csv")
+cleaneddata <- read.csv("UK_and_Irish_sp.csv")
+
+latlong <- select(cleaneddata, Year, Name.Current.Sci, Longitude, Latitude)
+bphysalus <- filter(latlong, Name.Current.Sci ==  "Balaenoptera physalus")
+bactorostrata <- filter(latlong, Name.Current.Sci ==  "Balaenoptera acutorostrata")
+bborealis <- filter(latlong, Name.Current.Sci ==  "Balaenoptera borealis")
+bmusculus <- filter(latlong, Name.Current.Sci ==  "Balaenoptera musculus")
+#unmysticete <- filter(latlong, Name.Current.Sci ==  "Unknown mysticete")
+#unbalaenopterid <- filter(latlong, Name.Current.Sci ==  "Unknown balaenoptera")
+#mysticete <- filter(latlong, Name.Current.Sci == "Un. mystitcete")
+mnovaeangliae <- filter(latlong, Name.Current.Sci == "Megaptera novaeangliae")
+
+#bind all mysticetes
+combinedmysticetes <- rbind(bphysalus, bactorostrata, bborealis, bmusculus, mnovaeangliae)
+
+#Stripping out odontocetes 
+odontocetes <- latlong[ !(latlong$Name.Current.Sci %in% sortedmysticetes$Name.Current.Sci), ]
+
+#Ordering and combining species by year - to arrange in descending order put "desc" before the year 
+sortedodonts <- arrange(odontocetes,(Year))
+
+sortedmysticetes$whatareyou <- "mysticete"
+sortedodonts$whatareyou <- "odontocete"
+
+
+#Beaked whales coded seperately if required 
+#beakers <- latlong %>% 
+#  filter(Name.Current.Sci %in% c("Hyperoodon ampullatus", "Mesoplodon densirostris", "Mesoplodon europaeus", "Mesoplodon mirus"))
+#
+#beakers$whatareyou <- "beaker"
+
+allall <- rbind(sortedodonts, sortedmysticetes)
+allall$whatareyou <- "all"
+allparv <- rbind(sortedodonts, sortedmysticetes, allall)
+
+
+save(allparv, file="allparv.RData")
+
+```
+
+
+## Plotting the data 
+### Load packages 
+```{r}
+library(maps)
+library(mapdata)
+library(ggplot2)
+library(viridis)
+library(hexbin)
+library(ggmap)
+library(gridExtra)
+library(tidyverse)
+```
+
+##Plot Figure.2 
+This plot uses the dataset from above (allparv) as well as the final cleaned data UK_and_Irish_sp
+Figure.2: Temporal and spatial strandings for all, odontocetes, mysticetes with added information on key human events throughout the century. 
+```{r}
+#Extract UK map
+#Added Ireland
+uk <- map_data("world", regions = c('UK', 'Ireland', 'Guernsey', 'Jersey', 'Isle of Man'))
+
+#Create base map
+gg1 <-
+  ggplot() +
+  geom_polygon(data = uk, aes(x = long, y = lat, group = group),
+               fill = "white", color = "grey70") +
+  coord_fixed(1.3)
+
+#Read in the strandings data
+#This is the cleaned data with unknowns and rare species removed
+ds <- read.csv("UK_and_Irish_sp.csv")
+
+#This dataset comes from "make_megadata.R"
+load("allparv.RData")
+
+ds <- allparv
+
+# capitalize the labels
+ds$whatareyou <- Hmisc::capitalize(ds$whatareyou)
+
+
+#function to build the hexmaps
+make_data <- function(ds, years, labs=FALSE){
+  # Remove NAs from coordinates
+  # And restrict to things in UK waters
+  #Filter species here too·
+  ds <- ds %>%
+    filter(!is.na(Latitude) & !is.na(Longitude)) %>%
+    filter(Latitude < 62 & Latitude > 45) %>%
+    filter(Longitude < 3 & Latitude > -11)
+
+
+  ds <- ds %>%
+    filter(Year>=years[1] & Year<years[2])
+
+  #Basic plot using viridis colour scheme
+  #Note that you can change bins and transparency
+  
+  pp <- gg1+
+    geom_hex(data = ds, aes(y = Latitude, x= Longitude), bins = 50, alpha = 0.75) +
+    theme_minimal() +
+    facet_wrap(~whatareyou, ncol=1, strip.position="left") +
+    labs(x="", y="") +
+    scale_fill_viridis(trans = "log", na.value="white",
+                       limits = c(1, 501),
+                       breaks = c(1, 10, 20, 50, 100, 250, 500),
+                       labels = c(1, 10, 20, 50, 100, 250, 500)) +
+    ggtitle(paste0(years[1], "-", years[2]))
+  if(labs){
+    pp <- pp +
+      theme(legend.position= c(10.1,1.35),
+            axis.text=element_blank(),
+            strip.text=element_text(),
+            plot.title=element_text(hjust=0.5, size=8))
+    
+    #Adding some legend detail 
+    pp <- pp + 
+      theme(legend.title = element_text(colour="black", size=10))
+    
+    pp <- pp + 
+      theme(legend.text= element_text(colour="black", size=7))
+
+  
+  }else{
+    pp <- pp +
+      theme(legend.position="none",
+            strip.text=element_text(colour="white"),
+            axis.text=element_blank(),
+            plot.title=element_text(hjust=0.5, size=8))
+  }
+
+  return(pp)
+}
+
+## make the time series line
+
+# get the data
+linesdat <- ds %>%
+  group_by(Year, whatareyou) %>%
+  summarize(total=n())
+
+
+# make the timeseries plot
+plines <- ggplot(linesdat) +
+  scale_x_continuous(labels=seq(1900, 2025, by=25),
+                     breaks=seq(1900, 2025, by=25),
+                     expand=c(0, 0)) +
+  geom_line(aes(x=Year, y=total, group=whatareyou, colour=whatareyou)) +
+  #scale_fill_viridis() +
+  #Changed variable colours - these are colour blind friendly 
+  scale_colour_manual(values=c("#D55E00", "#0072B2", "#73BFB8")) +
+  #position = "jitter" + 
+  theme_minimal() +
+  theme(legend.position= c("right")) +
+  labs(x="", y="Total stranded individuals", colour="Suborder") 
+  
+
+
+#Adding events to the plot 
+plines <- plines + annotate("rect", xmin=1914, xmax=1918, ymin=0, ymax=800, alpha=.1, fill="gray64") +
+  geom_text(
+    #where the label starts (on the x axis) and where it finishes (on the y axis)
+    #Colour of the label 
+    aes(x = 1916, y = 780, label = "WWI"), size = 3, colour = "gray38") + 
+  annotate("rect", xmin=1939, xmax=1945, ymin=0, ymax=800, alpha=.1, fill="gray64") +
+  geom_text(
+    aes(x = 1942, y = 780, label = "WWII"), size = 3, colour = "gray38") + 
+  annotate("segment", x =1985, xend=1985, y=50, yend=725, colour = "gray38", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) +
+  geom_text(
+    aes(x = 1988, y = 780, label = "1985/1986 season:
+        Moratorium on whaling comes into effect"), size = 3, colour = "gray38") +
+  #Annotation coordinates 
+  annotate("segment", x = 1990, xend = 1990, y = 50, yend = 565, colour="gray38", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) + 
+  geom_text(
+    aes(x = 1995, y = 620, label = "1990: CSIP and IWDG
+   programmes start"), size = 3, colour = "gray38") +
+  annotate("segment", x = 1945, xend = 1945, y = 50, yend = 540, colour="gray38", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) + 
+  geom_text(
+    aes(x = 1945, y = 620, label = "1945: Increase in 
+        post-war fishing & 
+        whaling effort"), size = 3, colour = "gray38")
+  
+#put it all together
+gr <- grid.arrange(plines,
+                   make_data(ds, years=c(1913, 1925), TRUE),
+                   make_data(ds, years=c(1926, 1950)),
+                   make_data(ds, years=c(1951, 1975)),
+                   make_data(ds, years=c(1976, 2000)),
+                   make_data(ds, years=c(2001, 2016)),
+                   layout_matrix = matrix(c(1,2,1,3,1,4,1,5,1,6), 2, 5))
+#Save plot 
+ggsave(gr, file="Figure2.pdf", height=13, width=10)
+
+```

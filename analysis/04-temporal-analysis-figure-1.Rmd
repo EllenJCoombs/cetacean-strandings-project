@@ -111,7 +111,3 @@ print(p)
 ggsave(p, filename="Figure1.pdf", width=10, height=6)
 
 ```
-
-
-```
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

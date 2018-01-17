@@ -10,7 +10,6 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Final data clean
-
 This script requires the output from `02-cleaning-and-adding-Irish-data.Rmd`. This is the final stage of the data cleaning before analysis.
 
 'UK_and_Irish_sp' is the final dataset used for analysis 
@@ -22,6 +21,9 @@ library(dplyr)
 
 ```
 
+
+##Final data clean 
+Remove unknowns and rare species (these are species that only occur 1-2 times in the stranding dataset)
 ```{r cars}
 #If you have saved your dataset as a csv, read in the data 
 #UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
@@ -38,5 +40,9 @@ UK_and_Irish_sp <- UK_and_Irish_known %>%
                                    "Delphinapterus leucas", "Kogia sima",
                                    "Mesoplodon densirostris", "Mesoplodon europaeus",
                                    "Lagenodelphis hosei")))
+
+
+#Save dataset for use in analysis and plotting 
+write.csv(UK_and_Irish_sp, file = "UK_and_Irish_sp.csv")
 
 ```
