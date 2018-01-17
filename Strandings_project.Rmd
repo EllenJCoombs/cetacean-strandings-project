@@ -403,8 +403,6 @@ write.csv(UK_and_Irish_sp, file = "UK_and_Irish_sp.csv")
 ### Code for plotting temporal plot 
 ```{r, echo=TRUE}
 
-#Make Figure 1 - plot of individual species stranding through time 
-
 library(plyr)
 library(ggplot2)
 library(viridis)

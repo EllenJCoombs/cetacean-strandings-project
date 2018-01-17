@@ -1,0 +1,33 @@
+---
+title: "04-temporal-analysis-figure-1"
+author: "Ellen Coombs"
+date: "16/01/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Temporal strandings plot 
+
+This markdown document requires the output from `03-final-data-clean.Rmd`. This code plots all cetacean strandings from 1913-2015 from the combined dataset (NHM + CSIP + IWDG) and produces Figure.1 from the paper. 
+
+
+## Load packages 
+```{r}
+library(plyr)
+library(ggplot2)
+library(viridis)
+```
+
+## Including Plots
+
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

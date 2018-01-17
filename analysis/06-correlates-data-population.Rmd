@@ -1,0 +1,36 @@
+---
+title: "06-correlates-data-population"
+author: "Ellen Coombs"
+date: "10/01/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Collecting storms data for the model 
+No prerequisites are required for this code to run. This code reads in and cleans population data which will form part of the dataset of possible correlates of strandings. 
+
+```{r}
+library(dplyr)
+```
+
+## Reading in the data
+### Cleaning data 
+These data come from the Office of National Statistics and various data sources (see supplementary material) - collected for 1913-2015
+```{r}
+#Population data UK
+#Also in the "modelling' folder 
+#This is a data file that is combined with yearly strandings 
+
+Population <- read.csv("Population_UK.csv")
+Population <- Population %>%
+  rename(Year = YEAR) %>%
+  rename(Population = POPULATION)
+
+#Save data for pulling into final correlates dataset 
+write.csv(Population, file = Population)
+
+```
+

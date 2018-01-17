@@ -1,0 +1,240 @@
+---
+title: "09-correlates-data-SST"
+author: "Ellen Coombs"
+date: "10/01/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Collecting sea surface temperature (SST) data for the model 
+No prerequisites are required for this code to run. This code reads in and cleans sea surface temperature (SST) data which will form part of the dataset of possible correlates of strandings. 
+
+More details are available in the supplementary material. 
+Extracting data from the HadISST (Met Office)dataset was done first. This was carried out for 14 locations around the UK and Ireland (see supplementary material)
+
+These data are from the UK Met Office, they are monthly SST readings. 
+## Load packages 
+```{r}
+library(chron) #Provides chronological order for dates and times 
+library(RColorBrewer) #If you want to plot SST maps 
+library(lattice) #If you want to plot SST maps - visuals 
+library(ncdf4) #Reading in netcdf data 
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ncdf4.helpers)#collection of functions for dealing with NetCDF files opened using ncdf4
+library(PCICt) #identifies meaningful correlations to define edges in a weighted network
+```
+
+## Load data
+The data are downloaded from the Met Office website 
+```{r}
+#Reading in .nc data 
+ncin <- nc_open("HadISST_sst.nc")
+
+#Taking a look at the data 
+ncin_data <- ncvar_get(ncin, attributes(ncin$var)$names[1])
+
+```
+
+
+## Data cleaning and manipulation 
+```{r}
+ 
+#This use of non-standard calendars messes up the calculations of as.Date, 
+#so you must use a more specialized function to read in the time variable of the
+#climate model output and map it to standard calendar dates. 
+#You can do this with the nc.get.time.series function from the ncdf4.helpers package
+#you should also load the PCICt package to use this function):
+
+#This sets the date to a standard: YYYYMMDD and time as well
+sst_time <- nc.get.time.series(ncin, v = "sst",
+                               time.dim.name = "time")
+sst_time[c(1:3, length(sst_time) - 2:0)]
+
+#Getting sst data 
+sst <- ncvar_get(ncin, "sst")
+
+#This variable is in a 3-dimensional array, with dimensions ordered as first longitude, then latitude, then time:
+#Checking on SST data - use the following 
+dim(sst)
+length(sst_time)
+summary(sst_time)
+
+```
+
+## Pulling out SST data for multiple locations 
+See supplementary material for lat/long of 14 locations around the UK and Ireland. Each location should be put into the below code: long_index and lat_index 
+
+Once this code has been run for each of the 14 sites, a dataframe of SST should be available for each of the sites, e.g. Ireland Wicklow. If desired, these should be saved as csv files, for example write.csv(Ireland_WIcklow, file = "Ireland_Wicklow.csv") 
+
+Lat/longs and locations required: 
+<Ellen to add>
+
+```{r}
+#Selecting only one location (lat/long)
+lon_index <- which.min(abs(lon - 1.75))
+lat_index <- which.min(abs(lat - 52.48))
+time_index <- as.PCICt(c("1913-01-01", "2016-01-01"), cal="360")
+sst[lon_index, lat_index, time_index]
+
+
+#Picking out specifics of data - this is one lat/long from 1870-2017
+#Note that this code uses format and as.Date to convert the PCICt object 
+#to a date object, to allow use of a date axis when plotting with ggplot2.
+lon_index <- which.min(abs(lon - - 6.04)) 
+lat_index <- which.min(abs(lat - 52.98))
+
+sst <- nc.get.var.subset.by.axes(ncin, "sst",
+                                 axis.indices = list(X = lon_index,
+                                                     Y = lat_index))
+
+data_frame(time = sst_time,
+           sst = as.vector(sst)) %>% 
+  mutate(time = as.Date(format(sst_time, "%Y-%m-%d")))
+  #Write csv is for extracting csv data and compare each site 
+#E.g  write.csv(file = "Ireland_Wicklow.csv") 
+
+
+#To plot if required 
+  ggplot(aes(x = time, y = sst)) + 
+  geom_line() + 
+  xlab("Date") + ylab("Temperature (C)") + 
+  ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",
+          subtitle = "At model grid point nearest Dover, UK") + 
+  theme_classic()
+
+```
+
+## Pulling together all of the data 
+This code pulls together the SST data from each of the chosen 14 sites 
+```{r}
+#Ireland data binding and cleaning 
+Ireland <- bind_cols(Ireland_BrowHead, Ireland_Cleggan, Ireland_Wicklow)
+#Rename sst1, sst2 etc to the places they represent 
+Ireland <- Ireland %>%
+    dplyr::rename(sst_Browhead_IR = sst) %>%
+    dplyr::rename(sst_Cleggan_IR = sst1) %>%
+    dplyr::rename(sst_Wicklow_IR = sst2) 
+
+#Select column specifics 
+Ireland <- Ireland %>%
+select(time, sst_Browhead_IR, sst_Cleggan_IR, sst_Wicklow_IR)
+
+#UK data binding and cleaning 
+UK <- bind_cols(UK_Ballyhillin, UK_Barrow, UK_Dover, UK_GoreCliff, UK_Holyhead, UK_JohnOGroats, 
+                UK_LandsEnd, UK_Lindisfarne, UK_Lowerstoft, UK_Mull, UK_Shetland)
+
+#As above - change sst1, sst2 etc to the places they represent 
+  UK <- UK %>%
+    dplyr::rename(sst_Ballyhillin_UK = sst) %>%
+    dplyr::rename(sst_Barrow_UK = sst1) %>%
+    dplyr::rename(sst_Dover_UK = sst2) %>%
+    dplyr::rename(sst_GoreCliff_UK = sst3) %>%
+    dplyr::rename(sst_Holyhead_UK = sst4) %>%
+    dplyr::rename(sst_JohnOGroats_UK = sst5) %>%
+    dplyr::rename(sst_LandsEnd_UK = sst6) %>%
+    dplyr::rename(sst_Lindisfarne_UK = sst7) %>%
+    dplyr::rename(sst_Lowerstoft_UK = sst8) %>%
+    dplyr::rename(sst_Mull_UK = sst9) %>%
+    dplyr::rename(sst_Shetland_UK = sst10) 
+  
+#Select column specifics 
+  UK <- UK %>%
+    select(time, sst_Ballyhillin_UK, sst_Barrow_UK, sst_Dover_UK, sst_GoreCliff_UK, sst_Holyhead_UK,
+           sst_JohnOGroats_UK, sst_LandsEnd_UK, sst_Lindisfarne_UK, sst_Lowerstoft_UK, sst_Mull_UK, 
+           sst_Shetland_UK)
+  
+#Binding the UK and Ireland 
+UK_Ireland <- bind_cols(UK, Ireland)
+#Removing the second time variable (from the Ireland dataset)
+UK_Ireland$time1 <- NULL
+
+write.csv(UK_Ireland, file = "UK_Ireland_SST.csv")
+
+#Plot all temperatures if required 
+#Plots of the UK and Ireland
+#ggplot() + 
+  #geom_line(data = UK_Ballyhillin, aes(x = time, y = sst, group = 1)) + 
+  #geom_line(data = UK_Barrow, aes(x = time, y = sst, group = 1)) + 
+  #geom_line(data = UK_Dover, aes(x = time, y = sst, group = 1)) + 
+  #geom_line(data = UK_GoreCliff, aes(x = time, y = sst, group = 1)) + 
+  #geom_line(data = UK_Holyhead, aes(x = time, y = sst, group = 1)) + 
+  #geom_line(data = UK_JohnOGroats, aes(x = time, y = sst, group = 1)) + 
+  #geom_line(data = UK_LandsEnd, aes(x = time, y = sst, group = 1)) + 
+  #geom_line(data = UK_Lindisfarne, aes(x = time, y = sst, group = 1)) + 
+  #geom_line(data = UK_Lowerstoft, aes(x = time, y = sst, group = 1)) + 
+  #geom_line(data = UK_Mull, aes(x = time, y = sst, group = 1)) + 
+  #geom_line(data = UK_Shetland, aes(x = time, y = sst, group = 1)) +
+  #geom_line(data = Ireland_BrowHead, aes(x = time, y = sst, group = 1)) + 
+  #geom_line(data = Ireland_Cleggan, aes(x = time, y = sst, group = 1)) + 
+  #geom_line(data = Ireland_Wicklow, aes(x = time, y = sst, group = 1)) + 
+  #geom_smooth(span = 0.3) +
+  #labs(y = "SST",
+       #x = "time") +
+  #ggtitle("Daily measured sea-surface-temperature, 1870 - 2017",   
+          #subtitle = "At model grid points nearest to several UK and Ireland locations") + 
+  #theme_classic() 
+
+```
+
+## Working with the max yearly SST 
+Pulling out the monthly mean from thw 14 locations and then selecting the mean yearly max SST
+```{r}
+UK_Ireland_SST <- read.csv("UK_Ireland_SST.csv")
+
+#Added a yearly mean for each location in Excel - Think, can't find the code for this 
+
+#Pull out the monthly mean SST
+UK_mean_SST <- UK_Ireland_SST %>%
+  dplyr::select(time, UK_mean) 
+
+#Renaming uk_mean_SST columns 
+UK_mean_SST <- UK_mean_SST %>%
+  dplyr::rename(Date = time)
+
+#Date format 
+#Had to make it a as.Date first 
+UK_mean_SST <- mutate(UK_mean_SST, Date = as.Date(Date))
+
+#Splitting SST into day, month, year 
+df <- data.frame(date = UK_mean_SST$Date,
+                 year = as.numeric(format(UK_mean_SST$Date, format = "%Y")),
+                 month = as.numeric(format(UK_mean_SST$Date, format = "%m")),
+                 day = as.numeric(format(UK_mean_SST$Date, format = "%d")))
+
+#Binding SST and dates/months/years and removing the extra 'date' 
+SST_day_month_year <- bind_cols(df, UK_mean_SST) 
+SST_day_month_year$Date <- NULL
+
+#Average SST for each of the months from 1912 - 2016
+aggregate(SST_day_month_year$UK_mean, by = list(SST_day_month_year$year), max)
+SST_yearly_max <- aggregate(UK_mean ~ year, data = SST_day_month_year, max)
+
+#Renaming the max_year temp and also selecting from 1913:2015 only 
+SST_yearly_max <- SST_yearly_max %>%
+  dplyr::rename(year_max = UK_mean) %>%
+  filter(year %in% c(1913:2015))
+
+#Plot if desired 
+#ggplot(data = SST_yearly_max, aes(x = year, y = year_max)) +
+  #geom_line() + 
+  #xlab("Year") + ylab("Maximum recorded SST ("~degree~"C)") + 
+  #ggtitle("Yearly maximum UK sea-surface-temperature (SST) (1913 - 2015)",
+          #subtitle = "Average taken from 14 sites closest to chosen model grid points") + 
+  #theme_classic()
+
+#Rename the columns 
+SST_yearly_max <- SST_yearly_max %>% 
+  rename(Max_SST = year_max)
+
+#Save for use in dataframe for correlates model 
+write.csv(SST_yearly_max, file = "SST_yearly_max.csv")
+
+```
+
+

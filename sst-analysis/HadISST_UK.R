@@ -186,7 +186,7 @@ time_index <- as.PCICt(c("1913-01-01", "2016-01-01"), cal="360")
 sst[lon_index, lat_index, time_index]
 
 
-#Picking out specific of data - this is one lat/long from 1870-2017
+#Picking out specifics of data - this is one lat/long from 1870-2017
 #Note that this code uses format and as.Date to convert the PCICt object 
 #to a date object, to allow use of a date axis when plotting with ggplot2.
 lon_index <- which.min(abs(lon - - 6.04)) 
