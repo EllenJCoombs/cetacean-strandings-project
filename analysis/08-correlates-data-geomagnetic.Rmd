@@ -1,0 +1,246 @@
+---
+title: "08-correlates-data-geomagentic"
+author: "Ellen Coombs"
+date: "17/01/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Collecting storms data for the model 
+No prerequisites are required for this code to run. This code reads in and cleans geomagnetic data which will form part of the dataset of possible correlates of strandings. 
+
+```{r}
+library(dplyr) #for mutate 
+library(tidyr) #for unnest 
+```
+
+## Import raw geomagnetic data
+These data were obtained from the British Geological Survey. 
+```{r}
+#This is the global geomag data
+geomag <- read.csv("Geomagnetic_data.csv")
+```
+
+
+## Formatting the data 
+The data were in an odd format so need to be cleaned first 
+Raw zip. files are stored in the `raw data` folder 
+Description of where the data comes from is provided in the code. 
+### Load packages 
+```{r}
+require(readr)  # for read_csv()
+require(purrr)  # for map(), reduce()
+require(stringr)
+```
+
+### Formatting the data 
+This code needs to be run for each of the 3 datafiles: esk.zip, had.zip and ler.zip. The outputs then need to be saved as csv files for further analysis. 
+
+The data: 
+Reading in multiple data files from UK oberservatories 
+For Lerwick (LER) and Eskdalemuir (ESK) this is 1940 – present
+For Hartland (HAD), this folder contains data for Greenwich (GRW 1868 - 1925) and Abinger (ABN 1926 - 1956) both based in and near London before these observatory operations were moved to Hartland (1957 – present) in Devon when the electrification of tramlines and railway disturbances made measurements in London impossible
+
+Each data file contains a year of K-index data. This is a 3-houly scale of local geomagnetic activity, weighted to its locality. 
+The scale ranged from 0 (quiet) – 9 (most disturbed)
+The file format is: Day Month  Year Day-number Eight 3-hourly K-index values
+
+```{r}
+
+# Function to fix the weirdly formatted magnet data
+# Natalie Cooper 2017
+
+
+fix_magnet_data <- function(filename){
+  
+  # Read in the magnet data
+  raw.data <- read_lines(filename)
+  
+  # Make list of column names
+  # You will need to edit these 
+  names.col <- c("Day","Month","Year","Day_number","3_1", "3_2", "3_3", "3_4", "3_5", "3_6", "3_7", "3_8")
+  
+  # Remove whitespace at the front of the first column
+  # Replace spaces with commas
+  # Remove excess commas
+  # Split into columns using commas as delimiters
+  # Outputs a list but with separators in right places
+  fixed.data <- raw.data %>%
+    str_trim() %>%
+    str_replace_all(" ", ",") %>%
+    str_replace_all(",,,,", ",") %>%
+    str_replace_all(",,,", ",") %>%
+    str_replace_all(",,", ",") %>%
+    str_split(",")
+  
+  # Coerce list into a dataframe and name columns
+  df1 <- setNames(do.call(rbind.data.frame, fixed.data), names.col)
+  
+}
+
+# To run the code...
+
+# Extract all the files from a folder
+# Due to the weird file extensions you'll need a folder that
+# contains _only_ your magnet data
+files <- list.files()
+
+# Read in the files
+# Tidy them up
+# Combine them all
+magnet.data.ler <- map_dfr(files, fix_magnet_data)
+
+# This may throw some warning messages about making factors 
+# into characters, which isn't an issue at present
+# but may need fixing later
+
+write.csv(magnet.data.ler, file ="Geomag_ler.csv")
+
+#The same code should be run for esk.zip and had.zip data files 
+
+```
+
+
+## Cleaning the geomagnetic data  
+Once the above function has been used to clean data from ESK, HAD and LER, then the following cleaning can be done. Reading in the csv files created using the above function. 
+
+This code takes a maximum daily reading (from 8 x 3 hourly recordings of Kp value), and then takes a maximum yearly reading for LER, ESK and HAD. 
+```{r}
+#Cleaning up the geomag data 
+
+#Firstly the esk.data (Eskdalemuir)
+geomag_esk <- read.csv("Geomag_esk.csv")
+
+geomag_esk <- geomag_esk %>%
+  select(Day, Month, Year, Mean_daily, Max_daily)
+
+#Take yearly max value from ESK 
+#Rename variables 
+esk_yearly_max <- aggregate(geomag_esk$Max_daily, by = list(geomag_esk$Year), max)
+esk_yearly_max <- esk_yearly_max %>%
+  rename(Year = Group.1) %>%
+  rename(K_index = x)
+
+#Plot if wanted 
+#ggplot(data = esk_yearly_max, aes(x = Year, y = K_index, group = 1)) +
+  #geom_line() +
+  #labs(y = "Kp value")
+
+#Hartland (HAD)
+geomag_had <- read.csv("Geomag_had.csv")
+geomag_had <- geomag_had %>%
+  select(Day, Month, Year, Mean_daily, Max_daily)
+
+#Take yearly max value from HAD
+#Rename variables 
+had_yearly_max <- aggregate(geomag_had$Max_daily, by = list(geomag_had$Year), max)
+had_yearly_max <- had_yearly_max %>%
+  rename(Year = Group.1) %>%
+  rename(K_index = x)
+
+#Plot if wanted 
+#ggplot(data = had_yearly_max, aes(x = Year, y = K_index, group = 1)) +
+  #geom_line() +
+  #labs(y = "Kp value")
+
+
+#Lerwick (LER) 
+geomag_ler <- read.csv("Geomag_ler.csv")
+geomag_ler <- geomag_ler %>%
+  select(Day, Month, Year, Mean_daily, Max_daily)
+
+#Take yearly max value from LER
+#Rename variables 
+ler_yearly_max <- aggregate(geomag_ler$Max_daily, by = list(geomag_ler$Year), max)
+ler_yearly_max <- ler_yearly_max %>%
+  rename(Year = Group.1) %>%
+  rename(K_index = x)
+
+#Plot if wanted 
+#ggplot(data = ler_yearly_max, aes(x = Year, y = K_index, group = 1)) +
+  #geom_line() +
+  #labs(y = "Kp value")
+
+```
+
+
+## Combining all 3 datasets 
+This code takes the maximum readings from ESK, LER and HAD and filters and combines them so that there is a full dataset of Kp readings from 1913-2015. 
+
+Where there is only one reading for the year (e.g. 1913-1926, was Greenwich (GRW) contained in the HAD datafile), then that yearly max reading is used. If there are multiple readings per year (e.g. ESK and ABN (also contained in the HAD datafile), then a mean max yealry value is taken. Further detials are in the supplementary materials. 
+
+```{r}
+
+#As mentioned 
+#For Lerwick (LER) and Eskdalemuir (ESK) this is 1940 – present
+#For Hartland (HAD), this folder contains data for Greenwich (GRW 1868 - 1925) 
+#and Abinger (ABN 1926 - 1956) both based in and near London before these observatory 
+#operations were moved to Hartland (1957 – present) in Devon when the electrification of 
+#tramlines and railway disturbances made measurements in London impossible
+
+#Each data file contains a year of K-index data. This is a 3-houly scale of local geomagnetic activity, weighted to its locality. 
+#The scale ranged from 0 (quiet) – 9 (most disturbed)
+
+
+#Combining all the data 
+#1913-1940: Had 
+#1940-2015: All 
+
+geomag_had1913 <- geomag_had %>%
+  filter(Year %in% c(1913:1939))
+
+geom_had1940 <- geomag_had %>%
+  filter(Year %in% c(1940:2015))
+
+geom_esk1940 <- geomag_esk %>%
+  filter(Year %in% c(1940:2015))
+
+geom_ler1940 <- geomag_ler %>%
+  filter(Year %in% c(1940:2015))
+
+
+#Combining all of the data 
+geomag_1940_2015 <- bind_cols(geom_ler1940, geom_esk1940, geom_had1940)
+
+geomag_1940_2015 <- geomag_1940_2015 %>%
+  select(Day, Month, Year, Max_daily, Max_daily1, Max_daily2)
+
+#write.csv(geomag_1940_2015, file = "Geomag_1940_2015.csv")
+
+#Slimming the data down 
+geomag_1940_2015 <- read.csv("Geomag_1940_2015.csv")
+
+
+```
+
+## Taking the mean maximum Kp value 
+```{r}
+
+#This is doing the same as the above but taking the mean of all the maxes, rather than the 
+#absolute max 
+
+#Need geomag_1940_2015 andtake mean max from this + geomag_had1913 as these are the only records for 
+#1913 - 1939 (so no mean can be taken)
+
+#Get the mean max values from geomag_1940_2015 
+geomag_1940_2015_mean_max <- aggregate(geomag_1940_2015$Mean_max, by = list(geomag_1940_2015$Year), max)
+#Rename for binding 
+geomag_1940_2015_mean_max<- geomag_1940_2015_mean_max %>%
+rename(Year = Group.1) %>%
+  rename(Max_K_index = x)
+
+#Bind with geomag_had1913 
+All_geom_mean_max <- bind_rows(geomag_1940_2015_mean_max, geomag_1913_max)
+All_geom_mean_max <- arrange(All_geom_mean_max, Year)
+
+ggplot(data = All_geom_mean_max, aes(x = Year, y = Max_K_index, group = 1)) +
+  geom_line() +
+  labs(y = "Max Kp value")
+
+#This is the final dataset which will be fed into the model for Generalised Additive Modelling
+write.csv(All_geom_mean_max, file = "Geom_mean_max.csv")
+
+```

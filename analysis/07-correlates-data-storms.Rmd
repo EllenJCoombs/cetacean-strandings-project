@@ -1,0 +1,48 @@
+---
+title: "07-correlates-data-storms"
+author: "Ellen Coombs"
+date: "10/01/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Collecting storms data for the model 
+No prerequisites are required for this code to run. This code reads in and cleans storm data which will form part of the dataset of possible correlates of strandings. 
+
+## Load packages 
+```{r}
+library(dplyr)
+```
+
+## Load data 
+This loads the raw storms data csv file 
+```{r}
+#Storm data 
+#Read from "Modelling" folder 
+storms <- read.csv("Storm_data.csv")
+```
+
+## Clean data 
+```{r}
+#Select data 
+storms <- storms %>% 
+  select(Year, Count)
+
+#Counting up and keeping 0 as 0 
+storms <- storms %>% 
+  complete(Year, fill = list(Count = 0)) %>% 
+  dplyr::group_by(Year) %>% 
+  dplyr::summarise(count = sum(Count))
+
+#Renaming count to storms 
+Storms <- storms %>%
+  rename(Storms = count)
+
+#Save cleaned storms data 
+write.csv(Storms, file = "Storm_data.csv")
+
+```
+
