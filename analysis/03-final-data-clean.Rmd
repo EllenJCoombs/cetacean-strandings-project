@@ -6,14 +6,21 @@ output: html_document
 ---
 
 ```{r setup, include=TRUE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Final data clean
 
-This script requires the output from `02-cleaning-and-adding-Irish-data.Rmd`. This is the final stage of the data cleaning before analysis
+This script requires the output from `02-cleaning-and-adding-Irish-data.Rmd`. This is the final stage of the data cleaning before analysis.
 
 'UK_and_Irish_sp' is the final dataset used for analysis 
+
+## Load packages 
+```{r cars}
+
+library(dplyr)
+
+```
 
 ```{r cars}
 #If you have saved your dataset as a csv, read in the data 

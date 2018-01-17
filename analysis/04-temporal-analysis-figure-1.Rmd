@@ -1,0 +1,117 @@
+---
+title: "04-temporal-analysis-figure-1"
+author: "Ellen Coombs"
+date: "10/01/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Temporal strandings plot 
+This markdown document requires the output from `03-final-data-clean.Rmd`. This code plots all cetacean strandings from 1913-2015 from the combined dataset (NHM + CSIP + IWDG) and produces Figure.1 from the paper. 
+
+Before plotting this, we need to gather the data for doing so. This dataframe contains Year, Species and total number of strandings for each species for that year. 
+
+## Load packages 
+```{r}
+library(dplyr)
+```
+
+## Load data 
+Here we are loading the 'UK_and_Irish.sp' dataset (see `03-final-data-clean.Rmd`), this is the final, cleaned dataset with NHM + CSIP + IWDG combined, all rare species and duplicates removed. 
+
+```{r}
+#Load data 
+UK_and_Irish_sp <- read.csv("UK_and_Irish_sp.csv")
+#'Speciesyearcount' cleaned data: a count of current scientific name and year 
+#Had to add dplyr:: when I ran this but may be the case that it isn't needed 
+```
+
+## Create a new dataframe 
+This code counts the number of each species which strands per year. It adds 0s when there are no strandings for that species 
+```{r}
+speciesyearcount <- dplyr::count(UK_and_Irish_sp, Name.Current.Sci, Year) %>%
+  na.omit()
+
+#This is making sure unknowns aren't factors in the data 
+speciesyearcount$Name.Current.Sci <- droplevels(speciesyearcount$Name.Current.Sci)
+
+#Adding a 0 to each year without a record 
+speciesyearcount <- speciesyearcount %>% 
+  complete(Year = seq(min(1913), max(2015), 1L), Name.Current.Sci = unique(speciesyearcount$Name.Current.Sci))
+
+#NAs -> 0 
+speciesyearcount[is.na(speciesyearcount)] <- 0
+
+#Changing the name of the dataset 
+all_strandings <- speciesyearcount 
+#Rename n to "Total_strandings"
+all_strandings <- all_strandings %>% 
+  rename(Total_strandings = n)
+#Reaname Name.Current.Sci to Species 
+all_strandings <- all_strandings %>%
+  rename(Species = Name.Current.Sci)
+
+#Save dataset 
+write.csv(all_strandings, file = "all_strandings.csv")
+```
+
+## Plotting all species which strand each year 
+### Load packages 
+This code is for Figure 1. in the paper 
+```{r}
+library(plyr)
+library(ggplot2)
+library(viridis) 
+```
+
+### Load data 
+```{r}
+
+# load all the strandings data
+alls <- read.csv("all_strandings.csv")
+```
+
+## Plot data 
+```{r}
+# chance Total_strandings to Total_events to get # events
+plotdat <- ddply(alls, .(Year, Species), summarize, total=sum(Total_strandings))
+
+# remove the zeros so they are transparent in plot
+plotdat <- plotdat[plotdat$total != 0,]
+# reverse sp. order alphabetically
+plotdat$Species <- factor(plotdat$Species, levels = rev(levels(plotdat$Species)))
+
+#what should the upper limit be?
+#> max(plotdat$total)
+#[1] 501
+
+#build the plot
+p <- ggplot(plotdat) +
+  geom_tile(aes(x=Year, y=Species, fill=total)) +
+  scale_x_continuous(expand=c(0,0)) +
+  theme_minimal() +
+  labs(fill="Individuals", y="") +
+  #needs to be on the log scale because of pho^2 :(
+  scale_fill_viridis(trans = "log", na.value="white",
+                     #501 was from the above commented 'max' code 
+                     limits = c(1, 501),
+                     breaks = c(1, 10, 20, 50, 100, 250, 500),
+                     labels = c(1, 10, 20, 50, 100, 250, 500)) +
+  theme(legend.position="bottom", legend.key.width=unit(0.1, "npc"),
+        #This makes the text italic 
+        axis.text.y=element_text(face="italic")) +
+  #Need to bold the balaenopterids 
+  theme(axis.text.y=element_text(face=ifelse(levels(plotdat$Species)=="Balaenoptera acutorostrata","bold","italic")))
+
+print(p)
+#Save plot 
+ggsave(p, filename="Figure1.pdf", width=10, height=6)
+
+```
+
+
+```
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
