@@ -46,15 +46,12 @@ All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, 
                     method = "REML",
                     family=nb())
 
-#this was for checking how high to make the k value (k-1)
-#k (almost always k-1)
-unique(all_strandings$Max_SST)
-
+#GAM summary and GAM plots 
 summary(All_strandc)
 par(mfrow = c(2,2))
 plot(All_strandc)
 
-#AIC(All_strandc)
+#AIC if required 
 #AIC(All_strandc)
 
 #Gam.check
