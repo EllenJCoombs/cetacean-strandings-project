@@ -1,5 +1,5 @@
 ---
-title: "12-generalised-additive-models"
+title: "12-generalised-additive-models""
 author: "Ellen Coombs"
 date: "10/01/2018"
 output: html_document
