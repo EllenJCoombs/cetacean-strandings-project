@@ -807,8 +807,8 @@ All_strand_tidy <- plyr::ldply(Tidy_All_strand, tidy, .id = "model")
 All_strand_glance <- plyr::ldply(Tidy_All_strand, glance, .id = "model")
 
 #Save to csv if required 
-write.csv(All_strand_tidy, file = "All_tidy1567.csv")
-write.csv(All_strand_glance, file = "All_glance1567.csv")
+write.csv(All_strand_tidy, file = "All_strand_tidy.csv")
+write.csv(All_strand_glance, file = "All_strand_glance.csv")
 
 
 #This next chunk of code looks at point specifics to determine outliers (in this case
