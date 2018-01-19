@@ -257,7 +257,15 @@ UK_Ireland <- bind_cols(UK, Ireland)
 #Removing the second time variable (from the Ireland dataset)
 UK_Ireland$time1 <- NULL
 
-write.csv(UK_Ireland, file = "UK_Ireland_SST.csv")
+#Adding the yearly mean, taken by averaging the 14 locations 
+UK_Ireland_SST$UK_mean <- rowMeans(subset(UK_Ireland_SST, select = c(sst_Ballyhillin_UK, sst_Barrow_UK, sst_Dover_UK,
+                                                                     sst_GoreCliff_UK, sst_Holyhead_UK, sst_JohnOGroats_UK,
+                                                                     sst_LandsEnd_UK, sst_Lindisfarne_UK, sst_Lowerstoft_UK,
+                                                                     sst_Mull_UK, sst_Shetland_UK, sst_Browhead_IR, sst_Cleggan_IR, 
+                                                                     sst_Wicklow_IR)), na.rm = TRUE)
+
+#Write csv if required 
+write.csv(UK_Ireland_SST, file = "UK_Ireland_SST.csv")
 #Have added the mean
 
 UK_Ireland_SST <- read.csv("UK_Ireland_SST.csv")
@@ -310,9 +318,23 @@ ggplot() +
 UK_mean_SST <- UK_Ireland_SST %>%
   dplyr::select(time, UK_mean) 
 
-#Plotting UK mean temperature 
+
+#Renaming uk_mean_SST columns 
+
+UK_mean_SST <- UK_mean_SST %>%
+  dplyr::rename(Date = time)
+
+#Filter out the columns we want - this is 1913:2015 
+#Filtered this way instead of by year (for example) because the dates were messy 
+UK_mean_SST <- UK_mean_SST %>% 
+  filter(row_number() %in% 517:1752)
+
+sapply(UK_mean_SST, class)
+UK_mean_SST <- mutate(UK_mean_SST, Date = dmy(Date))
+
+#Plotting UK mean temperature if wanted 
 bb1 <- ggplot() + 
-  geom_point(data = UK_mean_SST, aes(x = time, y = UK_mean, group = 1)) + 
+  geom_point(data = UK_mean_SST, aes(x = Date, y = UK_mean, group = 1)) + 
   labs(y = "SST",
        x = "time") +
   ggtitle("Monthly mean sea-surface-temperature, 1870 - 2017",   
@@ -321,22 +343,12 @@ bb1 <- ggplot() +
 
 #Trying to add a trend line - not sure how to get this to work 
 #bb1<- bb1+ geom_smooth(span = 0.5) + 
-  #scale_colour_gradient(low='yellow', high='#de2d26') 
+#scale_colour_gradient(low='yellow', high='#de2d26') 
 
 bb1
 
-
-
 ##########################################################################################
 #Extracting yearly max SST data 
-
-#Renaming uk_mean_SST columns 
-
-UK_mean_SST <- UK_mean_SST %>%
-  dplyr::rename(Date = time)
-
-#Had to make it a as.Date first 
-UK_mean_SST <- mutate(UK_mean_SST, Date = as.Date(Date))
 
 #Splitting SST into day, month, year 
 df <- data.frame(date = UK_mean_SST$Date,
@@ -355,10 +367,9 @@ SST_yearly_max <- aggregate(UK_mean ~ year, data = SST_day_month_year, max)
 #Renaming the max_year temp and also selcting from 1913:2015 only (as my data starts
 #1912 and ends halfway through 2016)
 SST_yearly_max <- SST_yearly_max %>%
-  dplyr::rename(year_max = UK_mean) %>%
-  filter(year %in% c(1913:2015))
+  dplyr::rename(Year_max = UK_mean) 
 
-ggplot(data = SST_yearly_max, aes(x = year, y = year_max)) +
+ggplot(data = SST_yearly_max, aes(x = year, y = Year_max)) +
   geom_line() + 
   xlab("Year") + ylab("Maximum recorded SST ("~degree~"C)") + 
   ggtitle("Yearly maximum UK sea-surface-temperature (SST) (1913 - 2015)",
