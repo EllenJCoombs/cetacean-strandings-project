@@ -257,6 +257,8 @@ UK_Ireland <- bind_cols(UK, Ireland)
 #Removing the second time variable (from the Ireland dataset)
 UK_Ireland$time1 <- NULL
 
+UK_Ireland <- UK_Ireland_SST
+
 #Adding the yearly mean, taken by averaging the 14 locations 
 UK_Ireland_SST$UK_mean <- rowMeans(subset(UK_Ireland_SST, select = c(sst_Ballyhillin_UK, sst_Barrow_UK, sst_Dover_UK,
                                                                      sst_GoreCliff_UK, sst_Holyhead_UK, sst_JohnOGroats_UK,
@@ -332,20 +334,16 @@ UK_mean_SST <- UK_mean_SST %>%
 sapply(UK_mean_SST, class)
 UK_mean_SST <- mutate(UK_mean_SST, Date = dmy(Date))
 
-#Plotting UK mean temperature if wanted 
-bb1 <- ggplot() + 
-  geom_point(data = UK_mean_SST, aes(x = Date, y = UK_mean, group = 1)) + 
-  labs(y = "SST",
-       x = "time") +
-  ggtitle("Monthly mean sea-surface-temperature, 1870 - 2017",   
-          subtitle = "UK mean") + 
-  theme_classic()
+#Plotting UK mean temperature if required 
+#bb1 <- ggplot() + 
+  #geom_point(data = UK_mean_SST, aes(x = Date, y = UK_mean, group = 1)) + 
+  #labs(y = "SST",
+       #x = "time") +
+  #ggtitle("Monthly mean sea-surface-temperature, 1913 - 2015",   
+          #subtitle = "UK mean") + 
+  #theme_classic()
 
-#Trying to add a trend line - not sure how to get this to work 
-#bb1<- bb1+ geom_smooth(span = 0.5) + 
-#scale_colour_gradient(low='yellow', high='#de2d26') 
-
-bb1
+#bb1
 
 ##########################################################################################
 #Extracting yearly max SST data 

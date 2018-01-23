@@ -220,6 +220,7 @@ points(fitted_A[all_strandings$Species=="Delphinus delphis"],
 abline(a=0,b=1)
 
 #Removing Harbour porpoise from the dataset 
+# ! keeps everything but phocoena
 No_phocoena <- all_strandings %>%
   filter(Species != "Phocoena phocoena")
 
@@ -311,3 +312,28 @@ Glance_negb_no_pho <- plyr::ldply(Tidy_negb_no_pho, glance, .id = "model")
 
 #Saving the data for Dave - run residual plots 
 save(All_strandc, all_strandings, file = "Model_for_Dave.Rdata")
+
+#Running the models for phocoena only 
+phocoena <- all_strandings %>% 
+  filter(Species == "Phocoena phocoena")
+
+#No need for species smmoth 
+Phocoena_c <- gam(Total_strandings ~ offset(log(Population)) +s(Year, bs="ts") +
+                        s(Storms, k=5, bs="ts") +
+                        s(Max_K_index, k=4, bs="ts") +
+                        s(Max_SST, bs="ts") +
+                        s(NAO_index, bs="ts"), 
+                      data= phocoena, 
+                      method= "REML",
+                      family=nb())
+
+summary(Phocoena_c)
+par(mfrow = c(2,2))
+plot(Phocoena_c)
+
+#Gam.check
+par(mfrow=c(2,2))
+gam.check(Phocoena_c)
+
+
+

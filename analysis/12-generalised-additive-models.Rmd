@@ -118,6 +118,7 @@ This code runs the GAMs without harbour porpoises and then tidies up the output 
 ```{r, echo=TRUE}
 
 #Removing Harbour porpoise from the dataset 
+# ! keeps everything but phocoena
 No_phocoena <- all_strandings %>%
   filter(Species != "Phocoena phocoena")
 

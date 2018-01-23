@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = FALSE)
 No prerequisites are required for this code to run. This code reads in and cleans sea surface temperature (SST) data which will form part of the dataset of possible correlates of strandings. 
 
 More details are available in the supplementary material. 
-Extracting data from the HadISST (Met Office)dataset was done first. This was carried out for 14 locations around the UK and Ireland (see supplementary material)
+Extracting data from the HadISST (Met Office) dataset was done first. This was carried out for 14 locations around the UK and Ireland (see supplementary material)
 
 These data are from the UK Met Office, they are monthly SST readings. 
 ## Load packages 
@@ -68,10 +68,12 @@ summary(sst_time)
 ## Pulling out SST data for multiple locations 
 See supplementary material for lat/long of 14 locations around the UK and Ireland. Each location should be put into the below code: long_index and lat_index 
 
-Once this code has been run for each of the 14 sites, a dataframe of SST should be available for each of the sites, e.g. Ireland Wicklow. If desired, these should be saved as csv files, for example write.csv(Ireland_WIcklow, file = "Ireland_Wicklow.csv") 
+Once this code has been run for each of the 14 sites, a dataframe of SST should be available for each of the sites, e.g. Ireland Wicklow. The HadISST dataset contains readings SST readings all around the UK - other lat/long coordinates can be added to the following, if desired. 
+
+See: [Met Office](https://www.metoffice.gov.uk/hadobs/hadisst/>)
 
 Lat/longs and locations required: 
-<Ellen to add>
+Ellen to add> SOMETHING BETTER NEEDS TO GO HERE - e.g. code to pull in the lat/longs
 
 ```{r}
 #Selecting only one location (lat/long)
@@ -152,7 +154,11 @@ UK_Ireland <- bind_cols(UK, Ireland)
 #Removing the second time variable (from the Ireland dataset)
 UK_Ireland$time1 <- NULL
 
-write.csv(UK_Ireland, file = "UK_Ireland_SST.csv")
+#Renaming the dataset 
+UK_Ireland <- UK_Ireland_SST
+
+#Save if required
+#write.csv(UK_Ireland_SST, file = "UK_Ireland_SST.csv")
 
 #Plot all temperatures if required 
 #Plots of the UK and Ireland
@@ -181,11 +187,23 @@ write.csv(UK_Ireland, file = "UK_Ireland_SST.csv")
 ```
 
 ## Working with the max yearly SST 
-Pulling out the monthly mean from thw 14 locations and then selecting the mean yearly max SST
+Pulling out the monthly mean from the 14 locations and then selecting the mean yearly max SST
 ```{r}
-UK_Ireland_SST <- read.csv("UK_Ireland_SST.csv")
 
-#Added a yearly mean for each location in Excel - Think, can't find the code for this 
+#Calculating the monthly mean from all 14 locations 
+#Adding the yearly mean, taken by averaging the 14 locations 
+UK_Ireland_SST$UK_mean <- rowMeans(subset(UK_Ireland_SST, select = c(sst_Ballyhillin_UK,
+                                                                     sst_Barrow_UK, sst_Dover_UK,
+                                                                     sst_GoreCliff_UK,
+                                                                     sst_Holyhead_UK,
+                                                                     sst_JohnOGroats_UK,
+                                                                     sst_LandsEnd_UK,
+                                                                     sst_Lindisfarne_UK,
+                                                                     sst_Lowerstoft_UK,
+                                                                     sst_Mull_UK, sst_Shetland_UK,
+                                                                     sst_Browhead_IR,
+                                                                     sst_Cleggan_IR, 
+                                                                     sst_Wicklow_IR)), na.rm=TRUE)
 
 #Pull out the monthly mean SST
 UK_mean_SST <- UK_Ireland_SST %>%
@@ -195,15 +213,24 @@ UK_mean_SST <- UK_Ireland_SST %>%
 UK_mean_SST <- UK_mean_SST %>%
   dplyr::rename(Date = time)
 
-#Date format 
-#Had to make it a as.Date first 
-UK_mean_SST <- mutate(UK_mean_SST, Date = as.Date(Date))
+
+#Filter out the columns we want - this is 1913:2015 
+#Filtered this way instead of by year (for example) because the dates were messy 
+UK_mean_SST <- UK_mean_SST %>% 
+  filter(row_number() %in% 517:1752)
+
+#Change date format of new dataset
+sapply(UK_mean_SST, class)
+UK_mean_SST <- mutate(UK_mean_SST, Date = dmy(Date))
+
 
 #Splitting SST into day, month, year 
+#This code is for breaking down into day, month, year 
 df <- data.frame(date = UK_mean_SST$Date,
                  year = as.numeric(format(UK_mean_SST$Date, format = "%Y")),
                  month = as.numeric(format(UK_mean_SST$Date, format = "%m")),
                  day = as.numeric(format(UK_mean_SST$Date, format = "%d")))
+
 
 #Binding SST and dates/months/years and removing the extra 'date' 
 SST_day_month_year <- bind_cols(df, UK_mean_SST) 
@@ -215,11 +242,11 @@ SST_yearly_max <- aggregate(UK_mean ~ year, data = SST_day_month_year, max)
 
 #Renaming the max_year temp and also selecting from 1913:2015 only 
 SST_yearly_max <- SST_yearly_max %>%
-  dplyr::rename(year_max = UK_mean) %>%
+  dplyr::rename(Year_max = UK_mean) %>%
   filter(year %in% c(1913:2015))
 
 #Plot if desired 
-#ggplot(data = SST_yearly_max, aes(x = year, y = year_max)) +
+#ggplot(data = SST_yearly_max, aes(x = year, y = Year_max)) +
   #geom_line() + 
   #xlab("Year") + ylab("Maximum recorded SST ("~degree~"C)") + 
   #ggtitle("Yearly maximum UK sea-surface-temperature (SST) (1913 - 2015)",
