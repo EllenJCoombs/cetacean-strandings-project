@@ -29,7 +29,7 @@ library(tidyr)
 ```{r}
 
 #Read in species yearly strandings data 
-all_strandings <- read.csv( "all_strandings.csv")
+all_strandings <- read.csv("all_strandings.csv")
 
 #Read in UK and Irish population data 
 Population <- read.csv("Population_UK.csv")
@@ -59,6 +59,14 @@ All_model <- bind_cols(Population, Storms, Final_geom, SST_yearly_max, NAO_data)
 Model_data <- All_model
 #Save if required 
 #write.csv(All_model, file = "Model_data.csv")
+
+
+#Remove uneeded columns 
+Model_data$Year1 <- NULL
+Model_data$Year2 <- NULL 
+Model_data$year <- NULL 
+Model_data$Year3 <- NULL 
+
 
 #join the two datasets
 all_strandings <- full_join(all_strandings, Model_data, by = "Year")

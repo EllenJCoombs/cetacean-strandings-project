@@ -1,10 +1,16 @@
 
 
+library(gridExtra)
+library(maps)
+library(dplyr)
+library(ggplot2)
+
+
 # Read in the strandings data
-cleaneddata <- read.csv("cleandatesnames.csv")
+UK_and_Irish_sp <- read.csv("UK_and_Irish.csv")
 #Strip out specific species 
-P_macrocephalus <- cleaneddata %>%
-  filter(Name.Current.Sci == "Physeter macrocephalus")
+P_phocoena <- UK_and_Irish_sp %>%
+  filter(Name.Current.Sci == "Phocoena phocoena")
 
 # Extract map data
 uk <- map_data("world", regions = c('UK', 'Ireland'))
@@ -43,7 +49,7 @@ for(i in seq_along(decades)){
   
   
   # Use filter to select just the records for that decade
-  one.decade <- filter(P_macrocephalus, Year >= start.year & Year <= end.year)
+  one.decade <- filter(P_phocoena, Year >= start.year & Year <= end.year)
   
   # Add the points to the base map
   # Create a different map for each decade with a different name

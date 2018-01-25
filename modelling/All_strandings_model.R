@@ -115,7 +115,8 @@ All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, 
                       s(NAO_index, bs="ts"), 
                     data= all_strandings, 
                     method = "REML",
-                    family=nb())
+                    family=tw(a=1.2))
+
 
 #this was for checking how high to make the k value (k-1)
 #k (almost always k-1)
@@ -165,7 +166,7 @@ write.csv(All_coefs_glance1567, file = "All_glance1567.csv")
 par(mfrow=c(1,1))
 fitted_A <- fitted(All_strandc)
 response_A <-  All_strandc$y
-plot(fitted_A[response_A<50], response_A[response_A<50], pch=19, cex=0.2, asp=1)
+plot(fitted_A[response_A<200], response_A[response_A<200], pch=19, cex=0.2, asp=1)
 abline(a=0,b=1)
 
 #Using identify
@@ -317,7 +318,7 @@ save(All_strandc, all_strandings, file = "Model_for_Dave.Rdata")
 phocoena <- all_strandings %>% 
   filter(Species == "Phocoena phocoena")
 
-#No need for species smmoth 
+#No need for species smooth 
 Phocoena_c <- gam(Total_strandings ~ offset(log(Population)) +s(Year, bs="ts") +
                         s(Storms, k=5, bs="ts") +
                         s(Max_K_index, k=4, bs="ts") +
@@ -334,6 +335,4 @@ plot(Phocoena_c)
 #Gam.check
 par(mfrow=c(2,2))
 gam.check(Phocoena_c)
-
-
 

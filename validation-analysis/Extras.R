@@ -66,14 +66,22 @@ pmacrocephalus_strandings <- UK_and_Irish_sp %>%
 
 
 
-#Linear models of correlation  storms, SST 
-model3 <- lm(Storms ~ Max_SST, data = all_strandings)
-summary(model3)
+#Linear models of correlation  NAO, SST 
+NAO_SSTmodel <- lm(NAO_index ~ Max_SST, data = all_strandings)
+summary(NAO_SSTmodel)
+
+##Linear models of correlation  NAO, storms 
+NAO_stormsmodel <- lm(NAO_index ~ Storms, data = all_strandings)
+summary(NAO_stormsmodel)
+
+#Double checking the R-squared 
+summary(lm(Max_SST ~ NAO_index, all_strandings))$r.squared
+summary(lm(Storms ~ NAO_index, all_strandings))$r.squared
+
 
 m <- lm(POPULATION ~ STRANDINGS, data = pop_vs_strandings)
 
-summary(lm(Max_SST ~ NAO_index, all_strandings))$r.squared
-summary(lm(Storms ~ NAO_index, all_strandings))$r.squared
+
 
 
 #Plot all species stranding - facet_wrap 
@@ -82,8 +90,12 @@ summary(lm(Storms ~ NAO_index, all_strandings))$r.squared
 ggplot() + 
   geom_line(data = all_strandings, aes(x = Year, y = Total_strandings, colour = Species)) + 
   theme_bw() +
-  facet_wrap(~ Species, scales = "free")
+  labs(y = "Total strandings",
+       x = "Year") +
+  facet_wrap(~ Species, scales = "free") 
 
+
+?par
 
 
 scoeruleoalba <- UK_and_Irish_sp %>%
@@ -118,7 +130,7 @@ ggplot() +
 
 #Quick plot of SST 
 ggplot() + 
-  geom_line(data = SST_yearly_max, aes(x = year, y = Max_SST)) +
+  geom_line(data = SST_yearly_max, aes(x = year, y = Year_max)) +
   labs(y = "Maximum yearly SST ("~degree~"C)",
        x = "Year") +
   theme_bw() 
@@ -149,7 +161,7 @@ ggplot() +
 #Population 
 ggplot() + 
   geom_line(data = Population, aes(x = Year, y = Population)) +
-  labs(y = "UK and Irish population",
+  labs(y = "UK population (millions)",
        x = "Year") +
   theme_bw() 
 
@@ -158,3 +170,12 @@ ggplot() +
 packageVersion("mgcv")
 #Version of R
 getRversion()
+
+
+Population <- read.csv("Population_UK.csv")
+
+Population <- Population %>%
+  rename(Year = YEAR) %>%
+  rename(Population = POPULATION)
+
+
