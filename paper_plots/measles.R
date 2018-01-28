@@ -3,6 +3,7 @@
 library(plyr)
 library(ggplot2)
 library(viridis)
+library(base)
 
 # load all the strandings data
 alls <- read.csv("all_strandings.csv")
@@ -10,6 +11,32 @@ alls <- read.csv("all_strandings.csv")
 
 # chance Total_strandings to Total_events to get # events
 plotdat <- ddply(alls, .(Year, Species), summarize, total=sum(Total_strandings))
+
+#Change the factor levels
+#What levels do we have? 
+levels(plotdat$Species)
+
+#Specify the factor levels 
+plotdat$Species <- factor(c("Balaenoptera acutorostrata","Balaenoptera borealis",
+                       "Balaenoptera musculus", "Balaenoptera physalus", 
+                       "Delphinus delphis", "Globicephala melas", 
+                       "Grampus griseus",  "Hyperoodon ampullatus", 
+                       "Kogia breviceps", "Lagenorhynchus acutus", 
+                       "Lagenorhynchus albirostris","Megaptera novaeangliae", 
+                       "Mesoplodon bidens", "Mesoplodon mirus", "Orcinus orca",
+                       "Phocoena phocoena", "Physeter macrocephalus", 
+                       "Pseudorca crassidens", "Stenella coeruleoalba",
+                       "Tursiops truncatus", "Ziphius cavirostris"))
+
+
+plotdat$Species <- factor(plotdat$Species, levels = c("Balaenoptera acutorostrata","Balaenoptera borealis","Balaenoptera musculus",
+                                                                              "Balaenoptera physalus", "Megaptera novaeangliae","Delphinus delphis","Globicephala melas","Grampus griseus",
+                                                                              "Hyperoodon ampullatus","Kogia breviceps","Lagenorhynchus acutus","Lagenorhynchus albirostris",
+                                                                              "Mesoplodon bidens","Mesoplodon mirus","Orcinus orca",
+                                                                              "Phocoena phocoena","Physeter macrocephalus","Pseudorca crassidens","Stenella coeruleoalba",
+                                                                              "Tursiops truncatus","Ziphius cavirostris"))
+
+
 
 # remove the zeros so they are transparent in plot
 plotdat <- plotdat[plotdat$total != 0,]
@@ -34,10 +61,7 @@ p <- ggplot(plotdat) +
                      labels = c(1, 10, 20, 50, 100, 250, 500)) +
   theme(legend.position="bottom", legend.key.width=unit(0.1, "npc"),
         #This makes the text italic 
-        axis.text.y=element_text(face="italic")) +
-  #Need to bold the balaenopterids 
-  theme(axis.text.y=element_text(face=ifelse(levels(plotdat$Species)=="Balaenoptera acutorostrata","bold","italic")))
-
+        axis.text.y=element_text(face="italic"))
 
 print(p)
 #Save plot 

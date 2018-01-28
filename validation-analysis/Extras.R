@@ -179,3 +179,16 @@ Population <- Population %>%
   rename(Population = POPULATION)
 
 
+#Counts of each species for supplementary data 
+#This gives species per year 
+Species <- UK_and_Irish_sp %>%
+  count(Name.Current.Sci, Year)
+
+#Total count 
+Species <- UK_and_Irish_sp %>%
+  count(Name.Current.Sci)
+
+
+
+
+

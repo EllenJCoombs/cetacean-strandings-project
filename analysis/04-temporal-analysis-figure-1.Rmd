@@ -75,9 +75,48 @@ alls <- read.csv("all_strandings.csv")
 ```
 
 ## Plot data 
+This code rearranges the order of the species to put balaenopterids first. 
 ```{r}
 # chance Total_strandings to Total_events to get # events
 plotdat <- ddply(alls, .(Year, Species), summarize, total=sum(Total_strandings))
+
+
+#Change the factor levels
+#What levels do we have? 
+levels(plotdat$Species)
+
+#Specify the factor levels 
+plotdat$Species <- factor(c("Balaenoptera acutorostrata","Balaenoptera borealis",
+                       "Balaenoptera musculus", "Balaenoptera physalus", 
+                       "Delphinus delphis", "Globicephala melas", 
+                       "Grampus griseus",  "Hyperoodon ampullatus", 
+                       "Kogia breviceps", "Lagenorhynchus acutus", 
+                       "Lagenorhynchus albirostris","Megaptera novaeangliae", 
+                       "Mesoplodon bidens", "Mesoplodon mirus", "Orcinus orca",
+                       "Phocoena phocoena", "Physeter macrocephalus", 
+                       "Pseudorca crassidens", "Stenella coeruleoalba",
+                       "Tursiops truncatus", "Ziphius cavirostris"))
+
+#
+plotdat$Species <- factor(plotdat$Species, levels = c("Balaenoptera acutorostrata",
+                                                      "Balaenoptera borealis",
+                                                      "Balaenoptera musculus", 
+                                                      "Balaenoptera physalus",
+                                                      "Megaptera novaeangliae",
+                                                      "Delphinus delphis",
+                                                      "Globicephala melas",
+                                                      "Grampus griseus",
+                                                      "Hyperoodon ampullatus",
+                                                      "Kogia breviceps",
+                                                      "Lagenorhynchus acutus",
+                                                      "Lagenorhynchus albirostris",
+                                                      "Mesoplodon bidens",
+                                                      "Mesoplodon mirus","Orcinus orca",
+                                                      "Phocoena phocoena",
+                                                      "Physeter macrocephalus",
+                                                      "Pseudorca crassidens",
+                                                      "Stenellacoeruleoalba",
+                                                      "Tursiops truncatus","Ziphius cavirostris"))
 
 # remove the zeros so they are transparent in plot
 plotdat <- plotdat[plotdat$total != 0,]

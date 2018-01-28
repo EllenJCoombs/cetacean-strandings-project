@@ -108,14 +108,14 @@ write.csv(all_strandings, file = "all_strandings.csv")
 
 
 #GAM for the above with Species as the factor smooth 
-All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+All_strandb <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
                       s(Storms, k=5, bs="ts") +
                       s(Max_K_index, k=4, bs="ts") +
                       s(Max_SST, bs="ts") +
                       s(NAO_index, bs="ts"), 
                     data= all_strandings, 
                     method = "REML",
-                    family=tw(a=1.2))
+                    family=quasipoisson())
 
 
 #this was for checking how high to make the k value (k-1)
@@ -131,7 +131,7 @@ plot(All_strandc)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(All_strandc)
+gam.check(All_strandb)
 
 
 library(broom)
