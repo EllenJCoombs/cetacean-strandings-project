@@ -255,7 +255,7 @@ SST_yearly_max <- SST_yearly_max %>%
 
 #Rename the columns 
 SST_yearly_max <- SST_yearly_max %>% 
-  rename(Max_SST = year_max)
+  rename(Max_SST = Year_max)
 
 #Save for use in dataframe for correlates model 
 write.csv(SST_yearly_max, file = "SST_yearly_max.csv")

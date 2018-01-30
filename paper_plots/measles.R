@@ -29,12 +29,16 @@ plotdat$Species <- factor(c("Balaenoptera acutorostrata","Balaenoptera borealis"
                        "Tursiops truncatus", "Ziphius cavirostris"))
 
 
-plotdat$Species <- factor(plotdat$Species, levels = c("Balaenoptera acutorostrata","Balaenoptera borealis","Balaenoptera musculus",
-                                                                              "Balaenoptera physalus", "Megaptera novaeangliae","Delphinus delphis","Globicephala melas","Grampus griseus",
-                                                                              "Hyperoodon ampullatus","Kogia breviceps","Lagenorhynchus acutus","Lagenorhynchus albirostris",
-                                                                              "Mesoplodon bidens","Mesoplodon mirus","Orcinus orca",
-                                                                              "Phocoena phocoena","Physeter macrocephalus","Pseudorca crassidens","Stenella coeruleoalba",
-                                                                              "Tursiops truncatus","Ziphius cavirostris"))
+plotdat$Species <- factor(plotdat$Species, levels = c("Balaenoptera acutorostrata","Balaenoptera borealis",
+                                                      "Balaenoptera musculus", "Balaenoptera physalus",
+                                                      "Megaptera novaeangliae","Delphinus delphis",
+                                                      "Globicephala melas","Grampus griseus",
+                                                      "Hyperoodon ampullatus","Kogia breviceps",
+                                                      "Lagenorhynchus acutus","Lagenorhynchus albirostris",
+                                                      "Mesoplodon bidens","Mesoplodon mirus","Orcinus orca",
+                                                      "Phocoena phocoena","Physeter macrocephalus",
+                                                      "Pseudorca crassidens","Stenella coeruleoalba",
+                                                      "Tursiops truncatus","Ziphius cavirostris"))
 
 
 
