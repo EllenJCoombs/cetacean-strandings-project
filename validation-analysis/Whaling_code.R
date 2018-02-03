@@ -142,15 +142,15 @@ Catch_and_strandings <- Catch_and_strandings %>%
   rename(Catch = n)
 
 
-#Plot them both on the same graph 
+#Plot them whale catch (hunts) and strandings on the same graph 
   p <- ggplot(Catch_and_strandings, aes(x = Year))
   p <- p + geom_line(aes(y = Strandings, colour = "Total strandings"))
   
   # adding the stranding data, transformed to match roughly the range of the total catch
   p <- p + geom_line(aes(y = Catch/20, colour = "Total catch"))
   
-  # now adding the secondary axis, following the example in the help file ?scale_y_continuous
-  # and, very important, reverting the above transformation
+  # now adding the secondary axis with scale_y_continuous
+  # and, very important, reverting the above transformation 
   p <- p + scale_y_continuous(sec.axis = sec_axis(~.*20, name = "Total catch"))
   
   # modifying colours and theme options
@@ -159,6 +159,7 @@ Catch_and_strandings <- Catch_and_strandings %>%
                 x = "Year",
                 colour = "Parameter")
   p <- p + theme(legend.position = c(0.8, 0.9))
+  #show plot
   p  
 
   
