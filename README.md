@@ -14,11 +14,7 @@ To cite the paper:
 To cite this repo: 
 
 
-Image here 
-![_whale_image_](web address or folder here)
-
-
-## Data :bar_chart: chart_with_downwards_trend
+## Data :bar_chart: :chart_with_downwards_trend:
 
 These analyses use data from various studies. The data for possible environmental correlates of strandings can be found at these locations: 
 

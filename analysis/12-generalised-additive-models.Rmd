@@ -205,6 +205,8 @@ Phocoena_c_glance <- plyr::ldply(Tidy_Phocoena_c, glance, .id = "model")
 #write.csv(Phocoena_c_tidy, file = "Phocoena_c_tidy.csv")
 #write.csv(Phocoena_c_glance, file = "Phocoena_c_glance.csv")
 
+
+
 ```
 
 
