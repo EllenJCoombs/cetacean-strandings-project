@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+This code pulls together all of the correlates data e.g. Storms, and NAO, and puts them together along with 'Year', 'Species' and Total strandings' which is called `all_strandings.csv`. This dataset is fed into the Generalised Additive Model (`12-generalised-additive-models.Rmd`)
+
 
 ## Combining correlates data 
 This script requires the outputs from: 
