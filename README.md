@@ -1,5 +1,8 @@
 # What can cetacean stranding records tell us? A study of UK and Irish cetacean diversity over the past 100 years
 
+:whale2: :chart_with_upwards_trend:
+
+
 
 Author(s): 
 [Ellen J. Coombs](mailto:ellen.coombs.14@ucl.ac.uk), [David L. Miller](https://github.com/dill), Rob Deaville, Richard C. Sabin,  Simon Berrow, and [Natalie Cooper](https://github.com/nhcooper123)
@@ -25,7 +28,7 @@ These analyses use data from various studies. The data for possible environmenta
 - [North Atlantic Oscillation](https://climatedataguide.ucar.edu/sites/default/files/nao_station_annual.txt)
 
 Human population for the UK can be found here: 
--[Human population data](../blob/master/LICENSE) this will be a link to my datasheet 
+[Human population data](../blob/master/LICENSE) this will be a link to my datasheet 
 
 
 ## Analysis
