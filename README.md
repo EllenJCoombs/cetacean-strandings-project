@@ -2,6 +2,7 @@
 
 
 Author(s): 
+[Ellen J. Coombs](mailto: ellen.coombs.14@ucl.ac.uk), [David L. Miller](https://github.com/dill), Rob Deaville, Richard C. Sabin,  Simon Berrow, and [Natalie Cooper](https://github.com/nhcooper123)
 
 
 To cite the paper: 
