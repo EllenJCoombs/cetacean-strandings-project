@@ -18,9 +18,9 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 ## Data cleaning and binding 
 This code cleans up the raw data for analysis in the strandings paper 
 
-1. Cleaning and standardising variables the Natural History Museum (NHM), Cetacean Stranding Investigation Programme (CSIP) and Irish Whale and Dolphin Group (IWDG) datasets for binding 
-2. Cleaning and foramtting dates in the NHM and CSIP datasets
-3. Binding the 3 datasets (NHM + CSIP first, followed by IWDG which was aquired at a later date)
+1. Cleaning and standardising variables in the Natural History Museum (NHM), Cetacean Stranding Investigation Programme (CSIP) datasets for binding 
+2. Cleaning and formatting dates in the NHM and CSIP datasets
+3. Binding the 2 datasets (NHM + CSIP first, followed by IWDG which was aquired at a later date, see **02-cleaning-and-adding-irish-data.Rmd**)
 
 
 ## Load libraries/packages
