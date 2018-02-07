@@ -1,5 +1,5 @@
 ---
-title: "02-cleaning-and-adding-Irish-data"
+title: "02-cleaning-and-adding-irish-data"
 author: "Ellen Coombs"
 date: "10/01/2018"
 output: html_document
