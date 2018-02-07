@@ -18,7 +18,7 @@ Image here
 ![_whale_image_](web address or folder here)
 
 
-## Data 
+## Data :bar_chart: chart_with_downwards_trend
 
 These analyses use data from various studies. The data for possible environmental correlates of strandings can be found at these locations: 
 
@@ -31,7 +31,7 @@ Human population for the UK can be found here:
 [Human population data](../blob/master/LICENSE) this will be a link to my datasheet 
 
 
-## Analysis
+## Analysis :chart_with_upwards_trend: :whale2:
 All code used to run analyses and make figures and tables is included in the analyses/ folder. Before starting remember to either set your working directory to the stranding poject folder on your computer, or open an RStudio project from that folder. All of these files are in the RMarkdown format. You can click the Knit button in RStudio and create HTML versions using the code. 
 
 * **01-clean-up-data-for-analysis.Rmd** This script takes the raw data from the NHM and CSIP databases. This includes cleaning and standardising variables in the Natural History Museum (NHM), Cetacean Stranding Investigation Programme (CSIP) datasets for binding, cleaning and formatting dates in the NHM and CSIP dataset and binding the 2 datasets (NHM + CSIP first, followed by IWDG which was aquired at a later date; see **02-cleaning-and-adding-irish-data.Rmd**). If you're pushed for time, use the cleaned, merged final dataset of all 3 stranding datsets, which has also had rare species removed and is used in the GAMs. This can be found in the data folder and is called `UK_and_Irish_sp.csv`
@@ -62,14 +62,14 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 * **12-generalised-additive-models.Rmd** This code runs the GAM which looks at all strandings (species per year), with an offset of population.
 
 
-## Other folders 
+## Other folders :file_folder:
 `functions/` contains functions required by the code in the `analysis/` folder 
 `figures/` contains figures found in the manuscript 
 `raw data/` contains gathered raw data and sources on UK population and UK and Irish storms from 1913-2015
 `cleaned data/` contains cleaned stranding dataset with the NHM, CSIP and IWDG datasets combined, and rare species removed. Also contains the cleaned correlates data; as well as the cleaned dataset (which is all of the correlates combined + year, species and total strandings) 
 
 
-## Session Info
+## Session Info :clipboard:
 For reproducibility purposes, here is the output of `devtools::session_info()` used to perform the analyses in the publication.
 
 Session info ---------------------------------------------------------------------------------------
