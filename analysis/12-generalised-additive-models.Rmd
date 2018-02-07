@@ -27,6 +27,8 @@ all_strandings <- read.csv("all_strandings.csv")
 
 ## Generalised Additive Models (GAMs)
 This code runs the GAM which looks at all strandings (species per year), with an offset of population. The predictors are storms, geomagnetic data (Max_K_index), Maximum SST (Max_SST) and NAO index (NAO_index)
+
+The code also runs the models with harbour porpoises (_phocoena phocoena_) removed, and with harbour porpoises only. 
 ```{r}
 
 #This is to check how high to make the k value (k-1)
@@ -150,7 +152,6 @@ abline(a=0,b=1)
 
 
 #Using broom to tidy 
-
 #Tidy multiple models at once 
 Tidy_no_phocoena <- list(No_phocoena1 = No_phocoena1)
 
@@ -163,5 +164,49 @@ No_phocoena_glance <- plyr::ldply(Tidy_no_phocoena, glance, .id = "model")
 #write.csv(No_phocoena_glance, file = "No_phocoena_glance.csv")
 
 ```
+
+
+## Running GAMs for data with Phocoena phocoena (Harbour porpoise) only 
+This code runs the GAMs without harbour porpoises and then tidies up the output with `broom`
+```{r, echo=TRUE}
+
+#Running the models for phocoena only 
+phocoena <- all_strandings %>% 
+  filter(Species == "Phocoena phocoena")
+
+#No need for species smooth 
+Phocoena_c <- gam(Total_strandings ~ offset(log(Population)) +s(Year, bs="ts") +
+                        s(Storms, k=5, bs="ts") +
+                        s(Max_K_index, k=4, bs="ts") +
+                        s(Max_SST, bs="ts") +
+                        s(NAO_index, bs="ts"), 
+                      data= phocoena, 
+                      method= "REML",
+                      family=nb())
+
+summary(Phocoena_c)
+par(mfrow = c(2,2))
+plot(Phocoena_c)
+
+#Gam.check
+par(mfrow=c(2,2))
+gam.check(Phocoena_c)
+
+
+#Using broom to tidy 
+#Tidy multiple models at once 
+Tidy_Phocoena_c <- list(Phocoena_c = Phocoena_c)
+
+#Tidy and glance datasets 
+Phocoena_c_tidy <- plyr::ldply(Tidy_Phocoena_c, tidy, .id = "model")
+Phocoena_c_glance <- plyr::ldply(Tidy_Phocoena_c, glance, .id = "model")
+
+#Save to csv if required 
+#write.csv(Phocoena_c_tidy, file = "Phocoena_c_tidy.csv")
+#write.csv(Phocoena_c_glance, file = "Phocoena_c_glance.csv")
+
+```
+
+
 
 

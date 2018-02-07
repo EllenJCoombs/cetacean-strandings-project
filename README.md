@@ -19,8 +19,8 @@ Image here
 
 These analyses use data from various studies. The data for possible environmental correlates of strandings can be found at these locations: 
 
-- [HadISST data](https://Metoffice.com)
-- [British Geological Survey](link...)
+- [HadISST data](https://www.metoffice.gov.uk/hadobs/hadisst/data/download.html)
+- [British Geological Survey](http://www.geomag.bgs.ac.uk/data_service/data/magnetic_indices/k_indices.html)
 - [Storms](../blob/master/LICENSE) this will be a link to my own storms raw data and storm count
 - [North Atlantic Oscillation](https://climatedataguide.ucar.edu/sites/default/files/nao_station_annual.txt)
 
@@ -110,22 +110,6 @@ Packages -----------------------------------------------------------------------
  tools        3.4.0   2017-04-21 local         
  utils      * 3.4.0   2017-04-21 local         
  withr        2.1.1   2017-12-19 CRAN (R 3.4.3)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#Analyses
 
 
 
