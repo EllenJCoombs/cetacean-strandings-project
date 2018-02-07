@@ -2,7 +2,7 @@
 
 
 Author(s): 
-[Ellen J. Coombs](mailto: ellen.coombs.14@ucl.ac.uk), [David L. Miller](https://github.com/dill), Rob Deaville, Richard C. Sabin,  Simon Berrow, and [Natalie Cooper](https://github.com/nhcooper123)
+[Ellen J. Coombs](mailto:ellen.coombs.14@ucl.ac.uk), [David L. Miller](https://github.com/dill), Rob Deaville, Richard C. Sabin,  Simon Berrow, and [Natalie Cooper](https://github.com/nhcooper123)
 
 
 To cite the paper: 
@@ -15,7 +15,7 @@ Image here
 ![_whale_image_](web address or folder here)
 
 
-##Data 
+## Data 
 
 These analyses use data from various studies. The data for possible environmental correlates of strandings can be found at these locations: 
 
@@ -28,7 +28,7 @@ Human population for the UK can be found here:
 -[Human population data](../blob/master/LICENSE) this will be a link to my datasheet 
 
 
-##Analysis
+## Analysis
 All code used to run analyses and make figures and tables is included in the analyses/ folder. Before starting remember to either set your working directory to the stranding poject folder on your computer, or open an RStudio project from that folder. All of these files are in the RMarkdown format. You can click the Knit button in RStudio and create HTML versions using the code. 
 
 * **01-clean-up-data-for-analysis.Rmd** This script takes the raw data from the NHM and CSIP databases. This includes cleaning and standardising variables in the Natural History Museum (NHM), Cetacean Stranding Investigation Programme (CSIP) datasets for binding, cleaning and formatting dates in the NHM and CSIP dataset and binding the 2 datasets (NHM + CSIP first, followed by IWDG which was aquired at a later date; see **02-cleaning-and-adding-irish-data.Rmd**). If you're pushed for time, use the cleaned, merged final dataset of all 3 stranding datsets, which has also had rare species removed and is used in the GAMs. This can be found in the data folder and is called `UK_and_Irish_sp.csv`
@@ -59,7 +59,7 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 * **12-generalised-additive-models.Rmd** This code runs the GAM which looks at all strandings (species per year), with an offset of population.
 
 
-##Other folders 
+## Other folders 
 `functions/` contains functions required by the code in the `analysis/` folder 
 `figures/` contains figures found in the manuscript 
 `raw data/` contains gathered raw data and sources on UK population and UK and Irish storms from 1913-2015
@@ -82,6 +82,7 @@ Session info -------------------------------------------------------------------
 Packages -------------------------------------------------------------------------------------------
  package    * version date       source        
  base       * 3.4.0   2017-04-21 local         
+ clipr      * 0.4.0   2017-11-03 CRAN (R 3.4.2)
  colorspace   1.3-2   2016-12-14 CRAN (R 3.4.0)
  compiler     3.4.0   2017-04-21 local         
  datasets   * 3.4.0   2017-04-21 local         
@@ -104,12 +105,10 @@ Packages -----------------------------------------------------------------------
  plyr         1.8.4   2016-06-08 CRAN (R 3.4.0)
  Rcpp         0.12.12 2017-07-15 CRAN (R 3.4.1)
  rlang        0.1.1   2017-05-18 CRAN (R 3.4.0)
+ rstudioapi   0.7     2017-09-07 CRAN (R 3.4.1)
  scales       0.4.1   2016-11-09 CRAN (R 3.4.0)
  stats      * 3.4.0   2017-04-21 local         
  tibble       1.3.3   2017-05-28 CRAN (R 3.4.0)
  tools        3.4.0   2017-04-21 local         
  utils      * 3.4.0   2017-04-21 local         
  withr        2.1.1   2017-12-19 CRAN (R 3.4.3)
-
-
-
