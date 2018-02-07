@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Temporal strandings plot 
 This markdown document requires the output from `03-final-data-clean.Rmd`. This code plots all cetacean strandings from 1913-2015 from the combined dataset (NHM + CSIP + IWDG) and produces Figure.1 from the paper. 
 
-Before plotting this, we need to gather the data for doing so. This dataframe contains Year, Species and total number of strandings for each species for that year. 
+Before being able to plot Figure 1, we need to gather the data for doing so. This dataframe contains Year, Species and total number of strandings for each species for that year. 
 
 ## Load packages 
 ```{r}

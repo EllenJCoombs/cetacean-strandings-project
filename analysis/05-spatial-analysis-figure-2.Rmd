@@ -10,7 +10,8 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Code for plotting temporal plot (Figure 2) with key events and decadal spatial plots 
-The first section of code is needed to make the dataset to plot Figure 2.
+This code makes Figure 2. 
+The first section of code is needed to make the dataset for Figure 2.
 
 This markdown document requires the output from `03-final-data-clean.Rmd`
 
