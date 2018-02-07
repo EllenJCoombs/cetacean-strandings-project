@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Collecting storms data for the model 
-No prerequisites are required for this code to run. This code reads in and cleans population data which will form part of the dataset of possible correlates of strandings. 
+No prerequisites are required for this code to run. This code reads in, and cleans population data which will form part of the dataset of possible correlates of strandings. 
 
 ```{r}
 library(dplyr)
