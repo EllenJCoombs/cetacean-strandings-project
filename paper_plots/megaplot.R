@@ -9,6 +9,7 @@ library(hexbin)
 library(ggmap)
 library(gridExtra)
 library(tidyverse)
+library(Hmisc)
 
 #Extract UK map
 #Added Ireland
@@ -73,7 +74,8 @@ make_data <- function(ds, years, labs=FALSE){
       theme(legend.title = element_text(colour="black", size=10))
     
     pp <- pp + 
-      theme(legend.text= element_text(colour="black", size=7))
+      theme(legend.text= element_text(colour="black", size=7)) +
+      labs(subtitle = "(b)")
 
   
   }else{
@@ -92,7 +94,7 @@ make_data <- function(ds, years, labs=FALSE){
 # get the data
 linesdat <- ds %>%
   group_by(Year, whatareyou) %>%
-  summarize(total=n())
+  summarise(total=n())
 
 
 # make the timeseries plot
@@ -107,7 +109,8 @@ plines <- ggplot(linesdat) +
   #position = "jitter" + 
   theme_minimal() +
   theme(legend.position= c("right")) +
-  labs(x="", y="Total stranded individuals", colour="Suborder") 
+  labs(x="", y="Total stranded individuals", colour="Suborder") +
+  labs(subtitle = "(a)")
   
 
 
