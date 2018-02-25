@@ -79,10 +79,10 @@ Session info -------------------------------------------------------------------
  date     2018-02-07                  
 
 Packages -------------------------------------------------------------------------------------------
- package    * version date       source        
- base       * 3.4.0   2017-04-21 local \\
- clipr      * 0.4.0   2017-11-03 CRAN (R 3.4.2) \\
- colorspace   1.3-2   2016-12-14 CRAN (R 3.4.0) \\
+- package    * version date       source        
+- base       * 3.4.0   2017-04-21 local
+- clipr      * 0.4.0   2017-11-03 CRAN (R 3.4.2)
+ colorspace   1.3-2   2016-12-14 CRAN (R 3.4.0) 
  compiler     3.4.0   2017-04-21 local  
  datasets   * 3.4.0   2017-04-21 local         
  devtools   * 1.13.4  2017-11-09 CRAN (R 3.4.2)
