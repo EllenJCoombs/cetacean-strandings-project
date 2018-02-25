@@ -1,7 +1,7 @@
 
 library(maps)
 library(mapdata)
-library(dplyr)
+library(dplyr) 
 
 #Reading in cleaned data with unknowns removed and rare species removed 
 #cleaneddata <- read.csv("UK_and_Irish_strandings.csv")

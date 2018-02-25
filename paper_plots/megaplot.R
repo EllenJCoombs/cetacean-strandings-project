@@ -9,7 +9,7 @@ library(hexbin)
 library(ggmap)
 library(gridExtra)
 library(tidyverse)
-library(Hmisc)
+library(Hmisc) #Not sure why ths had to be run on later versions 
 
 #Extract UK map
 #Added Ireland
