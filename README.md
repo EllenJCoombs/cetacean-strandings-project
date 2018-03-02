@@ -80,13 +80,13 @@ Session info -------------------------------------------------------------------
 
 Packages -------------------------------------------------------------------------------------------
  package    * version date       source        
- base       * 3.4.0   2017-04-21 local
- clipr      * 0.4.0   2017-11-03 CRAN (R 3.4.2)
- colorspace   1.3-2   2016-12-14 CRAN (R 3.4.0) 
+ base       * 3.4.0   2017-04-21 local  
+ clipr      * 0.4.0   2017-11-03 CRAN (R 3.4.2)  
+ colorspace   1.3-2   2016-12-14 CRAN (R 3.4.0)   
  compiler     3.4.0   2017-04-21 local  
- datasets   * 3.4.0   2017-04-21 local         
- devtools   * 1.13.4  2017-11-09 CRAN (R 3.4.2)
- digest       0.6.12  2017-01-27 CRAN (R 3.4.0)
+ datasets   * 3.4.0   2017-04-21 local           
+ devtools   * 1.13.4  2017-11-09 CRAN (R 3.4.2)  
+ digest       0.6.12  2017-01-27 CRAN (R 3.4.0)   
  ggplot2      2.2.1   2016-12-30 CRAN (R 3.4.0)
  graphics   * 3.4.0   2017-04-21 local         
  grDevices  * 3.4.0   2017-04-21 local         
