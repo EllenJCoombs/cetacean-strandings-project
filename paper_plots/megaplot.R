@@ -101,7 +101,7 @@ plines <- ggplot(linesdat) +
   geom_line(aes(x=Year, y=total, group=whatareyou, colour=whatareyou)) +
   #scale_fill_viridis() +
   #Changed variable colours - these are colour blind friendly 
-  scale_colour_manual(values=c("#D55E00", "#000000", "#73BFB8")) +
+  scale_colour_manual(values=c("#D55E00", "#0072B2", "#73BFB8")) +
   #position = "jitter" + 
   theme_minimal() +
   theme(legend.position= "none") +
