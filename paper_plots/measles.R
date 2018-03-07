@@ -6,7 +6,7 @@ library(viridis)
 library(base)
 
 # load all the strandings data
-alls <- read.csv("all_strandings.csv")
+alls <- read.csv("all_strandings.csv") 
 
 
 # chance Total_strandings to Total_events to get # events
