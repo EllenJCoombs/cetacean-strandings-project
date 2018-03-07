@@ -57,7 +57,7 @@ p <- ggplot(plotdat) +
   scale_x_continuous(expand=c(0,0)) +
   theme_minimal() +
   labs(fill="Individuals", y="") +
-  #needs to be on the log scale because of pho^2 :(
+  #needs to be on the log scale because of pho^2 :( 
   scale_fill_viridis(trans = "log", na.value="white",
                      #501 was from the above commented 'max' code 
                      limits = c(1, 501),
