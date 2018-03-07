@@ -101,22 +101,22 @@ plines <- ggplot(linesdat) +
   geom_line(aes(x=Year, y=total, group=whatareyou, colour=whatareyou)) +
   #scale_fill_viridis() +
   #Changed variable colours - these are colour blind friendly 
-  scale_colour_manual(values=c("#D55E00", "#0072B2", "#73BFB8")) +
+  scale_colour_manual(values=c("#D55E00", "#000000", "#73BFB8")) +
   #position = "jitter" + 
   theme_minimal() +
-  theme(legend.position= c("right")) +
+  theme(legend.position= "none") +
   labs(x="", y="Total stranded individuals", colour="Suborder") +
   labs(subtitle = "(a)")
   
 
 
 #Adding events to the plot 
-plines <- plines + annotate("rect", xmin=1914, xmax=1918, ymin=0, ymax=800, alpha=.1, fill="gray64") +
+plines <- plines + annotate("rect", xmin=1914, xmax=1918, ymin=0, ymax=800, alpha=.1, fill="gray22") +
   geom_text(
     #where the label starts (on the x axis) and where it finishes (on the y axis)
     #Colour of the label 
     aes(x = 1916, y = 780, label = "WWI"), size = 3, colour = "gray38") + 
-  annotate("rect", xmin=1939, xmax=1945, ymin=0, ymax=800, alpha=.1, fill="gray64") +
+  annotate("rect", xmin=1939, xmax=1945, ymin=0, ymax=800, alpha=.1, fill="gray22") +
   geom_text(
     aes(x = 1942, y = 780, label = "WWII"), size = 3, colour = "gray38") + 
   annotate("segment", x =1985, xend=1985, y=50, yend=725, colour = "gray38", size=0.5, arrow=arrow(length=unit(0.1,"cm"))) +
