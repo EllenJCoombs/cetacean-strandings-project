@@ -1,7 +1,7 @@
 
 
 library(dplyr)
-library(mgcv)
+library(mgcv) #for GAMs 
 
 #Read in model data for adding to the GAM later on this script 
 Model_data <- read.csv("Model_data.csv")

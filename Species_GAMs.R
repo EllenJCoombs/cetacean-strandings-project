@@ -22,7 +22,23 @@ BA <- Y[[1]] #minke
 BB <- Y[[2]] #sei 
 BM <- Y[[3]] #blue
 BP <- Y[[4]] #fin
-E <- Y[[5]]
+DD <- Y[[5]] #common
+GM <- Y[[6]] #globicephala
+GG <- Y[[7]] #griseus
+HA <- Y[[8]] #northern 
+KB <- Y[[9]] #pygmy
+LA <- Y[[10]] #white sided 
+LAl <- Y[[11]] #white beaked 
+MA <- Y[[12]] #humpback
+MB <- Y[[13]] #Sowerby's
+MM <- Y[[14]] #True's 
+OO <- Y[[15]] #orca 
+PP <- Y[[16]] #harbour 
+PM <- Y[[17]] #sperm
+PC <- Y[[18]] #false 
+SC <- Y[[19]] #striped 
+TT <- Y[[20]] #bottlenose
+ZC <- Y[[21]] #Cuvier's
 
 
 
