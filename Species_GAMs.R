@@ -16,6 +16,18 @@ lDf <- split(sep_species, sep_species$Species)
 #Example of calling up sei whale data 
 lDf$`Balaenoptera borealis`
 
+#Splitting the tibble into data frames for each species 
+Y <- lapply(seq_along(lDf), function(x) as.data.frame(lDf[[x]])[, 2:8]) 
+
+bacutorostrata <- Y[[1]]
+B <- Y[[2]]
+C <- Y[[3]]
+D <- Y[[4]]
+E <- Y[[5]]
+
+
+
+
 #Running code for each of the seperate species 
 #There are 21 species, it might be easiest to just plug each of the species dataframes (above) into the 
 #following code 
