@@ -5,10 +5,9 @@
 
 #First, code to pick out each of the seperate species 
 
-
-
-#Now we need to take each species, give it a count per year (including 0s for years it wasn't 
-#recorded) and add it to the model data 
+#Now we need to take each species from the all_strandings dataset 
+#Creating a new data frame to play with
+sep_species <- all_strandings
 
 #Make new dataframe by splitting into seperate species (these are tibbles)
 lDf <- split(sep_species, sep_species$Species)
@@ -17,12 +16,12 @@ lDf <- split(sep_species, sep_species$Species)
 lDf$`Balaenoptera borealis`
 
 #Splitting the tibble into data frames for each species 
-Y <- lapply(seq_along(lDf), function(x) as.data.frame(lDf[[x]])[, 2:8]) 
+Y <- lapply(seq_along(lDf), function(x) as.data.frame(lDf[[x]])[, 1:8]) 
 
-bacutorostrata <- Y[[1]]
-B <- Y[[2]]
-C <- Y[[3]]
-D <- Y[[4]]
+BA <- Y[[1]] #minke
+BB <- Y[[2]] #sei 
+BM <- Y[[3]] #blue
+BP <- Y[[4]] #fin
 E <- Y[[5]]
 
 
