@@ -1,4 +1,6 @@
 
+library(dplyr)
+library(mgcv)
 
 #Species GAMs 
 #This code runs the GAMs for each of the indiviual species 
@@ -39,6 +41,29 @@ PC <- Y[[18]] #false
 SC <- Y[[19]] #striped 
 TT <- Y[[20]] #bottlenose
 ZC <- Y[[21]] #Cuvier's
+
+
+#Now the GAM's for each species 
+#Doing this one at a time - but I'm sure there is a way o do this and then use broom....
+
+BA_GAM <- gam(Total_strandings ~ offset(log(Population)) +
+                        s(Year, bs="ts") +
+                        s(Storms, k=5, bs="ts") +
+                        s(Max_K_index, k=4, bs="ts") +
+                        s(Max_SST, bs="ts") +
+                        s(NAO_index, bs="ts"), 
+                      data= BA, 
+                      method= "REML",
+                      family=nb)
+
+
+summary(BA_GAM)
+par(mfrow = c(2,2))
+plot(BA_GAM)
+
+#Gam.check
+par(mfrow=c(2,2))
+gam.check(BA_GAM)
 
 
 

@@ -1,5 +1,6 @@
 #GAMs
 #Models for all strandings 
+#This is practice code for the GAMs
 
 library(mgcv)
 library(broom)
@@ -36,7 +37,7 @@ All_ed <- gam(Total_events ~ offset(log(Population)) +s(Year, k = 80) +s(Max_SST
               family=tw(a=1.2))
 
 
-#+s(Storms, k = 4) +s(Max_K_index, k=4)
+#+s(Storms, k = 4) +s(Max_K_index, k=4) 
 
 summary(All_ed)
 plot(All_ed)
