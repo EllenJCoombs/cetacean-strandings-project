@@ -5,7 +5,7 @@
 
 
 Author(s): 
-[Ellen J. Coombs](mailto:ellen.coombs.14@ucl.ac.uk), [David L. Miller](https://github.com/dill), Rob Deaville, Richard C. Sabin,  Simon Berrow, and [Natalie Cooper](https://github.com/nhcooper123)
+[Ellen J. Coombs](mailto:ellen.coombs.14@ucl.ac.uk), [David L. Miller](https://github.com/dill), Rob Deaville, Richard C. Sabin, Richard C. Sabin, Louise Allan, Mick O’Connell, Simon Berrow, Andrew Brownlow, Mariel Ten Doeschate, Rod Penrose, Ruth Williams, Paul Jepson, and [Natalie Cooper](https://github.com/nhcooper123)
 
 
 To cite the paper:  
@@ -56,6 +56,8 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 * **11-correlates-data-for-model.Rmd** This code pulls together all of the correlates data e.g. Storms, and NAO, and puts them together along with 'Year', 'Species' and Total strandings' which is called `all_strandings.csv`. This dataset is fed into the Generalised Additive Model (`12-generalised-additive-models.Rmd`)
 
 * **12-generalised-additive-models.Rmd** This code runs the GAM which looks at all strandings (species per year), with an offset of population.
+
+* **13-extras-species-GAMs** This code runs additional GAMs which are not part of the paper or main analysis. These GAMs are species-specific, and run using the same covariates as in (`12-generalised-additive-models.Rmd`)
 
 
 ## Other folders :file_folder:
