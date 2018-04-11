@@ -57,7 +57,7 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 
 * **12-generalised-additive-models.Rmd** This code runs the GAM which looks at all strandings (species per year), with an offset of population.
 
-* **13-extras-species-GAMs** This code runs additional GAMs which are not part of the paper or main analysis. These GAMs are species-specific, and run using the same covariates as in (`12-generalised-additive-models.Rmd`)
+* **13-extras-species-GAMs** This code runs additional GAMs which are not part of the paper or main analysis. These GAMs are species-specific, and run using the same covariates as in (`12-generalised-additive-models.Rmd`) should users wish to look at species-specifics 
 
 
 ## Other folders :file_folder:
