@@ -1,6 +1,7 @@
 
 library(dplyr)
-library(mgcv)
+library(mgcv) #for GAMs
+library(broom) #for pulling all of the code together 
 
 #Species GAMs 
 #This code runs the GAMs for each of the indiviual species 
