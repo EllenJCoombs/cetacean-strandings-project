@@ -24,15 +24,20 @@ library(lubridate) #deals with date format
 ```
 
 ## Read in clean NHM and CSIP dataset 
+This is using the dataset created using `01-clean-up-data-for-analysis.Rmd`
+```{r}
+
+#First of all the cleaned NHM/CSIP data 
+cleaneddata <- read.csv("cleandatesnames.csv")
+```
+
 ## Read in raw IWDG data 
 
 ```{r}
 
 #Irish data 
 #Cleaning dataes and names to be the same as the "cleandatesnames")
-#Removing duplicates that appear in both the NHM and IWDG datasets 
-#First of all the cleaned NHM/CSIP data 
-cleaneddata <- read.csv("cleandatesnames.csv")
+#Removing duplicates that appear in both the NHM and IWDG datasets
 
 #Check species names
 levels(cleaneddata$Name.Current.Sci)
