@@ -29,8 +29,46 @@ all_strandings <- read.csv("all_strandings.csv")
 ## Sort individual species data 
 This code is required to split out data on each of the individual species. It keeps the original covariate data (i.e., storms, NAO index, sea surface temperature and geomagnetic readings used in the orignal 'all_strandings' GAM in `12-generalised-additive-models.Rmd`)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+#Species GAMs 
+#This code runs the GAMs for each of the indiviual species 
+
+#First, code to pick out each of the seperate species 
+#Now we need to take each species from the all_strandings dataset 
+#Creating a new data frame to play with
+sep_species <- all_strandings
+
+#Make new dataframe by splitting into seperate species (these are tibbles)
+lDf <- split(sep_species, sep_species$Species)
+
+#Example of calling up sei whale data 
+lDf$`Balaenoptera borealis`
+
+#Splitting the tibble into data frames for each species 
+Y <- lapply(seq_along(lDf), function(x) as.data.frame(lDf[[x]])[, 1:8]) 
+
+BA <- Y[[1]] #minke
+BB <- Y[[2]] #sei 
+BM <- Y[[3]] #blue
+BP <- Y[[4]] #fin
+DD <- Y[[5]] #common
+GM <- Y[[6]] #globicephala
+GG <- Y[[7]] #griseus
+HA <- Y[[8]] #northern 
+KB <- Y[[9]] #pygmy
+LA <- Y[[10]] #white sided 
+LAl <- Y[[11]] #white beaked 
+MN <- Y[[12]] #humpback
+MB <- Y[[13]] #Sowerby's
+MM <- Y[[14]] #True's 
+OO <- Y[[15]] #orca 
+PP <- Y[[16]] #harbour 
+PM <- Y[[17]] #sperm
+PC <- Y[[18]] #false 
+SC <- Y[[19]] #striped 
+TT <- Y[[20]] #bottlenose
+ZC <- Y[[21]] #Cuvier's
+
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

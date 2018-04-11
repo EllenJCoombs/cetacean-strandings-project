@@ -7,7 +7,6 @@ library(broom) #for pulling all of the code together
 #This code runs the GAMs for each of the indiviual species 
 
 #First, code to pick out each of the seperate species 
-
 #Now we need to take each species from the all_strandings dataset 
 #Creating a new data frame to play with
 sep_species <- all_strandings
