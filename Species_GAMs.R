@@ -68,9 +68,15 @@ par(mfrow=c(2,2))
 gam.check(ZC_GAM)
 
 
+#Using broom to tidy up all of the results together 
 
 
-#Running code for each of the seperate species 
-#There are 21 species, it might be easiest to just plug each of the species dataframes (above) into the 
-#following code 
+
+
+
+
+
+
+
+
 
