@@ -92,4 +92,6 @@ Odontocete_GAMs <- list(DD_GAM = DD_GAM, GM_GAM = GM_GAM, GG_GAM = GG_GAM, HA_GA
 Odontocete_tidy <- plyr::ldply(Odontocete_GAMs, tidy, .id = "model")
 Odontocete_glance <- plyr::ldply(Odontocete_GAMs, glance, .id = "model")
 
-
+#Save to csv if required 
+#write.csv(Odontocete_tidy, file = "Odontocete_tidy.csv")
+#write.csv(Odontocete_glance, file = "Odontocete_glance.csv")

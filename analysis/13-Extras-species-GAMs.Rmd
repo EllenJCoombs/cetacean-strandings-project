@@ -71,4 +71,38 @@ ZC <- Y[[21]] #Cuvier's
 
 ```
 
+
+## Running individual species GAMs
+
+To run this code for each species, simply use the species datasets that were made above, e.g., 'TT' for _Tursiops truncatus_, or 'SC' for _Stenella coeruleoalba_. This code shows an example of how to run the GAM for _Megatera novaeangliae_ 
+
+```{r}
+#Now the GAM's for each species 
+#Use the above acronyms e.g., 'TT' 
+#Doing this one at a time - but I'm sure there is a way o do this and then use broom....
+
+MN_GAM <- gam(Total_strandings ~ offset(log(Population)) +
+                        s(Year, bs="ts") +
+                        s(Storms, k=5, bs="ts") +
+                        s(Max_K_index, k=4, bs="ts") +
+                        s(Max_SST, bs="ts") +
+                        s(NAO_index, bs="ts"), 
+                      data= MN, 
+                      method= "REML",
+                      family=nb)
+
+
+summary(MN_GAM)
+par(mfrow = c(2,2))
+plot(MN_GAM)
+
+#Gam.check
+par(mfrow=c(2,2))
+gam.check(MN_GAM)
+
+```
+
+
+
+
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
