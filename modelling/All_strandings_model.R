@@ -135,7 +135,7 @@ gam.check(All_strandb)
 
 
 library(broom)
-#Broom to tidy model outputs 
+#Broom to tidy model outputs  
 
 #Tidy gives the neat model output - summarises the model statistical findings 
 #e.g. tidy(b_m)
