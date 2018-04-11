@@ -47,24 +47,24 @@ ZC <- Y[[21]] #Cuvier's
 #Use the above acronyms e.g., 'TT' 
 #Doing this one at a time - but I'm sure there is a way o do this and then use broom....
 
-GG_GAM <- gam(Total_strandings ~ offset(log(Population)) +
+HA_GAM <- gam(Total_strandings ~ offset(log(Population)) +
                         s(Year, bs="ts") +
                         s(Storms, k=5, bs="ts") +
                         s(Max_K_index, k=4, bs="ts") +
                         s(Max_SST, bs="ts") +
                         s(NAO_index, bs="ts"), 
-                      data= GG, 
+                      data= HA, 
                       method= "REML",
-                      family=nb)
+                      family=nb())
 
 
-summary(GG_GAM)
+summary(HA_GAM)
 par(mfrow = c(2,2))
-plot(GG_GAM)
+plot(HA_GAM)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(GG_GAM)
+gam.check(HA_GAM)
 
 
 
