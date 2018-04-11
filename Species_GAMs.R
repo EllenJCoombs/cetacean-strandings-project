@@ -32,7 +32,7 @@ HA <- Y[[8]] #northern
 KB <- Y[[9]] #pygmy
 LA <- Y[[10]] #white sided 
 LAl <- Y[[11]] #white beaked 
-MA <- Y[[12]] #humpback
+MN <- Y[[12]] #humpback
 MB <- Y[[13]] #Sowerby's
 MM <- Y[[14]] #True's 
 OO <- Y[[15]] #orca 
@@ -48,36 +48,49 @@ ZC <- Y[[21]] #Cuvier's
 #Use the above acronyms e.g., 'TT' 
 #Doing this one at a time - but I'm sure there is a way o do this and then use broom....
 
-ZC_GAM <- gam(Total_strandings ~ offset(log(Population)) +
+MN_GAM <- gam(Total_strandings ~ offset(log(Population)) +
                         s(Year, bs="ts") +
                         s(Storms, k=5, bs="ts") +
                         s(Max_K_index, k=4, bs="ts") +
                         s(Max_SST, bs="ts") +
                         s(NAO_index, bs="ts"), 
-                      data= ZC, 
+                      data= MN, 
                       method= "REML",
                       family=nb)
 
 
-
-summary(ZC_GAM)
+summary(MN_GAM)
 par(mfrow = c(2,2))
-plot(ZC_GAM)
+plot(MN_GAM)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(ZC_GAM)
+gam.check(MN_GAM)
 
 
 #Using broom to tidy up all of the results together 
+#paackage 'broom'
+#Tidy multiple models at once 
+Mysticete_GAMs <- list(BA_GAM = BA_GAM, BB_GAM = BB_GAM, BM_GAM = BM_GAM, BP_GAM = BP_GAM,
+                        MN_GAM = MN_GAM) 
+
+#Tidy and glance datasets 
+Mysticete_tidy <- plyr::ldply(Mysticete_GAMs, tidy, .id = "model")
+Mysticete_glance <- plyr::ldply(Mysticete_GAMs, glance, .id = "model")
+
+#Save to csv if required 
+#write.csv(Mysticete_tidy, file = "Mysticete_tidy.csv")
+#write.csv(Mysticete_glance, file = "Mysticete_glance.csv")
 
 
+Odontocete_GAMs <- list(DD_GAM = DD_GAM, GM_GAM = GM_GAM, GG_GAM = GG_GAM, HA_GAM = HA_GAM,
+                       KB_GAM = KB_GAM, LA_GAM = LA_GAM, LAl_GAM = LAl_GAM, MB_GAM = MB_GAM, 
+                       MM_GAN = MM_GAM, OO_GAM = OO_GAM, PP_GAM = PP_GAM, PM_GAM = PM_GAM, 
+                       PC_GAM = PC_GAM, SC_GAM = SC_GAM, TT_GAM = TT_GAM, ZC_GAM = ZC_GAM) 
 
 
-
-
-
-
-
+#Tidy and glance datasets 
+Odontocete_tidy <- plyr::ldply(Odontocete_GAMs, tidy, .id = "model")
+Odontocete_glance <- plyr::ldply(Odontocete_GAMs, glance, .id = "model")
 
 
