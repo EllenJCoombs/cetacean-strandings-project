@@ -2,7 +2,6 @@
 
 library(dplyr)
 library(mgcv) #for GAMs
-library(broom) #for pulling all of the code together 
 
 
 #Read in the stranding counts data 
@@ -22,12 +21,20 @@ Stranding_events_model <- full_join(Stranding_events_count, Model_data, by = "Ye
 Stranding_events_model$Year1 <- NULL 
 
 #Run the GAMs as before 
-Events_GAM <- gam(Total_events ~ offset(log(Population)) +
-                s(Year, bs="ts") +
+#This still has a species smoooth - it's just not including mass strandings 
+Events_GAM <- gam(Total_events ~ offset(log(Population)) +s(Year, Species, bs="fs")+
                 s(Storms, k=5, bs="ts") +
                 s(Max_K_index, k=4, bs="ts") +
                 s(Max_SST, bs="ts") +
                 s(NAO_index, bs="ts"), 
-              data= MN, 
+              data= Stranding_events_model, 
               method= "REML",
               family=nb)
+
+summary(Events_GAM)
+par(mfrow = c(2,2))
+plot(Events_GAM) 
+
+#Gam.check
+par(mfrow=c(2,2))
+gam.check(Events_GAM)
