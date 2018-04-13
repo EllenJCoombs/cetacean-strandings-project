@@ -66,12 +66,20 @@ pmacrocephalus_strandings <- UK_and_Irish_sp %>%
 
 
 
-#Linear models of correlation  NAO, SST 
-NAO_SSTmodel <- lm(NAO_index ~ Max_SST, data = all_strandings)
-summary(NAO_SSTmodel)
+#GLM of correlation  NAO, SST 
+#Data selection 
+NAO_SST <- all_strandings %>%
+  select(Year, NAO_index, Max_SST)
 
-##Linear models of correlation  NAO, storms 
-NAO_stormsmodel <- lm(NAO_index ~ Storms, data = all_strandings)
+NAO_SSTmodel <- glm(NAO_index ~ Max_SST, data = NAO_SST)
+summary(NAO_SSTmodel)
+ 
+##GLM of correlation  NAO, storms 
+#Data selection
+NAO_Storms <- all_strandings %>%
+  select(Year, NAO_index, Storms)
+
+NAO_stormsmodel <- glm(NAO_index ~ Storms, data = NAO_Storms, family = poisson()) 
 summary(NAO_stormsmodel)
 
 #Double checking the R-squared 
@@ -82,6 +90,8 @@ summary(lm(Storms ~ NAO_index, all_strandings))$r.squared
 m <- lm(POPULATION ~ STRANDINGS, data = pop_vs_strandings)
 
 
+
+NAO_stormsmodel
 
 
 #Plot all species stranding - facet_wrap 
