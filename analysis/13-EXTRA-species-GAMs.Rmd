@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Extras
 ### Running generalised additive models (GAMs) for each species 
 
-This RMarkdown document shows the code for running some additional analysis should users want to run GAMs for each individual species, using the same covariates as used in `12-generalised-additive-models.Rmd`. It is not part of the main analysis shown in the paper. 
+This RMarkdown document shows the code for running GAMs for each individual species, using the same covariates as used in `12-generalised-additive-models.Rmd`. It is not part of the main analysis shown in the paper but is mentioned in the analyses and supplementary information. 
 
 ## Load packages
 ```{r}
