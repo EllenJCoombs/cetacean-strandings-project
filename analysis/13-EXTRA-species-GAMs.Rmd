@@ -1,0 +1,144 @@
+---
+title: "13-extras-species-GAMs"
+author: "Ellen Coombs"
+date: "11/04/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Extras
+### Running generalised additive models (GAMs) for each species 
+
+This RMarkdown document shows the code for running some additional analysis should users want to run GAMs for each individual species, using the same covariates as used in `12-generalised-additive-models.Rmd`. It is not part of the main analysis shown in the paper. 
+
+## Load packages
+```{r}
+library(dplyr)
+library(mgcv) #for GAMs
+library(broom) #for pulling all of the code together 
+```
+
+## Load data 
+```{r}
+all_strandings <- read.csv("all_strandings.csv")
+```
+
+## Sort individual species data 
+This code is required to split out data on each of the individual species. It keeps the original covariate data (i.e., storms, NAO index, sea surface temperature and geomagnetic readings used in the orignal 'all_strandings' GAM in `12-generalised-additive-models.Rmd`)
+
+```{r}
+#Species GAMs 
+#This code runs the GAMs for each of the indiviual species 
+
+#First, code to pick out each of the seperate species 
+#Now we need to take each species from the all_strandings dataset 
+#Creating a new data frame to play with
+sep_species <- all_strandings
+
+#Make new dataframe by splitting into seperate species (these are tibbles)
+lDf <- split(sep_species, sep_species$Species)
+
+#Example of calling up sei whale data 
+lDf$`Balaenoptera borealis`
+
+#Splitting the tibble into data frames for each species 
+Y <- lapply(seq_along(lDf), function(x) as.data.frame(lDf[[x]])[, 1:8]) 
+
+BA <- Y[[1]] #minke
+BB <- Y[[2]] #sei 
+BM <- Y[[3]] #blue
+BP <- Y[[4]] #fin
+DD <- Y[[5]] #common
+GM <- Y[[6]] #globicephala
+GG <- Y[[7]] #griseus
+HA <- Y[[8]] #northern 
+KB <- Y[[9]] #pygmy
+LA <- Y[[10]] #white sided 
+LAl <- Y[[11]] #white beaked 
+MN <- Y[[12]] #humpback
+MB <- Y[[13]] #Sowerby's
+MM <- Y[[14]] #True's 
+OO <- Y[[15]] #orca 
+PP <- Y[[16]] #harbour 
+PM <- Y[[17]] #sperm
+PC <- Y[[18]] #false 
+SC <- Y[[19]] #striped 
+TT <- Y[[20]] #bottlenose
+ZC <- Y[[21]] #Cuvier's
+
+```
+
+
+## Running individual species GAMs
+
+To run this code for each species, simply use the species datasets that were made above, e.g., 'TT' for _Tursiops truncatus_, or 'SC' for _Stenella coeruleoalba_. This code shows an example of how to run the GAM for _Megatera novaeangliae_ 
+
+```{r}
+#Now the GAM's for each species 
+#Use the above acronyms e.g., 'TT' 
+#Doing this one at a time - but I'm sure there is a way o do this and then use broom....
+
+MN_GAM <- gam(Total_strandings ~ offset(log(Population)) +
+                        s(Year, bs="ts") +
+                        s(Storms, k=5, bs="ts") +
+                        s(Max_K_index, k=4, bs="ts") +
+                        s(Max_SST, bs="ts") +
+                        s(NAO_index, bs="ts"), 
+                      data= MN, 
+                      method= "REML",
+                      family=nb)
+
+
+summary(MN_GAM)
+par(mfrow = c(2,2))
+plot(MN_GAM)
+
+#Gam.check
+par(mfrow=c(2,2))
+gam.check(MN_GAM)
+
+```
+
+
+## Putting species GAM outputs together 
+
+This code pulls all of the seperate species' GAMs together into a table of mysticete outputs, and odontocete outputs. Commented out is code to save these outputs
+
+```{r}
+#Using broom to tidy up all of the results together 
+#paackage 'broom'
+#Tidy multiple models at once 
+
+#Consolidating mysticete GAM outputs 
+Mysticete_GAMs <- list(BA_GAM = BA_GAM, BB_GAM = BB_GAM, BM_GAM = BM_GAM, BP_GAM = BP_GAM,
+                        MN_GAM = MN_GAM) 
+
+#Tidy and glance datasets 
+Mysticete_tidy <- plyr::ldply(Mysticete_GAMs, tidy, .id = "model")
+Mysticete_glance <- plyr::ldply(Mysticete_GAMs, glance, .id = "model")
+
+#Save to csv if required 
+#write.csv(Mysticete_tidy, file = "Mysticete_tidy.csv")
+#write.csv(Mysticete_glance, file = "Mysticete_glance.csv")
+
+#Consolidating odontocete GAM outputs 
+Odontocete_GAMs <- list(DD_GAM = DD_GAM, GM_GAM = GM_GAM, GG_GAM = GG_GAM, HA_GAM = HA_GAM,
+                       KB_GAM = KB_GAM, LA_GAM = LA_GAM, LAl_GAM = LAl_GAM, MB_GAM = MB_GAM, 
+                       MM_GAN = MM_GAM, OO_GAM = OO_GAM, PP_GAM = PP_GAM, PM_GAM = PM_GAM, 
+                       PC_GAM = PC_GAM, SC_GAM = SC_GAM, TT_GAM = TT_GAM, ZC_GAM = ZC_GAM) 
+
+
+#Tidy and glance datasets 
+Odontocete_tidy <- plyr::ldply(Odontocete_GAMs, tidy, .id = "model")
+Odontocete_glance <- plyr::ldply(Odontocete_GAMs, glance, .id = "model")
+
+#Save to csv if required 
+#write.csv(Odontocete_tidy, file = "Odontocete_tidy.csv")
+#write.csv(Odontocete_glance, file = "Odontocete_glance.csv")
+
+```
+
+
