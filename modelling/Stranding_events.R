@@ -9,9 +9,10 @@ UK_and_Irish_sp <- read.csv("UK_and_Irish_sp.csv")
 UK_and_Irish_sp$X <- NULL
 UK_and_Irish_sp$X.1 <- NULL
 
+#Which ones ae duplicated? This gives a TRUE (duplicates) and FALSE (non duplicate)
 duplicated(UK_and_Irish_sp$S.W.No.)
-#Or you can use unique 
-unique(UK_and_Irish_SP$S.W.No.)
+#Or you can use unique - this produces unique S.W.No 
+unique(UK_and_Irish_sp$S.W.No.)
 
 #This works to get rid of e.g. 1932/14, 1932/14 
 Stranding_events <- UK_and_Irish_sp[!duplicated(UK_and_Irish_sp$S.W.No.), ]
@@ -30,7 +31,8 @@ Stranding_events <- Stranding_events[!duplicated(Stranding_events$S.W.No.), ]
 #This deletes all duplicates 
 #UK_IRL_stranding_events <- UK_IRL_stranding_events[!(duplicated(UK_IRL_stranding_events[c("Date", "Name.Current.Sci", "Latitude", "Longitude")]) | duplicated(UK_IRL_stranding_events[c("Date", "Name.Current.Sci", "Latitude", "Longitude")], fromLast = TRUE)), ]
 
-#This deletes one of the duplicates and keeps the other 
+#This deletes one of the duplicates and keeps the other based on:
+#Species name, Latitude, Longitude, Date 
 Stranding_events <- Stranding_events[!duplicated(Stranding_events[c("Name.Current.Sci", "Latitude", "Longitude", "Date")]), ]
 
 #Remove unknowns if wanted 
@@ -38,9 +40,10 @@ Stranding_events <- Stranding_events[!duplicated(Stranding_events[c("Name.Curren
   #filter(!(Name.Current.Sci %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ", "Unknown delphinid ",
                                    #"Unknown delphinid", "Unknown delphinid ", "Unknown mysticete")))
 
-
-ggplot(Stranding_events, aes(x = Year, fill = Name.Current.Sci)) +
-  geom_histogram(binwidth = 0.5)
+#Plot if desired 
+#This plots by species 
+#ggplot(Stranding_events, aes(x = Year, fill = Name.Current.Sci)) +
+  #geom_histogram(binwidth = 0.5)
 
 
 write.csv(Stranding_events, file = "Stranding_events.csv")
@@ -52,4 +55,5 @@ Stranding_events_count <- count(Stranding_events, Year)
 Stranding_events_count <- Stranding_events_count %>%
   rename(Total_events = n)
 
+#Saved in cleaned data in 'cleaned-data'
 write.csv(Stranding_events_count, file = "Stranding_events_count.csv")
