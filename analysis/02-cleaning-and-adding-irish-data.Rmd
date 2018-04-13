@@ -130,6 +130,13 @@ sapply(iwdg, class)
 cleaneddata <- mutate(cleaneddata, Date = dmy(Date))
 ```
 
+## Adding a data souce column to IWDG dataset 
+This code provides a datasource column should it be required for reference
+```{r}
+iwdg$Source <- IWDG
+
+```
+
 ## Merging the two datasets (NHM + CSIP with the IWDG data)
 ```{r}
 #Bind cleanedata with Irish data 

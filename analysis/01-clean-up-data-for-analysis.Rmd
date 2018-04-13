@@ -148,6 +148,17 @@ selectnhm$Date
 ```
 
 
+## Adding a new source column to the datasets
+This code provides a datasource column should it be required for reference
+```{r}
+
+selectnhm$Source <- NHM
+selectcsip$Source <- CSIP
+
+```
+
+
+
 ## Date format
 This code changes the data format in the NHM dataset first and creates and NHM final dataset (nhmfinal). This proves difficult when the dataset spans two centuries, for example the 1900s to the 2000s (see code). The code then formats the CSIP date to the same format (YYYY-MM-DD)
 ```{r}

@@ -78,5 +78,14 @@ Stranding_events_count <- Stranding_events_count %>%
                                    "Unknown delphinid", "Unknown delphinid ", 
                                    "Unknown mysticete")))
 
+
+#Or the rare species...but clean to make sure 
+#Removing rare species - this is now the final dataset for analysis 
+Stranding_events_count <- Stranding_events_count %>%
+  filter(!(Species %in% c("Monodon monoceros", "Peponocephala electra", 
+                                   "Delphinapterus leucas", "Kogia sima",
+                                   "Mesoplodon densirostris", "Mesoplodon europaeus",
+                                   "Lagenodelphis hosei")))
+
 #Saved in cleaned data in 'cleaned-data'
 write.csv(Stranding_events_count, file = "Stranding_events_count.csv")
