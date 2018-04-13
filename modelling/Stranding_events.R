@@ -48,12 +48,35 @@ Stranding_events <- Stranding_events[!duplicated(Stranding_events[c("Name.Curren
 
 write.csv(Stranding_events, file = "Stranding_events.csv")
 
+#How many stranding events per year? (all)
+#Stranding_events_count <- count(Stranding_events, Year)
+#Stranding_events_count <- Stranding_events_count %>%
+  #rename(Total_events = n)
 
-#Getting these ready for adding to the model data 
-#How many stranding events per year? 
-Stranding_events_count <- count(Stranding_events, Year)
+
+#We need events per year per species 
+Stranding_events_count <- Stranding_events %>%
+  count(Year, Name.Current.Sci)
+
+#Rename columns 
 Stranding_events_count <- Stranding_events_count %>%
-  rename(Total_events = n)
+  rename("Species" = "Name.Current.Sci") %>%
+  rename("Total_events" = "n")
+
+#Adds an extra column with all the years in 
+#Adding a 0 to each year without a record 
+Stranding_events_count <- Stranding_events_count %>% 
+  complete(Year = seq(min(1913), max(2015), 1L), Species = unique(Stranding_events_count$Species))
+
+#NAs -> 0 
+Stranding_events_count[is.na(Stranding_events_count)] <- 0
+
+#Not sure where the unknowns came from....but clean to make sure 
+Stranding_events_count <- Stranding_events_count %>%
+  filter(!(Species %in% c("Unknown", "Unknown odontocete", "Unknown odontocete ",
+                                   "Unknown delphinid ",
+                                   "Unknown delphinid", "Unknown delphinid ", 
+                                   "Unknown mysticete")))
 
 #Saved in cleaned data in 'cleaned-data'
 write.csv(Stranding_events_count, file = "Stranding_events_count.csv")
