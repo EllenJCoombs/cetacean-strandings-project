@@ -12,7 +12,7 @@ library(picante)
 
 UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
 
-#Mysitcetes
+#Mysticetes
 
 bphysalus <- filter(UK_and_Irish, Name.Current.Sci ==  "Balaenoptera physalus") 
 bacutorostrata <- filter(UK_and_Irish, Name.Current.Sci ==  "Balaenoptera acutorostrata") 

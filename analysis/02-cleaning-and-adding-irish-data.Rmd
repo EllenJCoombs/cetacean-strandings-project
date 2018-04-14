@@ -133,7 +133,7 @@ cleaneddata <- mutate(cleaneddata, Date = dmy(Date))
 ## Adding a data souce column to IWDG dataset 
 This code provides a datasource column should it be required for reference
 ```{r}
-iwdg$Source <- IWDG
+iwdg$Source <- "IWDG"
 
 ```
 
