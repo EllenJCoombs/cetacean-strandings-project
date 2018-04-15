@@ -15,12 +15,11 @@ Stranding_events_count <- read.csv("Stranding_events_count.csv")
 Model_data <- read.csv("Model_data.csv")
 
 #Bind Model_data and Stranding_events_count for GAM
-
 Stranding_events_model <- full_join(Stranding_events_count, Model_data, by = "Year")
 #Remove duplicated year column 
 Stranding_events_model$Year1 <- NULL 
 
-#Run the GAMs as before 
+#Run the GAMs as before - all covariates are the same 
 #This still has a species smoooth - it's just not including mass strandings 
 Events_GAM <- gam(Total_events ~ offset(log(Population)) +s(Year, Species, bs="fs")+
                 s(Storms, k=5, bs="ts") +
