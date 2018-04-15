@@ -58,7 +58,7 @@ MN_GAM <- gam(Total_strandings ~ offset(log(Population)) +
                       family=nb)
 
 
-summary(MN_GAM)
+summary(BA_GAM)
 par(mfrow = c(2,2))
 plot(MN_GAM) 
 
