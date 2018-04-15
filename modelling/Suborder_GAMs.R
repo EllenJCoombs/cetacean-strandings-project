@@ -24,7 +24,8 @@ mysticetes <- bind_rows(myst1, myst2, myst3, myst4, myst5)
 mysticetes$newcolumn <- "mysticete"
 
 #Strip out the odontocetes from the original dataset 
-#Selecting out odontocetes from main dataset and then delete Mysticetes 
+#Selecting out odontocetes from main dataset and then delete Mysticetes - this is easier than
+#picking out all 16 odontocetes individually 
 odontocetes <- all_strandings[ !(all_strandings$Species %in% mysticetes$Species), ]
 
 #Now add a column on suborder 
