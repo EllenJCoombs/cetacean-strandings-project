@@ -115,6 +115,7 @@ iwdg <- Irish_data %>%
 ```
 
 ### Date cleaning and uniformity 
+Cleaning the data and making dates the same format at the NHM + CSIP data
 ```{r}
 #Change date format - same as NHM/CSIP
 iwdg$Date <- iwdg$Date <- lubridate::dmy(iwdg$Date)
