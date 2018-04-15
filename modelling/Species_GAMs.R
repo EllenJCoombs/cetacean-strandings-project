@@ -58,13 +58,13 @@ MN_GAM <- gam(Total_strandings ~ offset(log(Population)) +
                       family=nb)
 
 
-summary(BA_GAM)
+summary(LAl_GAM)
 par(mfrow = c(2,2))
 plot(MN_GAM) 
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(MN_GAM)
+gam.check(LA_GAM)
 
 
 #Using broom to tidy up all of the results together 
