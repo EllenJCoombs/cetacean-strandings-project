@@ -132,12 +132,14 @@ cleaneddata <- mutate(cleaneddata, Date = dmy(Date))
 
 ## Adding a data souce column to IWDG dataset 
 This code provides a datasource column should it be required for reference
+Data columns should now be the same as the cleaneddata (NHM + CSIP dataset)
 ```{r}
 iwdg$Source <- "IWDG"
 
 ```
 
 ## Merging the two datasets (NHM + CSIP with the IWDG data)
+Note: 'cleaneddata' is the NHM + CSIP dataset
 ```{r}
 #Bind cleanedata with Irish data 
 UK_and_Irish <- bind_rows(cleaneddata, iwdg)
