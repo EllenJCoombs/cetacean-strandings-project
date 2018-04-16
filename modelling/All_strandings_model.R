@@ -36,7 +36,7 @@ speciesyearcount <- speciesyearcount %>%
 speciesyearcount[is.na(speciesyearcount)] <- 0
 
 #join the two datasets
-all_strandings <- full_join(speciesyearcount, Model_data, by = "Year")
+all_strandings <- full_join(speciesyearcount, All_model, by = "Year")
 all_strandings$X <- NULL
 
 #Rename 
@@ -103,6 +103,24 @@ all_strandings$Species <- as.factor(all_strandings$Species)
 sapply(all_strandings, class)
 #save as all_strandings 
 all_strandings$X1 <- NULL
+
+##### NOTE #### had to have a play around with this - check the RMarkdowns for cleaned code 
+#Clean up all_strandings for what we actually need 
+#A lot of exploration happened in the code above 
+all_strandings$Richness <- NULL
+all_strandings$Total_events <- NULL
+all_strandings$Organisations <- NULL
+
+all_strandings$Year1 <- NULL
+all_strandings$Year2 <- NULL
+all_strandings$year <- NULL
+all_strandings$Year3 <- NULL
+
+all_strandings <- all_strandings %>%
+  filter(!(Species %in% c("Monodon monoceros", "Peponocephala electra", "Delphinapterus leucas", "Kogia sima",
+                                   "Mesoplodon densirostris", "Mesoplodon europaeus", "Lagenodelphis hosei")))
+
+
 
 write.csv(all_strandings, file = "all_strandings.csv")
 
