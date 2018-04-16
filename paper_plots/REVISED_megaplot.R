@@ -18,7 +18,7 @@ plines <- ggplot(linesdat) +
   scale_colour_manual(values=c("#D55E00", "#0072B2", "#73BFB8")) +
   #position = "jitter" + 
   theme_minimal() +
-  theme(legend.position= "none") +
+  theme(legend.position= "right") +
   labs(x="", y="Total stranded individuals", colour="Suborder")
 
 #Adding events to the plot 

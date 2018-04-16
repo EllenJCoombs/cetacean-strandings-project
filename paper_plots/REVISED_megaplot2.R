@@ -61,6 +61,7 @@ make_data <- function(ds, years, labs=FALSE){
                        breaks = c(1, 10, 20, 50, 100, 250, 500),
                        labels = c(1, 10, 20, 50, 100, 250, 500)) +
     ggtitle(paste0(years[1], "-", years[2]))
+
   
   if(labs){
     pp <- pp +
@@ -79,7 +80,7 @@ make_data <- function(ds, years, labs=FALSE){
   }
   
   return(pp)
-
+}
 
   #put it all together
   gr <- grid.arrange(make_data(ds, years=c(1913, 1925), TRUE),
@@ -89,3 +90,4 @@ make_data <- function(ds, years, labs=FALSE){
                      make_data(ds, years=c(2001, 2016)),
                      layout_matrix = matrix(c(1,2,1,3,1,4,1,5,1,6), 2, 5))
 
+ 
