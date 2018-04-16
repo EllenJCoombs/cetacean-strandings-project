@@ -70,7 +70,13 @@ pollutants"), size = 3, colour = "gray38")
 
 #Adding circles for mass stranding years 
 plines <- plines + geom_point(aes(x=1950, y=275), size=10, shape=1, color="black") + 
-  geom_point(aes(x=1950, y=275), size=10, shape=1, color="black")
+  geom_point(aes(x=1927, y=190), size=10, shape=1, color="black") +
+  geom_point(aes(x=1935, y=121), size=10, shape=1, color="black") +
+  geom_point(aes(x=1955, y=85), size=10, shape=1, color="black") +
+  geom_point(aes(x=1983, y=191), size=10, shape=1, color="black") +
+  geom_point(aes(x=1985, y=106), size=10, shape=1, color="black") +
+  
+  
   
 
 #Run the plot
