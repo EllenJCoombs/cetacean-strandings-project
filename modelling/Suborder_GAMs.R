@@ -38,7 +38,7 @@ all_strandings <- bind_rows(mysticetes, odontocetes)
 all_strandings <- all_strandings %>%
   rename(Suborder = newcolumn)
 
-#Save the new all_strandingds dataset 
+#Save the new all_strandings dataset 
 #This is in 'cleaned data'
 all_strandings <- write.csv(all_strandings, file = "all_strandings.csv")
 
