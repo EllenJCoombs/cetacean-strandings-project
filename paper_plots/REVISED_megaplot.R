@@ -19,8 +19,7 @@ plines <- ggplot(linesdat) +
   #position = "jitter" + 
   theme_minimal() +
   theme(legend.position= "none") +
-  labs(x="", y="Total stranded individuals", colour="Suborder") +
-  labs(subtitle = "(a)")
+  labs(x="", y="Total stranded individuals", colour="Suborder")
 
 #Adding events to the plot 
 plines <- plines + annotate("rect", xmin=1914, xmax=1918, ymin=0, ymax=800, alpha=.1, fill="gray22") +
@@ -66,7 +65,13 @@ plines <- plines + annotate("rect", xmin=1914, xmax=1918, ymin=0, ymax=800, alph
 use of polychlorinated 
 biphenyls (PCBs)
 and other chemical 
-pollutants"), size = 3, colour = "gray38") 
+pollutants"), size = 3, colour = "gray38")
+
+
+#Adding circles for mass stranding years 
+plines <- plines + geom_point(aes(x=1950, y=275), size=10, shape=1, color="black") + 
+  geom_point(aes(x=1950, y=275), size=10, shape=1, color="black")
   
+
 #Run the plot
 plines
