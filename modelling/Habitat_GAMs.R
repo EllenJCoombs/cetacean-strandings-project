@@ -1,6 +1,5 @@
 
-
-#Habitat GAMs 
+#Habitat GAMs for species 
 #Running GAMs with information on whether species are pelagic, coastal or both 
 #Information was taken from Reid et al., 2003 
 
