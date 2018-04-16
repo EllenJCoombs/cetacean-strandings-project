@@ -82,12 +82,16 @@ make_data <- function(ds, years, labs=FALSE){
   return(pp)
 }
 
+
   #put it all together
-  gr <- grid.arrange(make_data(ds, years=c(1913, 1925), TRUE),
+  gr <- grid.arrange(pp, 
+                     make_data(ds, years=c(1913, 1925)),
                      make_data(ds, years=c(1926, 1950)),
                      make_data(ds, years=c(1951, 1975)),
                      make_data(ds, years=c(1976, 2000)),
                      make_data(ds, years=c(2001, 2016)),
                      layout_matrix = matrix(c(1,2,1,3,1,4,1,5,1,6), 2, 5))
+                  
+                     
 
  
