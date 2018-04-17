@@ -8,11 +8,12 @@ library(maps)
 library(hexbin)
 library(ggmap)
 library(gridExtra)
-library(tidyverse)
 library(Hmisc) 
 
 #Extract UK map
 #Added Ireland
+# Note that package purrr masks the function map so detach this, or don't load it, or
+# the tidyverse bundle, in the first place. 
 uk <- map_data("world", regions = c('UK', 'Ireland', 'Guernsey', 'Jersey', 'Isle of Man'))
 
 #Create base map
