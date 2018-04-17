@@ -1,5 +1,6 @@
 
-
+#This code is for the maps only part of the original megaplot.
+#Ellen still to do: make maps bigger, and closer together
 library(ggplot2)
 library(viridis)
 library(dplyr)
@@ -21,9 +22,9 @@ gg1 <-
                fill = "white", color = "grey70") +
   coord_fixed(1.3)
 
-#Read in the strandings data
+#Read in the strandings data - this isn't needed here - read in the allparv.RData
 #This is the cleaned data with unknowns and rare species removed
-ds <- read.csv("UK_and_Irish_sp.csv")
+#ds <- read.csv("UK_and_Irish_sp.csv")
 
 #This dataset comes from "make_megadata.R"
 load("allparv.RData")
