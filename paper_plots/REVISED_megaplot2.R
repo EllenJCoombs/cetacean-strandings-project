@@ -61,7 +61,7 @@ make_data <- function(ds, years, labs=FALSE){
                        limits = c(1, 501),
                        breaks = c(1, 10, 20, 50, 100, 250, 500),
                        labels = c(1, 10, 20, 50, 100, 250, 500)) +
-    ggtitle(paste0(years[1], "-", years[2]))
+    ggtitle(paste0(years[1], "-", years[2])) 
 
   
   if(labs){
@@ -83,12 +83,23 @@ make_data <- function(ds, years, labs=FALSE){
 
 
   #put the maps together 
-  gr <- grid.arrange(pp, 
-                     make_data(ds, years=c(1913, 1925)),
-                     make_data(ds, years=c(1926, 1950)),
-                     make_data(ds, years=c(1951, 1975)),
-                     make_data(ds, years=c(1976, 2000)),
-                     make_data(ds, years=c(2001, 2016)),
-                     layout_matrix = matrix(c(1,2,1,3,1,4,1,5,1,6), 2, 5)) 
-                  
-                    
+# To fix the spacing use plot.margin. Doing it here means you can have different
+# margins for each on if needed.
+# Top, right, bottom, left is the order
+# You may wish to modify. 
+  gr <- grid.arrange(make_data(ds, years=c(1913, 1925)) +
+                     theme(plot.margin=unit(c(5.5, 5.5, 5.5, -10), "points"),
+                           strip.text=element_text(colour="black")), # For y labels
+                     make_data(ds, years=c(1926, 1950)) +
+                     theme(plot.margin=unit(c(5.5, 5.5, 5.5, -10), "points")),
+                     make_data(ds, years=c(1951, 1975)) +
+                     theme(plot.margin=unit(c(5.5, 5.5, 5.5, -10), "points")),
+                     make_data(ds, years=c(1976, 2000)) +
+                     theme(plot.margin=unit(c(5.5, 5.5, 5.5, -10), "points")),
+                     make_data(ds, years=c(2001, 2016)) +
+                     theme(plot.margin=unit(c(5.5, 5.5, 5.5, -10), "points")),
+                     ncol = 5) 
+  
+# Save to pdf - may want to change size/location/name
+  ggsave(gr, file = "megaplot_maps.pdf", height = 5) 
+  
