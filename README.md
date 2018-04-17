@@ -57,15 +57,13 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 
 * **12-generalised-additive-models.Rmd** This code runs the GAM which looks at all strandings (species per year), with an offset of population.
 
-* **13-extras-species-GAMs** This code runs additional GAMs which are not part of the paper or main analysis. These GAMs are species-specific, and run using the same covariates as in (`12-generalised-additive-models.Rmd`) should users wish to look at species-specifics 
-
 
 ## Other folders :file_folder:
 `functions/` contains functions required by the code in the `analysis/` folder 
 `figures/` contains figures found in the manuscript 
 `raw data/` contains gathered raw data and sources on UK population and UK and Irish storms from 1913-2015
-`cleaned data/` contains cleaned stranding dataset with the NHM, CSIP and IWDG datasets combined, and rare species removed. Also contains the cleaned correlates data; as well as the cleaned dataset (which is all of the correlates combined + year, species and total strandings) 
-
+`cleaned data/` contains cleaned stranding dataset with the NHM, CSIP and IWDG datasets combined, and rare species removed. It also contains the cleaned correlates data; as well as the cleaned dataset (which is all of the correlates combined + year, species and total strandings) 
+`modelling/` contains code for models run in the supplementary material. See folder `modelling/supplementary-models`
 
 ## Session Info :clipboard:
 For reproducibility purposes, here is the output of `devtools::session_info()` used to perform the analyses in the publication.
