@@ -5,6 +5,7 @@ library(broom) #for pulling all of the code together
 
 #Species GAMs 
 #This code runs the GAMs for each of the indiviual species 
+#The same correlates are used - see supplementary material 
 
 #First, code to pick out each of the seperate species 
 #Now we need to take each species from the all_strandings dataset 
