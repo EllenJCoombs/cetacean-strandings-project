@@ -28,7 +28,7 @@ Human population for the UK can be found here:
 
 
 ## Analysis :chart_with_upwards_trend: :whale2:
-All code used to run analyses and make figures and tables is included in the analyses/ folder. Before starting remember to either set your working directory to the stranding poject folder on your computer, or open an RStudio project from that folder. All of these files are in the RMarkdown format. You can click the Knit button in RStudio and create HTML versions using the code. 
+All code used to run analyses and make figures and tables is included in the `analysis/` folder. Before starting remember to either set your working directory to the stranding poject folder on your computer, or open an RStudio project from that folder. All of these files are in the RMarkdown format. You can click the Knit button in RStudio and create HTML versions using the code. 
 
 * **01-clean-up-data-for-analysis.Rmd** This script takes the raw data from the NHM and CSIP databases. This includes cleaning and standardising variables in the Natural History Museum (NHM), Cetacean Stranding Investigation Programme (CSIP) datasets for binding, cleaning and formatting dates in the NHM and CSIP dataset and binding the 2 datasets (NHM + CSIP first, followed by IWDG which was aquired at a later date; see **02-cleaning-and-adding-irish-data.Rmd**). If you're pushed for time, use the cleaned, merged final dataset of all 3 stranding datsets, which has also had rare species removed and is used in the GAMs. This can be found in the data folder and is called `UK_and_Irish_sp.csv`
 
@@ -57,15 +57,13 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 
 * **12-generalised-additive-models.Rmd** This code runs the GAM which looks at all strandings (species per year), with an offset of population.
 
-* **13-extras-species-GAMs** This code runs additional GAMs which are not part of the paper or main analysis. These GAMs are species-specific, and run using the same covariates as in (`12-generalised-additive-models.Rmd`) should users wish to look at species-specifics 
-
 
 ## Other folders :file_folder:
 `functions/` contains functions required by the code in the `analysis/` folder 
 `figures/` contains figures found in the manuscript 
 `raw data/` contains gathered raw data and sources on UK population and UK and Irish storms from 1913-2015
-`cleaned data/` contains cleaned stranding dataset with the NHM, CSIP and IWDG datasets combined, and rare species removed. Also contains the cleaned correlates data; as well as the cleaned dataset (which is all of the correlates combined + year, species and total strandings) 
-
+`cleaned data/` contains cleaned stranding dataset with the NHM, CSIP and IWDG datasets combined, and rare species removed. It also contains the cleaned correlates data; as well as the cleaned dataset (which is all of the correlates combined + year, species and total strandings) 
+`modelling/` contains code for models run in the supplementary material. See folder `modelling/supplementary-models`
 
 ## Session Info :clipboard:
 For reproducibility purposes, here is the output of `devtools::session_info()` used to perform the analyses in the publication.
