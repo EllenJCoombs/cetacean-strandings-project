@@ -51,7 +51,6 @@ make_data <- function(ds, years, labs=FALSE){
   
   #Basic plot using viridis colour scheme
   #Note that you can change bins and transparency
-  
   pp <- gg1+
     geom_hex(data = ds, aes(y = Latitude, x= Longitude), bins = 50, alpha = 0.75) +
     theme_minimal() +
@@ -69,8 +68,6 @@ make_data <- function(ds, years, labs=FALSE){
       theme(axis.text=element_blank(),
             strip.text=element_text(),
             plot.title=element_text(hjust=0.5, size=8))
-
-    
     
   }else{
     pp <- pp +
@@ -84,7 +81,7 @@ make_data <- function(ds, years, labs=FALSE){
 }
 
 
-  #put it all together
+  #put the maps together 
   gr <- grid.arrange(pp, 
                      make_data(ds, years=c(1913, 1925)),
                      make_data(ds, years=c(1926, 1950)),
