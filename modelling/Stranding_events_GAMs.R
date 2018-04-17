@@ -37,3 +37,5 @@ plot(Events_GAM)
 #Gam.check
 par(mfrow=c(2,2))
 gam.check(Events_GAM)
+
+
