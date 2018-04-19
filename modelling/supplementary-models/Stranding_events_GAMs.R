@@ -11,12 +11,11 @@ Stranding_events_count <- read.csv("Stranding_events_count.csv")
 #This now needs to be merged with the Model_data dataset (used in the main analysis) before I
 #duplicated the variables variables to represent all species 
 #Model_data is in the 'modelling' folder 
-
 Model_data <- read.csv("Model_data.csv")
 
 #Bind Model_data and Stranding_events_count for GAM
 Stranding_events_model <- full_join(Stranding_events_count, Model_data, by = "Year")
-#Remove duplicated year column 
+#Remove duplicated year column from dataset 
 Stranding_events_model$Year1 <- NULL 
 
 #Run the GAMs as before - all covariates are the same 
