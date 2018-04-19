@@ -21,6 +21,7 @@ lDf$`Balaenoptera borealis`
 #Splitting the tibble into data frames for each species 
 Y <- lapply(seq_along(lDf), function(x) as.data.frame(lDf[[x]])[, 1:8]) 
 
+#new name <- assigned number (random) #common name/ID
 BA <- Y[[1]] #minke
 BB <- Y[[2]] #sei 
 BM <- Y[[3]] #blue
