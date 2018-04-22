@@ -1,4 +1,7 @@
-#Stranding events 
+#Stranding events
+#This code deletes duplicates when: Name.Current.Sci, Lat, Long and date
+#are the same - creating only one record for each stranding event (i.e.,
+#removing multiple records from a mass stranding event)
 library(dplyr) 
 #Looking at only stranding events (rather than individual strandings)
 #Based on S.W.No. 
