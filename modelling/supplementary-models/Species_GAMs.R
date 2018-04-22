@@ -1,4 +1,11 @@
 
+#This code is for running additional analysis on the correlates 
+#of strandings, running the model for each species in turn. 
+#Here the same correlates from the main analysis are used in 
+#the generalised additive models.
+
+
+
 library(dplyr)
 library(mgcv) #for GAMs
 library(broom) #for pulling all of the code together 

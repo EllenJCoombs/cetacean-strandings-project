@@ -1,4 +1,8 @@
-
+#This code is for running additional analysis on the correlates 
+#of strandings using stranding events only. 
+#Here a mass stranding is noted as one event. 
+#Here the same correlates from the main analysis are used in 
+#the generalised additive models.
 
 library(dplyr)
 library(mgcv) #for GAMs
