@@ -1,4 +1,4 @@
-
+#Running additional analysis 
 #Habitat GAMs for species 
 #Running GAMs with information on whether species are pelagic, coastal or both 
 #Information was taken from Reid et al., 2003 
@@ -6,6 +6,11 @@
 #Pelagic = most time spent in waters >200m 
 #Coastal = most time spent in waters  ≤ 200m 
 #Both - where it was stated the species spent time in both habitats equally, or where it was unclear
+
+#Here the same correlates from the main analysis are used in 
+#the generalised additive models.
+
+library(dplyr)
 
 #Read in the data from the cleaned data folder 
 all_strandings <- read.csv("all_strandings.csv")
