@@ -12,8 +12,8 @@ library(gtable)
 
 #Create text grob 
 Text1 = textGrob(paste("Blah Blah Blah, 
-                       yadda yadda yadda,
-                       booooo"))
+                       nyadda yadda yadda,
+                       nbooooo", size = 2))
 
 # get the data
 linesdat <- ds %>%
