@@ -2,7 +2,8 @@
 library(dplyr)
 library(ggplot2)
 
-#This code plots new Figure 1 (line plot)
+#This code plots new Figure 1 (line plot) 
+#Also text and circled mass strandings 
 # get the data
 linesdat <- ds %>%
   group_by(Year, whatareyou) %>%
