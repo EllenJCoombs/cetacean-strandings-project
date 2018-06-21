@@ -11,14 +11,14 @@ library(gtable)
 #New code on 15/06/2018 with the key underneath 
 
 #Create text grob 
-Text1 = textGrob(paste("1.  1920s: Sonar is starting to be used in French and UK waters. 
-2. 1946: NATO military testing in European waters: submarine, military sonar, and torpedo testing increase'
+Text1 = textGrob(paste("
+1. 1920s: Sonar is starting to be used in French and UK waters. 2. 1946: NATO military testing in European waters: submarine, military sonar, and torpedo testing increase'
 3. 1950s: Increase in post-war fishing & whaling effort
 4. 1960s: Increase in use of polychlorinated biphenyls (PCBs) and other chemical pollutants 
 5. 1985/86 season: Moratorium on whaling comes into effect 
 6. 1990: CSIP and IWDG programmes start
-7. 2000s: Increase in pile-driving for offshore wind turbine" 
-, size = 0.5))
+7. 2000s: Increase in pile-driving for offshore wind turbines"), 
+                       gp = gpar(fontsize = 8, col = 'black'), hjust = 1)
 
 # get the data
 linesdat <- ds %>%
@@ -80,13 +80,13 @@ plines <- plines + geom_point(aes(x=1950, y=275), size=10, shape=1, color="black
 
 
 # Add a row below the 2nd from the bottom
-gp = ggplotGrob(plines)
-gp = gtable_add_rows(gp, unit(3, "grobheight", Text1), -3)
+gd = ggplotGrob(plines)
+gd = gtable_add_rows(gd, unit(2, "grobheight", Text1), -3)
 # Add 'lab' grob to that row, under the plot panel
-gp = gtable_add_grob(gp, Text1, t = -3, l = gp$layout[gp$layout$name == "panel",]$l)
+gd = gtable_add_grob(gd, Text1, t = -3, l = gd$layout[gd$layout$name == "panel",]$l) 
 
 grid.newpage()
-grid.draw(gp)
+grid.draw(gd)
 
 #Run the plot - this runs it without the text underneath 
 plines
