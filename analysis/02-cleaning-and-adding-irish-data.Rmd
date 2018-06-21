@@ -197,7 +197,7 @@ UK_and_Irish <- UK_and_Irish[!(duplicated(UK_and_Irish[c("Date","Name.Current.Sc
 ```
 
 
-##Quick exploration of what's being seen in the combined final dataset 
+## Quick exploration of what's being seen in the combined final dataset (if desired)
 ```{r}
 #A count per year of each species (with unknowns) - if required 
 Strandings_count_IRL_UK <- count(Strandings_IRL_UK, Year, Name.Current.Sci)
