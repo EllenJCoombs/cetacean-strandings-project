@@ -11,7 +11,10 @@ library(gtable)
 #New code on 15/06/2018 with the key underneath 
 
 #Create text grob 
-Text1 = textGrob(paste("Blah Blah Blah, 
+Text1 = textGrob(paste("1.  1920s: Sonar is starting to be used in French and UK waters. 
+2. 1946: NATO military testing in European waters: submarine, military sonar, and torpedo testing increase'
+3. 1950s: Increase in post-war fishing & whaling effort
+4. 
                        nyadda yadda yadda,
                        nbooooo", size = 2))
 
