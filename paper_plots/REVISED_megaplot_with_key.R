@@ -12,14 +12,14 @@ library(gtable)
 
 #Create text grob 
 Text1 = textGrob(paste("
-1. 1920s: Sonar is starting to be used in French and UK waters. 
-2. 1946: NATO military testing in European waters: submarine, military sonar, and torpedo testing increase'
+1. 1920s: Sonar use in French and UK waters
+2. 1946: NATO military testing in European waters: submarine, sonar, & torpedo testing increase
 3. 1950s: Increase in post-war fishing & whaling effort
 4. 1960s: Increase in use of polychlorinated biphenyls (PCBs) and other chemical pollutants 
 5. 1985/86 season: Moratorium on whaling comes into effect 
-6. 1990: CSIP and IWDG programmes start
+6. 1990: The CSIP and IWDG programmes start
 7. 2000s: Increase in pile-driving for offshore wind turbines"), 
-                       gp = gpar(fontsize = 7, col = 'black'), hjust = 0)
+                       gp = gpar(fontsize = 8, col = 'black'), hjust = 0)
 
 # get the data
 linesdat <- ds %>%
@@ -39,7 +39,7 @@ plines <- ggplot(linesdat) +
   #position = "jitter" + 
   theme_minimal() +
   theme(legend.position= "right") +
-  theme(axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0))) +
+  theme(axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0))) +
   labs(x="", y="Total stranded individuals", colour="Suborder")
 
 #Adding events to the plot 
@@ -82,7 +82,7 @@ plines <- plines + geom_point(aes(x=1950, y=275), size=10, shape=1, color="black
 
 # Add a row below the 2nd from the bottom
 gd = ggplotGrob(plines)
-gd = gtable_add_rows(gd, unit(3, "grobheight", Text1), -3)
+gd = gtable_add_rows(gd, unit(1.5, "grobheight", Text1), -3)
 # Add 'lab' grob to that row, under the plot panel
 gd = gtable_add_grob(gd, Text1, t = -3, l = gd$layout[gd$layout$name == "panel",]$l) 
 
