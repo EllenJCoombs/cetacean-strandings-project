@@ -14,9 +14,11 @@ library(gtable)
 Text1 = textGrob(paste("1.  1920s: Sonar is starting to be used in French and UK waters. 
 2. 1946: NATO military testing in European waters: submarine, military sonar, and torpedo testing increase'
 3. 1950s: Increase in post-war fishing & whaling effort
-4. 
-                       nyadda yadda yadda,
-                       nbooooo", size = 2))
+4. 1960s: Increase in use of polychlorinated biphenyls (PCBs) and other chemical pollutants 
+5. 1985/86 season: Moratorium on whaling comes into effect 
+6. 1990: CSIP and IWDG programmes start
+7. 2000s: Increase in pile-driving for offshore wind turbine" 
+, size = 0.5))
 
 # get the data
 linesdat <- ds %>%
