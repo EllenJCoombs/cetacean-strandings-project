@@ -80,14 +80,16 @@ plines <- plines + geom_point(aes(x=1950, y=275), size=10, shape=1, color="black
   geom_point(aes(x=2015, y=667), size=10, shape=1, color="gray29")
 
 
-# Add a row below the 2nd from the bottom
+#Alter this code to change the positioning of the text grob 
+#Add a row below the 2nd from the bottom
 gd = ggplotGrob(plines)
 gd = gtable_add_rows(gd, unit(1.5, "grobheight", Text1), -3)
-# Add 'lab' grob to that row, under the plot panel
+#Add 'lab' grob to that row, under the plot panel
 gd = gtable_add_grob(gd, Text1, t = -3, l = gd$layout[gd$layout$name == "panel",]$l) 
 
 grid.newpage()
 grid.draw(gd)
 
+
 #Run the plot - this runs it without the text underneath 
-plines
+#plines
