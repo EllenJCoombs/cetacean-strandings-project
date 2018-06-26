@@ -9,6 +9,7 @@ library(gtable)
 
 #This code plots new Figure 1 (line plot)
 #New code on 15/06/2018 with the key underneath 
+#Final plot for paper 
 
 #Create text grob 
 Text1 = textGrob(paste("
@@ -87,6 +88,7 @@ gd = gtable_add_rows(gd, unit(1.5, "grobheight", Text1), -3)
 #Add 'lab' grob to that row, under the plot panel
 gd = gtable_add_grob(gd, Text1, t = -3, l = gd$layout[gd$layout$name == "panel",]$l) 
 
+#Print plot 
 grid.newpage()
 grid.draw(gd)
 
