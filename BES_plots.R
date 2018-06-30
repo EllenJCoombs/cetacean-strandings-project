@@ -1,18 +1,18 @@
 
 library(dplyr)
 install.packages("ggthemes")
-library(ggthemes)
+library(ggthemes) #for theme_tufte 
 
-plines <- ggplot(allplot) +
+plines <- ggplot(linesdat) +
   scale_x_continuous(labels=seq(1900, 2025, by=25),
                      breaks=seq(1900, 2025, by=25),
                      expand=c(0, 0)) +
   geom_line(aes(x=Year, y=total, group=whatareyou, colour=whatareyou)) +
   #scale_fill_viridis() +
   #Changed variable colours - these are colour blind friendly 
-  scale_colour_manual(values=c("#D55E00")) +
+  scale_colour_manual(values=c("#D55E00", "#000000", "#73BFB8")) +
   #position = "jitter" + 
-  theme_minimal() +
+  theme_tufte() +
   theme(legend.position= "right") +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0))) +
   labs(x="", y="Total stranded individuals", colour="Suborder")
@@ -49,8 +49,12 @@ allplot <- allplot %>%
 
 
 #All plus odontocete 
+all_and_odonts <- ds %>% 
+  filter(whatareyou %in% c("Odontocete", "All"))
 
-
+all_odont_plot <- all_and_odonts %>%
+  group_by(Year, whatareyou) %>%
+  summarise(total=n())
 
 
 
