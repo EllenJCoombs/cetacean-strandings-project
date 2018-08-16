@@ -74,23 +74,17 @@ The following lat/longs were used for 14 locations around the UK and Ireland. Ea
 
 Use the following lat/longs to pull out SST data for each of the 14 locations. 
 
-```{r setup, include=FALSE}
-library(knitr)
-library(kableExtra)
+---
+output: pdf_document
+---
 
-#Table(add table with lat/long)
-#These data are found in the supplementary materials and put into a csv file
-#Read in raw data
-#df<-read.csv("Lats_longs_data_UKandIreland.csv")
+| First Header  | Second Header | Third Header         |
+| :------------ | :-----------: | -------------------: |
+| First row     | Data          | Very long data entry |
+| Second row    | **Cell**      | *Cell*               |
+| Third row     | Cell that spans across two columns  ||
 
-kable(df)
-
-kable(df) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
-
-```
-```
-
+Table: Your Caption
 
 
 ```{r}
