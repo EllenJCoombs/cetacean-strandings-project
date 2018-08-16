@@ -5,9 +5,7 @@ date: "10/01/2018"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-```
+
 
 ## Collecting sea surface temperature (SST) data for the model 
 No prerequisites are required for this code to run. This code reads in and cleans sea surface temperature (SST) data which will form part of the dataset of possible correlates of strandings. 
@@ -72,8 +70,25 @@ Once this code has been run for each of the 14 sites, a dataframe of SST should 
 
 See: [Met Office](https://www.metoffice.gov.uk/hadobs/hadisst/>)
 
-Lat/longs and locations required: 
-Ellen to add> SOMETHING BETTER NEEDS TO GO HERE - e.g. code to pull in the lat/longs
+The following lat/longs were used for 14 locations around the UK and Ireland. Each lat/long for each of the 14 sites needs to be run, and then saved as a seperate file. The below code gives and example for County Wicklow ("Ireland_Wicklow")
+
+Use the following lat/longs to pull out SST data for each of the 14 locations. 
+
+```{r setup, include=FALSE}
+library(knitr)
+library(kableExtra)
+
+#kable(add table with lat/long)
+df<-read.csv("Lats_longs_data_UKandIreland.csv")
+
+getwd()
+
+
+
+```
+```
+
+
 
 ```{r}
 #Selecting only one location (lat/long)
