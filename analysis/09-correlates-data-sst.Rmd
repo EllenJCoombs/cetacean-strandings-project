@@ -78,11 +78,11 @@ Use the following lat/longs to pull out SST data for each of the 14 locations.
 output: pdf_document
 ---
 
-| First Header  | Second Header | Third Header         |
-| :------------ | :-----------: | -------------------: |
-| First row     | Data          | Very long data entry |
-| Second row    | **Cell**      | *Cell*               |
-| Third row     | Cell that spans across two columns  ||
+| Location        | Latitude      | Longitude            |
+| :------------   | :-----------: | -------------------: |
+| Ballyhillin, UK	|  55.34        | -7.4                 |
+| Second row      | **Cell**      | *Cell*               |
+| Third row       | Cell that spans across two columns  ||
 
 Table: Your Caption
 
