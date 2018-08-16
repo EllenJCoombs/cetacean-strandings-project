@@ -78,7 +78,7 @@ Use the following lat/longs to pull out SST data for each of the 14 locations.
 Latitudes and Longitudes for locations around the UK and Ireland
 ---
 
-Extra the data using the below lat/long information 
+Place these lat/longs into the code below one at a time to obtain SST data for each location. 
 
 | Location           | Latitude      | Longitude            |
 | :------------      | :-----------: | -------------------: |
