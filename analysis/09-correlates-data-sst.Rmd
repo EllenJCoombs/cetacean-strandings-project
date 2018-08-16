@@ -78,12 +78,15 @@ Use the following lat/longs to pull out SST data for each of the 14 locations.
 library(knitr)
 library(kableExtra)
 
-#kable(add table with lat/long)
-df<-read.csv("Lats_longs_data_UKandIreland.csv")
+#Table(add table with lat/long)
+#These data are found in the supplementary materials and put into a csv file
+#Read in raw data
+#df<-read.csv("Lats_longs_data_UKandIreland.csv")
 
-getwd()
+kable(df)
 
-
+kable(df) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 
 ```
 ```
