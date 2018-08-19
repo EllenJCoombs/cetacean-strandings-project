@@ -70,7 +70,7 @@ Once this code has been run for each of the 14 sites, a dataframe of SST should 
 
 See: [Met Office](https://www.metoffice.gov.uk/hadobs/hadisst/>)
 
-The following lat/longs were used for 14 locations around the UK and Ireland. Each lat/long for each of the 14 sites needs to be run, and then saved as a seperate file. The below code gives and example for County Wicklow ("Ireland_Wicklow")
+The following lat/longs were used for 14 locations around the UK and Ireland. Each lat/long for each of the 14 sites needs to be run, and then saved as a seperate file. The below code gives and example for County Wicklow ("Ireland_Wicklow") 
 
 Use the following lat/longs to pull out SST data for each of the 14 locations. 
 
