@@ -11,7 +11,7 @@ output: html_document
 No prerequisites are required for this code to run. This code reads in and cleans sea surface temperature (SST) data which will form part of the dataset of possible correlates of strandings. 
 
 More details are available in the supplementary material. 
-Extracting data from the HadISST (Met Office) dataset was done first. This was carried out for 14 locations around the UK and Ireland (see supplementary material)
+Extracting data from the [HadISST (Met Office)](https://www.metoffice.gov.uk/hadobs/hadisst/) dataset was done first. This was carried out for 14 locations around the UK and Ireland (see supplementary material)
 
 These data are from the UK Met Office, they are monthly SST readings. 
 ## Load packages 
