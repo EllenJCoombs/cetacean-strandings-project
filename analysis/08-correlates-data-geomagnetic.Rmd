@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Collecting storms data for the model 
-No prerequisites are required for this code to run. This code reads in and cleans geomagnetic data which will form part of the dataset of possible correlates of strandings. Data were obtained from the [British Geological Survey](https://www.bgs.ac.uk/) from their [K-indices data portal](http://www.geomag.bgs.ac.uk/data_service/data/magnetic_indices/k_indices.html)
+No prerequisites are required for this code to run. This code reads in and cleans geomagnetic data which will form part of the dataset of possible correlates of strandings. Data were obtained from the [British Geological Survey](https://www.bgs.ac.uk/) from their [K-indices data portal](http://www.geomag.bgs.ac.uk/data_service/data/magnetic_indices/k_indices.html).
 
 ```{r}
 library(dplyr) #for mutate 
