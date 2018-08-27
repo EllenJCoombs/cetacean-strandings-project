@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Collecting North Atlantic Oscillation (NAO) data for the model 
-No prerequisites are required for this code to run. This code reads in NOA data from [University Corporation for Atmospheric Research] (https://climatedataguide.ucar.edu), see Supplemental Information for details. 
+No prerequisites are required for this code to run. This code reads in NOA data from [University Corporation for Atmospheric Research](https://climatedataguide.ucar.edu), see Supplemental Information for details. 
 
 ## Load packages 
 ```{r}
