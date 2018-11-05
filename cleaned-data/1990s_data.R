@@ -56,9 +56,9 @@ Population<- Population %>%
   filter(row_number() %in% 78:103)
 
 #SST 
-SST_yearly_mean <- read.csv('SST_yearly_max.csv')
+SST_yearly_max <- read.csv('SST_yearly_max.csv')
 #Cut to 1990
-SST_yearly_mean <- SST_yearly_mean %>% 
+SST_yearly_max <- SST_yearly_max %>% 
   filter(row_number() %in% 78:103)
 
 #Geomagnetic
@@ -81,6 +81,32 @@ Storms <- storms %>%
   rename(Storms = count)
 #Save cleaned storms data 
 #write.csv(Storms, file = "Storm_data.csv")
+
+Storms <- Storms %>% 
+  filter(row_number() %in% 78:103)
+
+#NAO
+
+NAO_index <- read.csv('NAO_data.csv')
+NAO_index <- NAO_index %>% 
+  filter(row_number() %in% 78:103)
+
+
+#Bind all predictors together 
+
+All_model <- bind_cols(Population, Storms, Geom_mean_max, SST_yearly_max, NAO_index)
+All_model$X <- NULL
+All_model$Year1 <- NULL
+All_model$X1 <- NULL
+All_model$year <- NULL 
+All_model$Year2 <-NULL
+All_model$Year <-NULL
+ 
+#Variable name changes 
+All_model <- All_model %>% 
+  rename(Year = YEAR) %>%
+  rename(Population = POPULATION) %>%
+  rename(Max_SST = year_max)
 
 
 
