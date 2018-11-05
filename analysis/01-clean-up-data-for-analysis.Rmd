@@ -17,6 +17,10 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 ## Data cleaning and binding 
 This code cleans up the raw data for analysis in the strandings paper 
+If you wish to skip data cleaning and use the cleaned data the files are in the **cleaned-data** folder under: 
+`UK_and_Irish_strandings.csv` - with all species including 'rare' species data 
+`UK_and_Irish_sp.csv` - with 'rare' species removed
+
 
 1. Cleaning and standardising variables in the Natural History Museum (NHM), Cetacean Stranding Investigation Programme (CSIP) datasets for binding 
 2. Cleaning and formatting dates in the NHM and CSIP datasets
