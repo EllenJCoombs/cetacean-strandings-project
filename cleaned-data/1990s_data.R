@@ -86,7 +86,6 @@ Storms <- Storms %>%
   filter(row_number() %in% 78:103)
 
 #NAO
-
 NAO_index <- read.csv('NAO_data.csv')
 NAO_index <- NAO_index %>% 
   filter(row_number() %in% 78:103)
@@ -122,7 +121,7 @@ library(mgcv)
 unique(Final_model_1990$Storms)
 unique(Final_model_1990$Max_K_index)
 unique(Final_model_1990$Max_SST)
-unique(Fia)
+
 #GAM for the above with Species as the factor smooth 
 All_strand1990 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
                      s(Storms, k=7, bs="ts") +
