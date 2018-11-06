@@ -8,12 +8,9 @@
 library(dplyr)
 #Seperate
 UK_and_Irish_genus <- UK_and_Irish_sp %>% 
-  separate(Name.Current.Sci, c('Species', 'Genus'), sep=" ")
+  separate(Name.Current.Sci, c('Genus', 'Species'), sep=" ")
 
-
-
-
-
-install.packages('reshape')
-library(reshape)
-df = transform(UK_and_Irish_sp, Name.Current.Sci = colsplit(Name.Current.Sci, split = "\\|", names = c('Species', 'Genus')))
+#Remove species column 
+UK_and_Irish_genus$X.1 <- NULL
+UK_and_Irish_genus$X <- NULL 
+UK_and_Irish_genus$Species <- NULL 

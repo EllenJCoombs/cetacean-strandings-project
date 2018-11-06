@@ -125,8 +125,8 @@ unique(Final_model_1990$Max_SST)
 unique(Fia)
 #GAM for the above with Species as the factor smooth 
 All_strand1990 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                     s(Storms, k=5, bs="ts") +
-                     s(Max_K_index, k=4, bs="ts") +
+                     s(Storms, k=7, bs="ts") +
+                     s(Max_K_index, k=5, bs="ts") +
                      s(Max_SST, bs="ts") +
                      s(NAO_index, bs="ts"), 
                    data= Final_model_1990, 
