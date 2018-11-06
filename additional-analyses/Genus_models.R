@@ -102,7 +102,7 @@ Genus <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Genus, bs="fs")
                         s(NAO_index, bs="ts"), 
                       data= Genus_model, 
                       method = "REML",
-                      family=tw(a=1.2))
+                      family=nb())
 
 #GAM summary and GAM plots 
 summary(Genus)
