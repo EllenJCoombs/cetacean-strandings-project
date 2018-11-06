@@ -92,25 +92,26 @@ library(mgcv)
 unique(Genus_model$Storms)
 unique(Genus_model$Max_K_index)
 unique(Genus_model$Max_SST)
+unique(Genus_model$Genus)
 
 #GAM for the above with Species as the factor smooth 
-All_strand1990 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+Genus <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Genus, bs="fs") +
                         s(Storms, k=7, bs="ts") +
                         s(Max_K_index, k=5, bs="ts") +
                         s(Max_SST, bs="ts") +
                         s(NAO_index, bs="ts"), 
-                      data= Final_model_1990, 
+                      data= Genus_model, 
                       method = "REML",
-                      family=nb())
+                      family=tw(a=1.2))
 
 #GAM summary and GAM plots 
-summary(All_strand1990)
+summary(Genus)
 par(mfrow = c(2,2))
-plot(All_strand1990)
+plot(Genus)
 
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(All_strand1990)
+gam.check(Genus)
 
 
