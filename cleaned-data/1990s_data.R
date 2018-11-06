@@ -109,4 +109,39 @@ All_model <- All_model %>%
   rename(Max_SST = year_max)
 
 
+#Now bind all datasets 
+#join the two datasets
+Final_model_1990 <- full_join(CSIP_strandings, All_model, by = "Year")
+
+#Run same GAMs as before 
+#install.packages("mgcv")
+library(mgcv)
+
+#This is to check how high to make the k value (k-1)
+#k (almost always k-1)
+unique(Final_model_1990$Storms)
+unique(Final_model_1990$Max_K_index)
+unique(Final_model_1990$Max_SST)
+unique(Fia)
+#GAM for the above with Species as the factor smooth 
+All_strand1990 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+                     s(Storms, k=5, bs="ts") +
+                     s(Max_K_index, k=4, bs="ts") +
+                     s(Max_SST, bs="ts") +
+                     s(NAO_index, bs="ts"), 
+                   data= Final_model_1990, 
+                   method = "REML",
+                   family=nb())
+
+#GAM summary and GAM plots 
+summary(All_strand1990)
+par(mfrow = c(2,2))
+plot(All_strand1990)
+
+
+#Gam.check
+par(mfrow=c(2,2))
+gam.check(All_strand1990)
+
+
 
