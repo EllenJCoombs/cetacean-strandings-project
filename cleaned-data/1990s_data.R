@@ -109,7 +109,6 @@ All_model <- All_model %>%
 
 
 #Now bind all datasets 
-#join the two datasets
 Final_model_1990 <- full_join(CSIP_strandings, All_model, by = "Year")
 
 #Run same GAMs as before 
@@ -137,10 +136,9 @@ summary(All_strand1990)
 par(mfrow = c(2,2))
 plot(All_strand1990)
 
-
 #Gam.check
 par(mfrow=c(2,2))
 gam.check(All_strand1990)
 
-
+#family=tw(a=1.2))
 
