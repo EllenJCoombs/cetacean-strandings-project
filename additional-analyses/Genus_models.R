@@ -97,7 +97,7 @@ unique(Genus_model$Genus)
 #GAM for the above with Species as the factor smooth 
 Genus <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Genus, bs="fs") +
                         s(Storms, k=7, bs="ts") +
-                        s(Max_K_index, k=5, bs="ts") +
+                        s(Max_K_index, k=4, bs="ts") +
                         s(Max_SST, bs="ts") +
                         s(NAO_index, bs="ts"), 
                       data= Genus_model, 
