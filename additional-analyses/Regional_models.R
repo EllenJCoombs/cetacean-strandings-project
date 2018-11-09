@@ -281,6 +281,7 @@ WScotland_model <- WScotland_model %>%
 #Now bind all datasets 
 #join the two datasets
 WScotland_model <- full_join(Scottish_strandings, WScotland_model, by = "Year")
+WScotland_model$X <- NULL
 
 #Run same GAMs as before 
 #install.packages("mgcv")
@@ -293,22 +294,23 @@ unique(SW_model$Max_K_index)
 unique(SW_model$Max_SST)
 
 #GAM for the above with Species as the factor smooth 
-SW_strandings_model <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+NS_strandings_model <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
                              s(Storms, k=7, bs="ts") +
                              s(Max_K_index, k=5, bs="ts") +
                              s(Max_SST, bs="ts") +
                              s(NAO_index, bs="ts"), 
-                           data= SW_model, 
+                           data= WScotland_model, 
                            method = "REML",
-                           family=tw(a=1.2))
+                           family=nb())
 
 #GAM summary and GAM plots 
-summary(SW_strandings_model)
+summary(NS_strandings_model)
 par(mfrow = c(2,2))
-plot(SW_strandings_model)
-
+plot(NS_strandings_model)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(SW_strandings_model)
+gam.check(NS_strandings_model)
+
+#family=tw(a=1.2))
 
