@@ -106,6 +106,9 @@ NAO_index <- read.csv('NAO_data.csv')
 NAO_index <- NAO_index %>% 
   filter(row_number() %in% 79:103)
 
+#Regional fiahing data 
+
+
 SW_model <- bind_cols(SW_England, Storms, Geom_mean_max, SST_yearly_max, NAO_index)
 
 SW_model$X <- NULL
