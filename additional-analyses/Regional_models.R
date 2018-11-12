@@ -107,7 +107,9 @@ NAO_index <- NAO_index %>%
   filter(row_number() %in% 79:103)
 
 #Regional fiahing data 
-
+#Fishing <- read.csv("Fishing_data_UK.csv")
+#Fishing <- Fishing %>% 
+  #filter(row_number() %in% 79:103)
 
 SW_model <- bind_cols(SW_England, Storms, Geom_mean_max, SST_yearly_max, NAO_index)
 
@@ -119,12 +121,14 @@ SW_model$year <- NULL
 SW_model$Year <- NULL
 SW_model$Year2 <- NULL 
 SW_model$X <-NULL 
+SW_model$Year3 <- NULL
 
 #Rename
 SW_model <- SW_model %>% 
   dplyr::rename(Year = YEAR) %>%
   dplyr::rename(Population = SW.ENGLAND) %>%
-  dplyr::rename(Max_SST = year_max)
+  dplyr::rename(Max_SST = year_max)#%>%
+  #dplyr::rename(Fish_catch = Annual.catches..1000.tonnes.)
 
 #Now bind all datasets 
 #join the two datasets
@@ -148,7 +152,7 @@ SW_strandings_model <- gam(Total_strandings ~ offset(log(Population)) +s(Year, S
                         s(NAO_index, bs="ts"), 
                       data= SW_model, 
                       method = "REML",
-                      family=tw(a=1.2))
+                      family=nb())
 
 #GAM summary and GAM plots 
 summary(SW_strandings_model)
