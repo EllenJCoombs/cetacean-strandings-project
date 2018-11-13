@@ -106,12 +106,29 @@ NAO_index <- read.csv('NAO_data.csv')
 NAO_index <- NAO_index %>% 
   filter(row_number() %in% 79:103)
 
-#Regional fiahing data 
-#Fishing <- read.csv("Fishing_data_UK.csv")
-#Fishing <- Fishing %>% 
-  #filter(row_number() %in% 79:103)
 
-SW_model <- bind_cols(SW_England, Storms, Geom_mean_max, SST_yearly_max, NAO_index)
+#Fishing 
+#Regional fiahing data 
+#1950 - 2015 
+Fishing <- read.csv("Fishing_data_UK.csv")
+Fishing <- Fishing %>% 
+  filter(row_number() %in% 79:103)
+
+
+Shipping_UK <- read.csv("Shipping_data.csv")
+#Akready at 1950 - 2015 
+#Select columns 
+
+Shipping_UK <- Shipping_UK %>%
+  select(Year, Ship.gross.weight..tons.) %>%
+  dplyr::rename(Ships_tons = Ship.gross.weight..tons.)
+
+Shipping_UK <- Shipping_UK %>%
+  filter(row_number() %in% 42:66)
+
+
+SW_model <- bind_cols(SW_England, Storms, Geom_mean_max, SST_yearly_max, NAO_index, 
+                      Fishing, Shipping_UK)
 
 SW_model$X <- NULL
 SW_model$X1 <- NULL 
@@ -122,6 +139,7 @@ SW_model$Year <- NULL
 SW_model$Year2 <- NULL 
 SW_model$X <-NULL 
 SW_model$Year3 <- NULL
+SW_model$Year4 <- NULL
 
 #Rename
 SW_model <- SW_model %>% 
@@ -268,7 +286,27 @@ NAO_index <- read.csv('NAO_data.csv')
 NAO_index <- NAO_index %>% 
   filter(row_number() %in% 79:103)
 
-WScotland_model <- bind_cols(W_Scotland, Storms, Geom_mean_max, SST_yearly_max, NAO_index)
+#Fishing 
+#Regional fiahing data 
+#1950 - 2015 
+Fishing <- read.csv("Fishing_data_UK.csv")
+Fishing <- Fishing %>% 
+  filter(row_number() %in% 79:103)
+
+
+Shipping_UK <- read.csv("Shipping_data.csv")
+#Akready at 1950 - 2015 
+#Select columns 
+
+Shipping_UK <- Shipping_UK %>%
+  select(Year, Ship.gross.weight..tons.) %>%
+  dplyr::rename(Ships_tons = Ship.gross.weight..tons.)
+
+Shipping_UK <- Shipping_UK %>%
+  filter(row_number() %in% 42:66)
+
+WScotland_model <- bind_cols(W_Scotland, Storms, Geom_mean_max, SST_yearly_max, NAO_index, 
+                             Fishing, Shipping_UK)
 
 WScotland_model$X <- NULL
 WScotland_model$X1 <- NULL 
@@ -278,12 +316,16 @@ WScotland_model$year <- NULL
 WScotland_model$Year <- NULL
 WScotland_model$Year2 <- NULL 
 WScotland_model$X <-NULL 
+WScotland_model$Year3 <- NULL 
+WScotland_model$Year4 <- NULL 
 
 #Rename
 WScotland_model <- WScotland_model %>% 
   dplyr::rename(Year = YEAR) %>%
   dplyr::rename(Population = W.SCOTLAND) %>%
-  dplyr::rename(Max_SST = year_max)
+  dplyr::rename(Max_SST = year_max)%>%
+  dplyr::rename(Fish_catch = Annual.catches..1000.tonnes.)
+  
 
 #Now bind all datasets 
 #join the two datasets
@@ -305,10 +347,13 @@ NS_strandings_model <- gam(Total_strandings ~ offset(log(Population)) +s(Year, S
                              s(Storms, k=7, bs="ts") +
                              s(Max_K_index, k=5, bs="ts") +
                              s(Max_SST, bs="ts") +
-                             s(NAO_index, bs="ts"), 
+                             s(NAO_index, bs="ts") + 
+                             s(Fish_catch, bs="ts") +
+                             s(Ships_tons, bs="ts"),
                            data= WScotland_model, 
                            method = "REML",
                            family=nb())
+
 
 #GAM summary and GAM plots 
 summary(NS_strandings_model)
