@@ -145,8 +145,8 @@ SW_model$Year4 <- NULL
 SW_model <- SW_model %>% 
   dplyr::rename(Year = YEAR) %>%
   dplyr::rename(Population = SW.ENGLAND) %>%
-  dplyr::rename(Max_SST = year_max)#%>%
-  #dplyr::rename(Fish_catch = Annual.catches..1000.tonnes.)
+  dplyr::rename(Max_SST = year_max) %>%
+  dplyr::rename(Fish_catch = Annual.catches..1000.tonnes.)
 
 #Now bind all datasets 
 #join the two datasets
@@ -167,10 +167,12 @@ SW_strandings_model <- gam(Total_strandings ~ offset(log(Population)) +s(Year, S
                         s(Storms, k=7, bs="ts") +
                         s(Max_K_index, k=5, bs="ts") +
                         s(Max_SST, bs="ts") +
-                        s(NAO_index, bs="ts"), 
+                        s(NAO_index, bs="ts") + 
+                        s(Fish_catch, bs="ts") + 
+                        s(Ships_tons, bs="ts"),
                       data= SW_model, 
                       method = "REML",
-                      family=nb())
+                      family=poisson())
 
 #GAM summary and GAM plots 
 summary(SW_strandings_model)
