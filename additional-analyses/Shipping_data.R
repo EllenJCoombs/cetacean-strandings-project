@@ -29,7 +29,7 @@ strandings1950s <- strandings1950s %>%
 strandings1950s <- strandings1950s %>%
   dplyr::rename(Species = Name.Current.Sci)
 
-#Predictors 
+#Predictors: #1950 - 2015 
 Shipping_UK <- read.csv("Shipping_data.csv")
 
 #From the raw data file 
@@ -37,12 +37,13 @@ Shipping_UK <- read.csv("Shipping_data.csv")
 Population <- read.csv("Population_UK.csv")
 
 #Cut to 1950
+#1950 - 2015 
 Population<- Population %>% 
   filter(row_number() %in% 38:103)
 
 #SST 
+#1950 - 2015 
 SST_yearly_max <- read.csv('SST_yearly_max.csv')
-#Cut to 1990
 SST_yearly_max <- SST_yearly_max %>% 
   filter(row_number() %in% 38:103)
 
@@ -71,18 +72,33 @@ Storms <- Storms %>%
   filter(row_number() %in% 38:103)
 
 #NAO
+#1950 - 2015 
 NAO_index <- read.csv('NAO_data.csv')
 NAO_index <- NAO_index %>% 
   filter(row_number() %in% 38:103)
 
 #Regional fiahing data 
+#1950 - 2015 
 Fishing <- read.csv("Fishing_data_UK.csv")
 Fishing <- Fishing %>% 
   filter(row_number() %in% 38:103)
 
-#bind data with strandings 
-Shipping_model <- bind_cols(Population, Storms, Geom_mean_max, SST_yearly_max, NAO_index, Fishing)
+#Shipping data 
+#1950 - 2015 
+Shipping_UK <- read.csv("Shipping_data.csv")
+#Akready at 1950 - 2015 
+#Select columns 
 
+Shipping_UK <- Shipping_UK %>%
+  select(Year, Ship.gross.weight..tons.) %>%
+  dplyr::rename(Ships_tons = Ship.gross.weight..tons.)
+
+Shipping_UK <- Shipping_UK %>%
+  filter(row_number() %in% 1:66)
+
+#bind data with strandings 
+Shipping_model <- bind_cols(Population, Storms, Geom_mean_max, SST_yearly_max, NAO_index, Fishing,
+                            Shipping_UK)
 Shipping_model$X <- NULL
 Shipping_model$X1 <- NULL 
 Shipping_model$Year1 <- NULL
@@ -92,6 +108,7 @@ Shipping_model$Year <- NULL
 Shipping_model$Year2 <- NULL 
 Shipping_model$X <-NULL 
 Shipping_model$Year3 <- NULL
+Shipping_model$Year4 <- NULL
 
 #Rename
 Shipping_model <- Shipping_model %>% 
@@ -120,10 +137,11 @@ strandings_1950smodel <- gam(Total_strandings ~ offset(log(Population)) +s(Year,
                              s(Max_K_index, k=5, bs="ts") +
                              s(Max_SST, bs="ts") +
                              s(NAO_index, bs="ts") + 
-                             s(Fish_catch, bs="ts"),
+                             s(Fish_catch, bs="ts") + 
+                             s(Ships_tons, bs="ts"),  
                            data= Shipping1950s, 
                            method = "REML",
-                           family=nb())
+                           family=tw(a=1.2))
 
 #GAM summary and GAM plots 
 summary(strandings_1950smodel)
