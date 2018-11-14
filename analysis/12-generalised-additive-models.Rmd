@@ -40,7 +40,7 @@ unique(all_strandings$Max_K_index)
 
 #GAM for the above with Species as the factor smooth 
 All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                      s(Storms, k=5, bs="ts") +
+                      s(Storms, k=7, bs="ts") +
                       s(Max_K_index, k=4, bs="ts") +
                       s(Max_SST, bs="ts") +
                       s(NAO_index, bs="ts"), 
@@ -125,7 +125,7 @@ No_phocoena <- all_strandings %>%
   filter(Species != "Phocoena phocoena")
 
 No_phocoena_c1 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                     s(Storms, k=5, bs="ts") +
+                     s(Storms, k=7, bs="ts") +
                      s(Max_K_index, k=4, bs="ts") +
                      s(Max_SST, bs="ts") +
                      s(NAO_index, bs="ts"), 
@@ -176,7 +176,7 @@ phocoena <- all_strandings %>%
 
 #No need for species smooth 
 Phocoena_c <- gam(Total_strandings ~ offset(log(Population)) +s(Year, bs="ts") +
-                        s(Storms, k=5, bs="ts") +
+                        s(Storms, k=7, bs="ts") +
                         s(Max_K_index, k=4, bs="ts") +
                         s(Max_SST, bs="ts") +
                         s(NAO_index, bs="ts"), 
