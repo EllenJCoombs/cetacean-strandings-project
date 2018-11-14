@@ -71,3 +71,16 @@ par(mfrow=c(2,2))
 gam.check(All_strand)
 
 #family=tw(a=1.2))
+unique(All_model$Fish_catch)
+min(All_model$Fish_catch)
+max(All_model$Fish_catch)
+
+
+#Residuals plots for fish
+Fish_bins <- cut(All_strandings$Fish_catch, c(290000, 750000, 1000000, 2000000, 3000000, 
+                                              400000, 500000, 6500000))
+Fish_resid_data <- data.frame(Fish_catch=Fish_bins, resids=residuals(All_strand))
+boxplot(resids~Fish_catch, data=Fish_resid_data)
+
+
+
