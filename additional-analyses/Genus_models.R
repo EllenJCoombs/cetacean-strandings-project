@@ -63,8 +63,13 @@ Storm_data <- read.csv('Storm_data.csv')
 #NAO
 NAO_index <- read.csv('NAO_data.csv')
 
+#Fishing 
+Fishing <- read.csv("Fishing_data_UK.csv")
+
+
 #Bind the data 
-All_model <- bind_cols(Population, Storm_data, Geom_mean_max, SST_yearly_max, NAO_index)
+All_model <- bind_cols(Population, Storm_data, Geom_mean_max, SST_yearly_max, NAO_index, 
+                       Fishing)
 All_model$X <- NULL
 All_model$Year1 <- NULL
 All_model$X1 <- NULL
@@ -72,16 +77,19 @@ All_model$year <- NULL
 All_model$Year2 <-NULL
 All_model$Year <-NULL
 All_model$X2 <-NULL
+All_model$Year3 <- NULL 
 
 #Variable name changes 
 #Have to add dplyr:: as tidyr masks it 
 All_model <- All_model %>% 
   dplyr::rename(Year = YEAR) %>%
   dplyr::rename(Population = POPULATION) %>%
-  dplyr::rename(Max_SST = year_max)
+  dplyr::rename(Max_SST = year_max) %>%
+  dplyr::rename(Fish_catch = Annual.catches..1000.tonnes.)
 
 #Now join the two datasets
 Genus_model <- full_join(Genus_strandings, All_model, by = "Year")
+Genus_model$X <- NULL 
 
 #Run same GAMs as before 
 #install.packages("mgcv")
@@ -99,7 +107,8 @@ Genus <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Genus, bs="fs")
                         s(Storms, k=7, bs="ts") +
                         s(Max_K_index, k=4, bs="ts") +
                         s(Max_SST, bs="ts") +
-                        s(NAO_index, bs="ts"), 
+                        s(NAO_index, bs="ts") + 
+                        s(Fish_catch, bs="ts"),
                       data= Genus_model, 
                       method = "REML",
                       family=nb())
@@ -109,9 +118,9 @@ summary(Genus)
 par(mfrow = c(2,2))
 plot(Genus)
 
-
 #Gam.check
 par(mfrow=c(2,2))
 gam.check(Genus)
 
+#family=tw(a=1.2))
 

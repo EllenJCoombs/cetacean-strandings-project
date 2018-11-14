@@ -45,7 +45,8 @@ All_model$Year3 <- NULL
 All_model <- All_model %>% 
   dplyr::rename(Year = YEAR) %>%
   dplyr::rename(Population = POPULATION) %>%
-  dplyr::rename(Max_SST = year_max)
+  dplyr::rename(Max_SST = year_max) %>%
+  dplyr::rename(Fish_catch = Annual.catches..1000.tonnes.)
 
 All_strandings <- full_join(All_strandings, All_model, by = "Year")
 
@@ -57,7 +58,7 @@ All_strand <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, b
                         s(Fish_catch, bs="ts"),
                       data= All_strandings, 
                       method = "REML",
-                      family=tw(a=1.2))
+                      family=quasipoisson())
 
 
 #GAM summary and GAM plots 
