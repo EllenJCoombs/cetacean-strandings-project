@@ -34,10 +34,10 @@ speciesyearcount[is.na(speciesyearcount)] <- 0
 CSIP_strandings <- speciesyearcount 
 #Rename n to "Total_strandings"
 CSIP_strandings <- CSIP_strandings %>% 
-  rename(Total_strandings = n)
+  dplyr::rename(Total_strandings = n)
 #Reaname Name.Current.Sci to Species 
 CSIP_strandings <- CSIP_strandings %>%
-  rename(Species = Name.Current.Sci)
+  dplyr::rename(Species = Name.Current.Sci)
 
 #Save if required 
 
@@ -91,21 +91,28 @@ NAO_index <- NAO_index %>%
   filter(row_number() %in% 78:103)
 
 
+Fishing <- read.csv("Fishing_data_UK.csv")
+Fishing <- Fishing %>%
+  filter(row_number() %in% 78:103)
+
+
 #Bind all predictors together 
 
-All_model <- bind_cols(Population, Storms, Geom_mean_max, SST_yearly_max, NAO_index)
+All_model <- bind_cols(Population, Storms, Geom_mean_max, SST_yearly_max, NAO_index, Fishing)
 All_model$X <- NULL
 All_model$Year1 <- NULL
 All_model$X1 <- NULL
 All_model$year <- NULL 
 All_model$Year2 <-NULL
 All_model$Year <-NULL
+All_model$X2 <- NULL
+All_model$Year3 <- NULL
  
 #Variable name changes 
 All_model <- All_model %>% 
-  rename(Year = YEAR) %>%
-  rename(Population = POPULATION) %>%
-  rename(Max_SST = year_max)
+  dplyr::rename(Year = YEAR) %>%
+  dplyr::rename(Population = POPULATION) %>%
+  dplyr::rename(Max_SST = year_max)
 
 
 #Now bind all datasets 
@@ -126,7 +133,8 @@ All_strand1990 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Specie
                      s(Storms, k=7, bs="ts") +
                      s(Max_K_index, k=5, bs="ts") +
                      s(Max_SST, bs="ts") +
-                     s(NAO_index, bs="ts"), 
+                     s(NAO_index, bs="ts") +
+                     s(Fish_catch, bs="ts"),
                    data= Final_model_1990, 
                    method = "REML",
                    family=nb())
