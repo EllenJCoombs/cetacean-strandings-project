@@ -5,7 +5,6 @@
 #the generalised additive models.
 
 
-
 library(dplyr)
 library(mgcv) #for GAMs
 library(broom) #for pulling all of the code together 
@@ -17,7 +16,10 @@ library(broom) #for pulling all of the code together
 #First, code to pick out each of the seperate species 
 #Now we need to take each species from the all_strandings dataset 
 #Creating a new data frame to play with
-sep_species <- all_strandings
+sep_species <- All_strandings
+
+sep_species <- sep_species %>%
+  dplyr::rename(Species = Name.Current.Sci)
 
 #Make new dataframe by splitting into seperate species (these are tibbles)
 lDf <- split(sep_species, sep_species$Species)
@@ -26,7 +28,8 @@ lDf <- split(sep_species, sep_species$Species)
 lDf$`Balaenoptera borealis`
 
 #Splitting the tibble into data frames for each species 
-Y <- lapply(seq_along(lDf), function(x) as.data.frame(lDf[[x]])[, 1:8]) 
+#Be sure to capture the columns you want (1:10)
+Y <- lapply(seq_along(lDf), function(x) as.data.frame(lDf[[x]])[, 1:10]) 
 
 #new name <- assigned number (random) #common name/ID
 BA <- Y[[1]] #minke
@@ -51,36 +54,58 @@ SC <- Y[[19]] #striped
 TT <- Y[[20]] #bottlenose
 ZC <- Y[[21]] #Cuvier's
 
+#Count the species per year as normal
+speciesyearcount <- count(ZC, Species, Year) %>%
+  na.omit()
+
+#Adding a 0 to each year without a record 
+#Min is now 1990
+speciesyearcount <- speciesyearcount %>% 
+  complete(Year = seq(min(1913), max(2015), 1L))
+#NAs -> 0 
+speciesyearcount[is.na(speciesyearcount)] <- 0 
+#NAs to species name
+speciesyearcount[is.na(speciesyearcount)] <- "Ziphius cavirostris"
+
+#Changing the name of the dataset 
+species_strandings <- speciesyearcount 
+#Rename n to "Total_strandings"
+species_strandings <- species_strandings %>% 
+  dplyr::rename(Total_strandings = n)
+
+
+Species_model <- full_join(species_strandings, All_model, by = "Year")
 
 #Now the GAM's for each species 
 #Use the above acronyms e.g., 'TT' - this needs to be done for all 21 species (above)
 #Doing this one at a time - but I'm sure there is a way o do this and then use broom....
 
-HA_GAM <- gam(Total_strandings ~ offset(log(Population)) +
-                        s(Year, bs="ts") +
-                        s(Storms, k=5, bs="ts") +
-                        s(Max_K_index, k=4, bs="ts") +
-                        s(Max_SST, bs="ts") +
-                        s(NAO_index, bs="ts"), 
-                      data= HA, 
-                      method= "REML",
-                      family=nb)
+Species_GAM <- gam(Total_strandings ~ offset(log(Population)) +
+                s(Year, bs="ts") +
+                s(Storms, k=5, bs="ts") +
+                s(Max_K_index, k=4, bs="ts") +
+                s(Max_SST, bs="ts") +
+                s(NAO_index, bs="ts") + 
+                s(Fish_catch, bs="ts"),
+              data= Species_model, 
+              method= "REML",
+              family=nb())
 
 
-summary(HA_GAM)
+summary(Species_GAM)
 par(mfrow = c(2,2))
-plot(HA_GAM) 
+plot(Species_GAM) 
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(MN_GAM)
+gam.check(Species_GAM)
 
 
 #Using broom to tidy up all of the results together 
 #paackage 'broom'
 #Tidy multiple models at once 
 Mysticete_GAMs <- list(BA_GAM = BA_GAM, BB_GAM = BB_GAM, BM_GAM = BM_GAM, BP_GAM = BP_GAM,
-                        MN_GAM = MN_GAM) 
+                       MN_GAM = MN_GAM) 
 
 #Tidy and glance datasets 
 Mysticete_tidy <- plyr::ldply(Mysticete_GAMs, tidy, .id = "model")
@@ -92,9 +117,9 @@ Mysticete_glance <- plyr::ldply(Mysticete_GAMs, glance, .id = "model")
 
 
 Odontocete_GAMs <- list(DD_GAM = DD_GAM, GM_GAM = GM_GAM, GG_GAM = GG_GAM, HA_GAM = HA_GAM,
-                       KB_GAM = KB_GAM, LA_GAM = LA_GAM, LAl_GAM = LAl_GAM, MB_GAM = MB_GAM, 
-                       MM_GAN = MM_GAM, OO_GAM = OO_GAM, PP_GAM = PP_GAM, PM_GAM = PM_GAM, 
-                       PC_GAM = PC_GAM, SC_GAM = SC_GAM, TT_GAM = TT_GAM, ZC_GAM = ZC_GAM) 
+                        KB_GAM = KB_GAM, LA_GAM = LA_GAM, LAl_GAM = LAl_GAM, MB_GAM = MB_GAM, 
+                        MM_GAN = MM_GAM, OO_GAM = OO_GAM, PP_GAM = PP_GAM, PM_GAM = PM_GAM, 
+                        PC_GAM = PC_GAM, SC_GAM = SC_GAM, TT_GAM = TT_GAM, ZC_GAM = ZC_GAM) 
 
 
 #Tidy and glance datasets 
