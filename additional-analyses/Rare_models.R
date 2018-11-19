@@ -103,7 +103,7 @@ All_rare <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs=
                s(Fish_catch, bs="ts"),
              data= All_strandings_model, 
              method = "REML",
-             family=nb())
+             family=tw(a=1.2))
 
 #GAM summary and GAM plots 
 summary(All_rare)
