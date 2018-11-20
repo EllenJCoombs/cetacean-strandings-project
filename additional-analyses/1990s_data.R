@@ -1,4 +1,3 @@
-
 #1990s data only using the data with the rare species left in as confident with species IDs
 
 #Chop data to just 1990 onwards 
@@ -67,16 +66,7 @@ Geom_mean_max <- Geom_mean_max %>%
   filter(row_number() %in% 78:103)
 
 #Storms 
-Storm_data <- read.csv('Storm_data.csv')
-#Select data 
-storms <- Storm_data %>% 
-  select(Year, Count)
-#Counting up and keeping 0 as 0 
-storms <- storms %>% 
-  complete(Year, fill = list(Count = 0)) %>% 
-  dplyr::group_by(Year) %>% 
-  dplyr::summarise(count = sum(Count))
-#Renaming count to storms 
+Storms <- read.csv('Storm_data.csv')
 Storms <- storms %>%
   rename(Storms = count)
 #Save cleaned storms data 
@@ -96,9 +86,19 @@ Fishing <- Fishing %>%
   filter(row_number() %in% 78:103)
 
 
+Shipping <- read.csv("Shipping_data.csv")
+#Select required rows 
+Shipping <- Shipping %>%
+  select(Year, Ship.gross.weight..tons.)
+
+Shipping <- Shipping %>%
+  filter(row_number() %in% 41:66)
+
+
 #Bind all predictors together 
 
-All_model <- bind_cols(Population, Storms, Geom_mean_max, SST_yearly_max, NAO_index, Fishing)
+All_model <- bind_cols(Population, Storms, Geom_mean_max, SST_yearly_max, NAO_index, Fishing,
+                       Shipping)
 All_model$X <- NULL
 All_model$Year1 <- NULL
 All_model$X1 <- NULL
@@ -107,12 +107,15 @@ All_model$Year2 <-NULL
 All_model$Year <-NULL
 All_model$X2 <- NULL
 All_model$Year3 <- NULL
- 
+All_model$Year4 <- NULL
+
 #Variable name changes 
 All_model <- All_model %>% 
   dplyr::rename(Year = YEAR) %>%
   dplyr::rename(Population = POPULATION) %>%
-  dplyr::rename(Max_SST = year_max)
+  dplyr::rename(Max_SST = year_max) %>%
+  dplyr::rename(Fish_catch = Annual.catches..1000.tonnes.) %>%
+  dplyr::rename(Ships_tons = Ship.gross.weight..tons.)
 
 
 #Now bind all datasets 
@@ -130,14 +133,15 @@ unique(Final_model_1990$Max_SST)
 
 #GAM for the above with Species as the factor smooth 
 All_strand1990 <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
-                     s(Storms, k=7, bs="ts") +
-                     s(Max_K_index, k=5, bs="ts") +
-                     s(Max_SST, bs="ts") +
-                     s(NAO_index, bs="ts") +
-                     s(Fish_catch, bs="ts"),
-                   data= Final_model_1990, 
-                   method = "REML",
-                   family=nb())
+                        s(Storms, k=7, bs="ts") +
+                        s(Max_K_index, k=5, bs="ts") +
+                        s(Max_SST, bs="ts") +
+                        s(NAO_index, bs="ts") +
+                        s(Fish_catch, bs="ts") + 
+                        s(Ships_tons, bs="ts"),
+                      data= Final_model_1990, 
+                      method = "REML",
+                      family=nb())
 
 #GAM summary and GAM plots 
 summary(All_strand1990)
@@ -149,4 +153,5 @@ par(mfrow=c(2,2))
 gam.check(All_strand1990)
 
 #family=tw(a=1.2))
+
 
