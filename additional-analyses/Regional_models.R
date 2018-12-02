@@ -127,6 +127,7 @@ Shipping_UK <- Shipping_UK %>%
   filter(row_number() %in% 42:66)
 
 
+
 SW_model <- bind_cols(SW_England, Storms, Geom_mean_max, SST_yearly_max, NAO_index, 
                       Fishing, Shipping_UK)
 
