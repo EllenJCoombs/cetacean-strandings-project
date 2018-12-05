@@ -43,7 +43,8 @@ All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, 
                       s(Storms, k=7, bs="ts") +
                       s(Max_K_index, k=4, bs="ts") +
                       s(Max_SST, bs="ts") +
-                      s(NAO_index, bs="ts"), 
+                      s(NAO_index, bs="ts") + 
+                      s(Fish_catch, bs = "ts"), 
                     data= all_strandings, 
                     method = "REML",
                     family=nb())

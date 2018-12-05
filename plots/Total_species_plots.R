@@ -37,17 +37,18 @@ speciesyearcount <- dplyr::count(Strandings_known_IRL_UK, Name.Current.Sci, Year
 
 #Geom_line of all species for every year 
 speciesyearcount <- speciesyearcount %>%
-  rename(Species = Name.Current.Sci) 
+  dplyr::rename(Species = Name.Current.Sci) 
 
-p <- ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Name.Current.Sci))+
+
+p <- ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Species))+
   theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
   labs(x = "Year", y = "Count") +
   geom_line() +
   theme(legend.position="bottom") +
-  scale_fill_viridis() + 
-  theme_light()
+  scale_fill_viridis(option="viridis") + 
+  theme_minimal()
   
- p + facet_wrap(~ Name.Current.Sci, scales = 'free')
+ p + facet_wrap(~ Species, scales = 'free')
   
   
 #Looking at species by year - a count of each species per year
