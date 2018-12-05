@@ -7,6 +7,7 @@ library(dplyr)
 library(tidyverse)
 library(ggplot2)
 library(reshape) 
+library(viridis)
 
 
 UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
@@ -38,14 +39,15 @@ speciesyearcount <- dplyr::count(Strandings_known_IRL_UK, Name.Current.Sci, Year
 speciesyearcount <- speciesyearcount %>%
   rename(Species = Name.Current.Sci) 
 
-ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Species))+
+p <- ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Name.Current.Sci))+
   theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
   labs(x = "Year", y = "Count") +
   geom_line() +
-  theme_bw() + 
-  theme(legend.position="bottom")
-  scale_fill_manual(values=c("deeppink", "steelblue"), guide=FALSE) + 
-  facet_wrap(~ Species) 
+  theme(legend.position="bottom") +
+  scale_fill_viridis() + 
+  theme_light()
+  
+ p + facet_wrap(~ Name.Current.Sci, scales = 'free')
   
   
 #Looking at species by year - a count of each species per year
@@ -183,7 +185,7 @@ ggplot(sortedmysticetes, aes(x = Year)) +
 
 
 #Odontocetes plot 
-ggplot(sortedodonts, aes(x = Year)) +
+ggplot(species, aes(x = Year)) +
   stat_count(width = 0.5) +
   facet_wrap(~ Name.Current.Sci)
 
