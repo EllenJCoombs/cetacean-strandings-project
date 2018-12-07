@@ -156,8 +156,8 @@ selectnhm$Date
 This code provides a datasource column should it be required for reference
 ```{r}
 
-selectnhm$Source <- "NHM"
-selectcsip$Source <- "CSIP"
+selectnhm$newcolumn <- "NHM"
+selectcsip$newcolumn <- "CSIP"
 
 ```
 
