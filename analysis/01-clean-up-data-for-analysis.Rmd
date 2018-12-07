@@ -170,7 +170,6 @@ This code changes the data format in the NHM dataset first and creates and NHM f
 #Changing date format in the NHM dataset
 library(lubridate) #For dates stuff 
 library(dplyr)
-#Why is this adding 100 years???
 #selectnhm <- mutate(selectnhm, Date = dmy(Date))
 
 #Trying this instead - works by changing all 2000s to 1900s
