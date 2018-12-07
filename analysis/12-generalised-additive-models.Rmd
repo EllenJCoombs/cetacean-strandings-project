@@ -16,6 +16,11 @@ This script requires the output from `11-correlates-data-for-model`
 ```{r}
 library(dplyr)
 library(mgcv)
+library(devtools) #for downlading gratia 
+
+#Installing gratia for extra nice plots (in body of the paper)
+devtools::install_github('gavinsimpson/gratia')
+library(gratia)
 ```
 
 ## Load data 
@@ -52,6 +57,9 @@ All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, 
 #GAM summary and GAM plots 
 summary(All_strandc)
 par(mfrow = c(2,2))
+#
+
+#in mgvc 
 plot(All_strandc)
 
 #AIC if required 
