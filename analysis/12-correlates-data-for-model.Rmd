@@ -20,6 +20,7 @@ This script requires the outputs from:
 `08-correlates-data-geomagnetic.Rmd`
 `09-correlates-data-SST.Rmd`
 `10-correlates-data-NAO.Rmd`
+`11-correlates-data-fishing-catch.Rmd`
 
 ## Load packages 
 ```{r}
