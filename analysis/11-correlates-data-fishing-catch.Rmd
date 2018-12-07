@@ -1,0 +1,58 @@
+---
+title: "11-correlates-data-fishing-catch"
+author: "Ellen Coombs"
+date: "07/12/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Collecting North Atlantic Oscillation (NAO) data for the model 
+
+This code is for reading in the fishing catch data. 
+Data are from the International Council for the Exploration of the Sea [ICES](www.ices.dk). 
+
+We combined 3 separate fishing datasets into a .csv file: 
+
+ICES Historical Landings: 1903 – 1949 
+Historical Nominal Catches: 1950 – 2010 
+Official Nominal Catches: 2006 – 2016 
+
+The following code cleans the data for the model. 
+
+##Cleaning the fishing catch data
+```{r, echo=TRUE}
+
+Fisheries_data <- read.csv("Landings.csv")
+
+#Country codes 
+Fisheries_data <- Fisheries_data %>%
+  filter(Country %in% c("GBE", "GBU", "GBS", "IRL"))
+
+Fisheries_data$X <- NULL
+Fisheries_data$X.1 <- NULL
+Fisheries_data$X.2 <- NULL
+Fisheries_data$X.3 <- NULL 
+Fisheries_data$X.4 <-NULL 
+
+#Years selected 
+Fisheries_data <- Fisheries_data %>%
+  filter(Year %in% c(1913:2015))
+
+#Selecting specific columns
+Fisheries_data <- Fisheries_data %>%
+  select(Year, Landings)
+
+Fisheries_data$Landings = as.numeric(as.character(Fisheries_data$Landings))
+#NAs -> 0 
+Fisheries_data[is.na(Fisheries_data)] <- 0
+
+#Aggrgate by year 
+Fisheries_data <- aggregate(Fisheries_data$Landings, by=list(Year=Fisheries_data$Year), FUN=sum)
+
+write.csv(Fisheries_data, file = "Fisheries_data.csv")
+
+```
+
