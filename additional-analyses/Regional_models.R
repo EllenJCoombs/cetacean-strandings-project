@@ -180,6 +180,8 @@ summary(SW_strandings_model)
 par(mfrow = c(2,2))
 plot(SW_strandings_model)
 
+draw(SW_strandings_model)
+
 #Gam.check
 par(mfrow=c(2,2))
 gam.check(SW_strandings_model)
