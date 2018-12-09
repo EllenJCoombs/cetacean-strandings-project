@@ -44,7 +44,7 @@ unique(all_strandings$Max_K_index)
 
 
 #GAM for the above with Species as the factor smooth 
-All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
+All_strand <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, bs="fs") +
                       s(Storms, k=7, bs="ts") +
                       s(Max_K_index, k=4, bs="ts") +
                       s(Max_SST, bs="ts") +
@@ -55,19 +55,19 @@ All_strandc <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, 
                     family=nb())
 
 #GAM summary and GAM plots 
-summary(All_strandc)
+summary(All_strand)
 par(mfrow = c(2,2))
 #
 
 #in mgvc 
-plot(All_strandc)
+plot(All_strand)
 
 #AIC if required 
-#AIC(All_strandc)
+#AIC(All_strand)
 
 #Gam.check
 par(mfrow=c(2,2))
-gam.check(All_strandc)
+gam.check(All_strand)
 
 ```
 
