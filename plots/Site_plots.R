@@ -25,20 +25,12 @@ sitecount <- sitecount %>%
 sitecount <- sitecount %>%
   rename(strandings_count = n)
 
-
-#counting total strandings per year 
-gg1 <- ggplot(data=sitecount, aes(x=Year, y= strandings_total)) +
-  geom_bar(stat="identity", width=0.5)
-  
-  
-gg1 + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-                                  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
-
-
+#Plots per site 
 ggplot(sitecount, aes(x = Year, y = strandings_count)) +
   geom_bar(stat="identity", width=0.5) +
   facet_wrap(~ Code) +
-  theme_light() 
+  theme_classic() +
+  labs(x="Year",y="Stranding count")
 
 
 
