@@ -57,9 +57,6 @@ All_strand <- gam(Total_strandings ~ offset(log(Population)) +s(Year, Species, b
 #GAM summary and GAM plots 
 summary(All_strand)
 par(mfrow = c(2,2))
-#
-
-#in mgvc 
 plot(All_strand)
 
 #AIC if required 
