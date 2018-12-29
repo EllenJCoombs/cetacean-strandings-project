@@ -52,6 +52,7 @@ Fisheries_data[is.na(Fisheries_data)] <- 0
 #Aggrgate by year 
 Fisheries_data <- aggregate(Fisheries_data$Landings, by=list(Year=Fisheries_data$Year), FUN=sum)
 
+#To save the data
 write.csv(Fisheries_data, file = "Fisheries_data.csv")
 
 ```
