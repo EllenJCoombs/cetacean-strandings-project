@@ -27,7 +27,7 @@ The following code cleans the data for the model.
 
 Fisheries_data <- read.csv("Landings.csv")
 
-#Country codes 
+#Country codes for UK and Ireland (inclduing Isle of Man etc.)
 Fisheries_data <- Fisheries_data %>%
   filter(Country %in% c("GBE", "GBU", "GBS", "IRL"))
 
