@@ -75,6 +75,7 @@ View(nhm)
 
 
 #embedding commands
+#data substitute 
 nhm$Date <- gsub("Summer", "1 Jun",
             gsub("Winter", "1 Dec",
             gsub("Spring", "1 Mar",
