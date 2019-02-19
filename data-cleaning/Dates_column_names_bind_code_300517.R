@@ -3,7 +3,7 @@
 #Code for cleaning up messy dates and latitudes in the NHM dataset 
 #Code for cleaning the dates in the CSIP dataset 
 #Code for renaming columns so that both datsets have the same variables 
-#Code for binding the two datasets together 
+#Code for binding the two (CSIP + NHM) datasets together 
 
 
 rm(list = ls())
