@@ -103,7 +103,7 @@ plot_all_whale_years(ds, species.col = "Name.Current.Sci", whales,
 
 
 
-#Mysitcetes ###########################################################################
+#Mysticetes ###########################################################################
 mysticetesplot <- c("balaenoptera acutorostrata", "balaenoptera borealis", "balaenoptera musculus", "balaenoptera physalus", 
                     "megaptera novaeangliae", "un. mystitcete", "unknown balaenoptera", "unknown balaenopterid",
                     "unknown mysticete") 
