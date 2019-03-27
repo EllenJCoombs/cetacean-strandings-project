@@ -5,7 +5,7 @@
 
 
 Author(s): 
-[Ellen J. Coombs](mailto:ellen.coombs.14@ucl.ac.uk), [David L. Miller](https://github.com/dill), Rob Deaville, Richard C. Sabin, Richard C. Sabin, Louise Allan, Mick O’Connell, Simon Berrow, Andrew Brownlow, Mariel Ten Doeschate, Rod Penrose, Ruth Williams, Paul Jepson, and [Natalie Cooper](https://github.com/nhcooper123)
+[Ellen J. Coombs](mailto:ellen.coombs.14@ucl.ac.uk), Rob Deaville, Richard C. Sabin, Richard C. Sabin, Louise Allan, Mick O’Connell, Simon Berrow, Brian Smith, Andrew Brownlow, Mariel Ten Doeschate, Rod Penrose, Ruth Williams, Matthew Perkins, Paul Jepson, and [Natalie Cooper](https://github.com/nhcooper123)
 
 
 To cite the paper:  
