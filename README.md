@@ -11,7 +11,9 @@ Author(s):
 To cite the paper:  
 
 
-To cite this repo: 
+To cite this repo: Coombs, E.J., Deaville, R., Sabin, R. C., Allan, L., O’Connell, M., Berrow, S., Smith, B., Brownlow, A., Ten Doeschate, M., Penrose, R., Williams, R., Perkins, M., Jepson, P., Cooper, N. What can cetacean stranding records tell us? A study of UK and Irish cetacean diversity over the past 100 years. (2019). GitHub: 
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2612908.svg)](https://doi.org/10.5281/zenodo.2612908)
 
 
 ## Data :bar_chart: :chart_with_downwards_trend: 
