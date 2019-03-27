@@ -49,7 +49,7 @@ names(nhm)
 ```
 
 ## Initial exploration of data
-This initial exploration is valuable for checking which variables we have across the datasets, as wekk as their class. This is important for binding the datasets later 
+This initial exploration is valuable for checking which variables we have across the datasets, as well as their class. This is important for binding the datasets later 
 ```{r}
 
 #What variables have we got? Check the data imported correctly 
