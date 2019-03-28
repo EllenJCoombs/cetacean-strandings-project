@@ -63,7 +63,7 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 
 * **11-correlates-data-fishing-catch** This code reads in the fishing catch data from the International Council for the Exploration of the Sea (ICES)
 
-* **12-correlates-data-for-model.Rmd** This code pulls together all of the correlates data e.g. Storms, and NAO, and puts them together along with 'Year', 'Species' and Total strandings' which is called `all_strandings.csv` in our code. This dataset is fed into the Generalised Additive Model (`12-generalised-additive-models.Rmd`)
+* **12-correlates-data-for-model.Rmd** This code pulls together all of the correlates data e.g. Storms, and NAO, and puts them together along with 'Year', 'Species' and Total strandings' which is called `all_strandings.csv` in our code. This dataset is fed into the Generalised Additive Model (`13-generalised-additive-models.Rmd`)
 
 * **13-generalised-additive-models.Rmd** This code runs the GAM which looks at all strandings (species per year), with an offset of population.
 
