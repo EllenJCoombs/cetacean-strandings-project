@@ -14,6 +14,10 @@ knitr::opts_chunk$set(echo = FALSE)
 This script requires the output from `01-clean-up-data-for-analysis.Rmd`. 
 The first part of this script imports and cleans the Irish dataset. The second part of this script binds the Irish dataset with the NHM + CSIP dataset (called `cleandatesnames.csv`)
 
+The Irish Whale and Dolphin Group data need to be added here and can be accessed from: 
+[Irish Whale and Dolphin Group stranding data] (http://www.iwdg.ie/) 
+
+
 ## Irish data cleaning and binding 
 
 ## Load libraries/packages 
@@ -27,8 +31,6 @@ library(lubridate) #deals with date format
 This is using the dataset created using `01-clean-up-data-for-analysis.Rmd`
 ```{r}
 
-#The Irish Whale and Dolphin Group data need to be added here and can be accessed from: 
-[Irish Whale and Dolphin Group stranding data] (http://www.iwdg.ie/) 
 
 ```
 
