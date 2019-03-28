@@ -29,10 +29,6 @@ library(lubridate) #deals with date format
 
 ## Read in clean NHM and CSIP dataset 
 This is using the dataset created using `01-clean-up-data-for-analysis.Rmd`
-```{r}
-
-
-```
 
 ## Read in raw IWDG data 
 
