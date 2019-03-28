@@ -38,7 +38,7 @@ All code used to run analyses and make figures and tables is included in the `an
 
 * **01-clean-up-data-for-analysis.Rmd** This script takes the raw data from the NHM and CSIP databases. This includes cleaning and standardising variables in the Natural History Museum (NHM), Cetacean Stranding Investigation Programme (CSIP) datasets for binding, cleaning and formatting dates in the NHM and CSIP dataset and binding the 2 datasets (NHM + CSIP first, followed by IWDG which was aquired at a later date; see **02-cleaning-and-adding-irish-data.Rmd**). Throughout the code  the cleaned, merged final dataset of all 3 stranding datsets, which has also had rare species removed is called: `UK_and_Irish_sp.csv`
 
-If you're pushed for time, you can download a cleaned dataset for running the Generalised Additive Models from: (data.nhm)[https://data.nhm.ac.uk/dataset/what-can-cetacean-stranding-records-tell-us]
+If you're pushed for time, you can download a cleaned dataset for running the Generalised Additive Models from: [data.nhm](https://data.nhm.ac.uk/dataset/what-can-cetacean-stranding-records-tell-us)
 
 * **02-cleaning-and-adding-irish-data.Rmd** The first part of this script shows where the Irish data can be accessed and also how to clean the Irish dataset. The second part of this script binds the Irish dataset with the NHM + CSIP dataset (called `cleandatesnames.csv`)
 
