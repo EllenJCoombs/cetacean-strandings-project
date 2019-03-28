@@ -1,5 +1,5 @@
 #Residual plots for covariates 
-
+#Practice code for plots
 
 load("Model_for_Dave.Rdata")
 
