@@ -36,18 +36,20 @@ Human population for the UK can be found here:
 ## Analysis :chart_with_upwards_trend: :whale2:
 All code used to run analyses and make figures and tables is included in the `analysis/` folder. Before starting remember to either set your working directory to the stranding poject folder on your computer, or open an RStudio project from that folder. All of these files are in the RMarkdown format. You can click the Knit button in RStudio and create HTML versions using the code. 
 
-* **01-clean-up-data-for-analysis.Rmd** This script takes the raw data from the NHM and CSIP databases. This includes cleaning and standardising variables in the Natural History Museum (NHM), Cetacean Stranding Investigation Programme (CSIP) datasets for binding, cleaning and formatting dates in the NHM and CSIP dataset and binding the 2 datasets (NHM + CSIP first, followed by IWDG which was aquired at a later date; see **02-cleaning-and-adding-irish-data.Rmd**). If you're pushed for time, use the cleaned, merged final dataset of all 3 stranding datsets, which has also had rare species removed and is used in the GAMs. This can be found in the data folder and is called `UK_and_Irish_sp.csv`
+* **01-clean-up-data-for-analysis.Rmd** This script takes the raw data from the NHM and CSIP databases. This includes cleaning and standardising variables in the Natural History Museum (NHM), Cetacean Stranding Investigation Programme (CSIP) datasets for binding, cleaning and formatting dates in the NHM and CSIP dataset and binding the 2 datasets (NHM + CSIP first, followed by IWDG which was aquired at a later date; see **02-cleaning-and-adding-irish-data.Rmd**). Throughout the code  the cleaned, merged final dataset of all 3 stranding datsets, which has also had rare species removed is called: `UK_and_Irish_sp.csv`
 
-* **02-cleaning-and-adding-irish-data.Rmd** The first part of this script imports and cleans the Irish dataset. The second part of this script binds the Irish dataset with the NHM + CSIP dataset (called `cleandatesnames.csv`)
+If you're pushed for time, you can download a cleaned dataset for running the Generalised Additive Models from: (data.nhm)[https://data.nhm.ac.uk/dataset/what-can-cetacean-stranding-records-tell-us]
+
+* **02-cleaning-and-adding-irish-data.Rmd** The first part of this script shows where the Irish data can be accessed and also how to clean the Irish dataset. The second part of this script binds the Irish dataset with the NHM + CSIP dataset (called `cleandatesnames.csv`)
 
 * **03-final-data-clean.Rmd** This is the final stage of the data cleaning before analysis.
-'UK_and_Irish_sp' is the final dataset used for analysis 
+'UK_and_Irish_sp' is the final dataset used for analysis in our code. 
 
 * **04-temporal-analysis-figure-1.Rmd** This code plots all cetacean strandings from 1913-2015 from the combined dataset (NHM + CSIP + IWDG) and produces Figure.1 from the paper. 
 
 * **05-spatial-analysis-figure-2.Rmd** Produces Figure 2. 
 
-If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use the model dataset called `all_strandings.csv` to run the analysis in **12-generalised-additive-models.Rmd**. 
+If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use the model dataset called `all_strandings.csv` to run the analysis in **12-generalised-additive-models.Rmd**. See 01. above for details on downloading the model input file. 
 
 * **06-correlates-data-population.Rmd** This code reads in, and cleans population data which forms part of the dataset of possible correlates of strandings.
 
