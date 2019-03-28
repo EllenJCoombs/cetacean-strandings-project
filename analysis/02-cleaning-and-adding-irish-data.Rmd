@@ -27,7 +27,7 @@ library(lubridate) #deals with date format
 This is using the dataset created using `01-clean-up-data-for-analysis.Rmd`
 ```{r}
 
-#The Irish Whale and Dolphin Group data can be accessed from: 
+#The Irish Whale and Dolphin Group data need to be added here and can be accessed from: 
 [Irish Whale and Dolphin Group stranding data] (http://www.iwdg.ie/) 
 
 ```
