@@ -27,8 +27,11 @@ library(lubridate) #deals with date format
 This is using the dataset created using `01-clean-up-data-for-analysis.Rmd`
 ```{r}
 
-#First of all the cleaned NHM/CSIP data 
-cleaneddata <- read.csv("cleandatesnames.csv")
+#Firstly the data for the NHM can be downloaded from: 
+
+https://data.nhm.ac.uk/dataset/8c67d782-c01d-4807-8913-f57d0daabf35
+
+
 ```
 
 ## Read in raw IWDG data 
