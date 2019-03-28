@@ -27,10 +27,8 @@ library(lubridate) #deals with date format
 This is using the dataset created using `01-clean-up-data-for-analysis.Rmd`
 ```{r}
 
-#Firstly the data for the NHM can be downloaded from: 
-
-https://data.nhm.ac.uk/dataset/8c67d782-c01d-4807-8913-f57d0daabf35
-
+#The Irish Whale and Dolphin Group data can be accessed from: 
+[Irish Whale and Dolphin Group stranding data] (http://www.iwdg.ie/) 
 
 ```
 
@@ -39,7 +37,8 @@ https://data.nhm.ac.uk/dataset/8c67d782-c01d-4807-8913-f57d0daabf35
 ```{r}
 
 #Irish data 
-#Cleaning dataes and names to be the same as the "cleandatesnames")
+#Irish data downloaded and saved as "Irish_strandings_raw.csv"
+#Cleaning dates and names to be the same as the "cleandatesnames")
 #Removing duplicates that appear in both the NHM and IWDG datasets
 
 #Check species names
