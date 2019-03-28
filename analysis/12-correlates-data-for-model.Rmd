@@ -52,7 +52,7 @@ NAO_data <- read.csv("NAO_data.csv")
 NAO_data$X <- NULL
 
 #Read in fishing catch data 
-Fishing_data <- read.csv("fishing_data.csv")
+Fishing_data <- read.csv("Fisheries_data.csv")
 
 ```
 
