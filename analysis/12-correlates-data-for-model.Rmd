@@ -51,13 +51,16 @@ SST_yearly_max <- read.csv("SST_yearly_max.csv")
 NAO_data <- read.csv("NAO_data.csv")
 NAO_data$X <- NULL
 
+#Read in fishing catch data 
+Fishing_data <- read.csv("fishing_data.csv")
+
 ```
 
 ## Combining all of the data for final model dataset 
 The All_stranding dataset needs to be read back in for all cetacean strandings: this is created in `04-temporal-analysis-figure-1.Rmd`
 ```{r}
 
-All_model <- bind_cols(Population, Storms, Final_geom, SST_yearly_max, NAO_data)
+All_model <- bind_cols(Population, Storms, Final_geom, SST_yearly_max, NAO_data, Fishing_data)
 
 Model_data <- All_model
 #Save if required 
