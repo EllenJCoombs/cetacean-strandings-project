@@ -68,8 +68,7 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 * **13-generalised-additive-models.Rmd** This code runs the GAM which looks at all strandings (species per year), with an offset of population.
 
 ## Other folders :file_folder:
-`functions/` contains functions required by the code in the `analysis/` folder 
-`figures/` contains figures found in the manuscript 
+`paper-plots/` contains figures found in the manuscript 
 `raw data/` contains gathered raw data on UK population, North Atlantic Oscillation, and UK and Irish storms from 1913-2015
 `cleaned data/` contains cleaned geomagnetic data, population data nd other correlates data
 `modelling/` contains code for models run in the supplementary material. See folder `modelling/supplementary-models`
