@@ -63,16 +63,15 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 
 * **11-correlates-data-fishing-catch** This code reads in the fishing catch data from the International Council for the Exploration of the Sea (ICES)
 
-* **12-correlates-data-for-model.Rmd** This code pulls together all of the correlates data e.g. Storms, and NAO, and puts them together along with 'Year', 'Species' and Total strandings' which is called `all_strandings.csv`. This dataset is fed into the Generalised Additive Model (`12-generalised-additive-models.Rmd`)
+* **12-correlates-data-for-model.Rmd** This code pulls together all of the correlates data e.g. Storms, and NAO, and puts them together along with 'Year', 'Species' and Total strandings' which is called `all_strandings.csv` in our code. This dataset is fed into the Generalised Additive Model (`12-generalised-additive-models.Rmd`)
 
 * **13-generalised-additive-models.Rmd** This code runs the GAM which looks at all strandings (species per year), with an offset of population.
-
 
 ## Other folders :file_folder:
 `functions/` contains functions required by the code in the `analysis/` folder 
 `figures/` contains figures found in the manuscript 
-`raw data/` contains gathered raw data and sources on UK population and UK and Irish storms from 1913-2015
-`cleaned data/` contains cleaned stranding dataset with the NHM, CSIP and IWDG datasets combined, and rare species removed. It also contains the cleaned correlates data; as well as the cleaned dataset (which is all of the correlates combined + year, species and total strandings) 
+`raw data/` contains gathered raw data on UK population, North Atlantic Oscillation, and UK and Irish storms from 1913-2015
+`cleaned data/` contains cleaned geomagnetic data, population data nd other correlates data
 `modelling/` contains code for models run in the supplementary material. See folder `modelling/supplementary-models`
 
 ## Session Info :clipboard:
