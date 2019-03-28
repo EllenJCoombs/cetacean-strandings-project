@@ -8,11 +8,12 @@ __Authors:__
 [Ellen J. Coombs](mailto:ellen.coombs.14@ucl.ac.uk), Rob Deaville, Richard C. Sabin, Richard C. Sabin, Louise Allan, Mick O’Connell, Simon Berrow, Brian Smith, Andrew Brownlow, Mariel Ten Doeschate, Rod Penrose, Ruth Williams, Matthew Perkins, Paul Jepson, and [Natalie Cooper](https://github.com/nhcooper123)
 
 
-__To cite the paper__: Coombs, E.J., Deaville, R., Sabin, R. C., Allan, L., O’Connell, M., Berrow, S., Smith, B., Brownlow, A., Ten Doeschate, M., Penrose, R., Williams, R., Perkins, M., Jepson, P., Cooper, N. What can cetacean stranding records tell us? A study of UK and Irish cetacean diversity over the past 100 years. (2019). Marine Mammal Science. XXX-XXX 
+__To cite the paper__: 
+> Coombs, E.J., Deaville, R., Sabin, R. C., Allan, L., O’Connell, M., Berrow, S., Smith, B., Brownlow, A., Ten Doeschate, M., Penrose, R., Williams, R., Perkins, M., Jepson, P., Cooper, N. What can cetacean stranding records tell us? A study of UK and Irish cetacean diversity over the past 100 years. (2019). X. XXX-XXX 
 
 
 __To cite this repo__: 
-Coombs, E.J., Deaville, R., Sabin, R. C., Allan, L., O’Connell, M., Berrow, S., Smith, B., Brownlow, A., Ten Doeschate, M., Penrose, R., Williams, R., Perkins, M., Jepson, P., Cooper, N. What can cetacean stranding records tell us? A study of UK and Irish cetacean diversity over the past 100 years. (2019). GitHub: github.com/EllenJCoombs/cetacean-strandings-project Published version v.1.0. Zenodo DOI: 10.5281/zenodo.2612908
+> Coombs, E.J., Deaville, R., Sabin, R. C., Allan, L., O’Connell, M., Berrow, S., Smith, B., Brownlow, A., Ten Doeschate, M., Penrose, R., Williams, R., Perkins, M., Jepson, P., Cooper, N. What can cetacean stranding records tell us? A study of UK and Irish cetacean diversity over the past 100 years. (2019). GitHub: github.com/EllenJCoombs/cetacean-strandings-project Published version v.1.0. Zenodo. http://doi.org/10.5281/zenodo.2612908
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2612908.svg)](https://doi.org/10.5281/zenodo.2612908)
 
@@ -73,46 +74,46 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 ## Session Info :clipboard:
 For reproducibility purposes, here is the output of `devtools::session_info()` used to perform the analyses in the publication.
 
-Session info ---------------------------------------------------------------------------------------
- setting  value                       
- version  R version 3.4.0 (2017-04-21)
- system   x86_64, darwin15.6.0        
- ui       RStudio (1.0.153)           
- language (EN)                        
- collate  en_GB.UTF-8                 
- tz       <NA>                        
- date     2018-02-07                  
+    Session info ---------------------------------------------------------------------------------------
+    setting  value                       
+    version  R version 3.4.0 (2017-04-21)
+    system   x86_64, darwin15.6.0        
+    ui       RStudio (1.0.153)           
+    language (EN)                        
+    collate  en_GB.UTF-8                 
+    tz       <NA>                        
+    date     2018-02-07                  
 
-Packages -------------------------------------------------------------------------------------------
- package    * version date       source        
- base       * 3.4.0   2017-04-21 local  
- clipr      * 0.4.0   2017-11-03 CRAN (R 3.4.2)  
- colorspace   1.3-2   2016-12-14 CRAN (R 3.4.0)   
- compiler     3.4.0   2017-04-21 local  
- datasets   * 3.4.0   2017-04-21 local           
- devtools   * 1.13.4  2017-11-09 CRAN (R 3.4.2)  
- digest       0.6.12  2017-01-27 CRAN (R 3.4.0)   
- ggplot2      2.2.1   2016-12-30 CRAN (R 3.4.0)  
- graphics   * 3.4.0   2017-04-21 local           
- grDevices  * 3.4.0   2017-04-21 local           
- grid         3.4.0   2017-04-21 local           
- gtable       0.2.0   2016-02-26 CRAN (R 3.4.0)  
- knitr        1.17    2017-08-10 CRAN (R 3.4.0)  
- lattice      0.20-35 2017-03-25 CRAN (R 3.4.0)  
- lazyeval     0.2.0   2016-06-12 CRAN (R 3.4.0)  
- Matrix       1.2-9   2017-03-14 CRAN (R 3.4.0)  
- memoise      1.1.0   2017-04-21 CRAN (R 3.4.0)  
- methods    * 3.4.0   2017-04-21 local           
- mgcv         1.8-17  2017-02-08 CRAN (R 3.4.0)  
- munsell      0.4.3   2016-02-13 CRAN (R 3.4.0)  
- nlme         3.1-131 2017-02-06 CRAN (R 3.4.0)  
- plyr         1.8.4   2016-06-08 CRAN (R 3.4.0)  
- Rcpp         0.12.12 2017-07-15 CRAN (R 3.4.1)  
- rlang        0.1.1   2017-05-18 CRAN (R 3.4.0)  
- rstudioapi   0.7     2017-09-07 CRAN (R 3.4.1)  
- scales       0.4.1   2016-11-09 CRAN (R 3.4.0)  
- stats      * 3.4.0   2017-04-21 local           
- tibble       1.3.3   2017-05-28 CRAN (R 3.4.0)  
- tools        3.4.0   2017-04-21 local           
- utils      * 3.4.0   2017-04-21 local           
- withr        2.1.1   2017-12-19 CRAN (R 3.4.3)  
+    Packages -------------------------------------------------------------------------------------------
+    package    * version date       source        
+    base       * 3.4.0   2017-04-21 local  
+    clipr      * 0.4.0   2017-11-03 CRAN (R 3.4.2)  
+    colorspace   1.3-2   2016-12-14 CRAN (R 3.4.0)   
+    compiler     3.4.0   2017-04-21 local  
+    datasets   * 3.4.0   2017-04-21 local           
+    devtools   * 1.13.4  2017-11-09 CRAN (R 3.4.2)  
+    digest       0.6.12  2017-01-27 CRAN (R 3.4.0)   
+    ggplot2      2.2.1   2016-12-30 CRAN (R 3.4.0)  
+    graphics   * 3.4.0   2017-04-21 local           
+    grDevices  * 3.4.0   2017-04-21 local           
+    grid         3.4.0   2017-04-21 local           
+    gtable       0.2.0   2016-02-26 CRAN (R 3.4.0)  
+    knitr        1.17    2017-08-10 CRAN (R 3.4.0)  
+    lattice      0.20-35 2017-03-25 CRAN (R 3.4.0)  
+    lazyeval     0.2.0   2016-06-12 CRAN (R 3.4.0)  
+    Matrix       1.2-9   2017-03-14 CRAN (R 3.4.0)  
+    memoise      1.1.0   2017-04-21 CRAN (R 3.4.0)  
+    methods    * 3.4.0   2017-04-21 local           
+    mgcv         1.8-17  2017-02-08 CRAN (R 3.4.0)  
+    munsell      0.4.3   2016-02-13 CRAN (R 3.4.0)  
+    nlme         3.1-131 2017-02-06 CRAN (R 3.4.0)  
+    plyr         1.8.4   2016-06-08 CRAN (R 3.4.0)  
+    Rcpp         0.12.12 2017-07-15 CRAN (R 3.4.1)  
+    rlang        0.1.1   2017-05-18 CRAN (R 3.4.0)  
+    rstudioapi   0.7     2017-09-07 CRAN (R 3.4.1)  
+    scales       0.4.1   2016-11-09 CRAN (R 3.4.0)  
+    stats      * 3.4.0   2017-04-21 local           
+    tibble       1.3.3   2017-05-28 CRAN (R 3.4.0)  
+    tools        3.4.0   2017-04-21 local           
+    utils      * 3.4.0   2017-04-21 local           
+    withr        2.1.1   2017-12-19 CRAN (R 3.4.3)  
