@@ -17,6 +17,7 @@ Before being able to plot Figure 3, we need to gather the data for doing so. Thi
 ## Load packages 
 ```{r}
 library(dplyr)
+library(tidyr)
 ```
 
 ## Load data 
