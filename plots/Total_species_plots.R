@@ -1,5 +1,5 @@
 
-#This code is looking at some species plots - still messy 
+#This code is looking at some species plots
 #Splitting data into years and species and then attempting to look at mysticetes seperately 
 #Messy variable names - need to clean 
 
@@ -41,14 +41,17 @@ speciesyearcount <- speciesyearcount %>%
 
 
 p <- ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Species))+
-  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
+  theme_bw() +
   labs(x = "Year", y = "Count") +
   geom_line() +
   theme(legend.position="bottom") +
   scale_fill_viridis(option="viridis") + 
   theme_minimal()
   
- p + facet_wrap(~ Species, scales = 'free')
+pp <- p + facet_wrap(~ Species, scales = 'free')
+ 
+pp + theme(strip.background = element_rect(colour = "black", fill = "grey40")) +
+  theme_bw()
   
   
 #Looking at species by year - a count of each species per year
