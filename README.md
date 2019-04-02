@@ -76,115 +76,19 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 ## Session Info :clipboard:
 For reproducibility purposes, here is the output of `devtools::session_info()` used to perform the analyses in the publication.
 
-Session info --------------------------------------------------------------
- setting  value                       
- version  R version 3.5.1 (2018-07-02)
- system   x86_64, darwin15.6.0     
- ui       RStudio (1.1.423)    
- language (EN) 
- collate  en_GB.UTF-8  
- tz       Europe/London  
- date     2019-04-02                  
 
-Packages ------------------------------------------------------------------
- package      * version date       source        
- acepack        1.4.1   2016-10-29 CRAN (R 3.5.0)
- 
- assertthat     0.2.0   2017-04-11 CRAN (R 3.5.0)
- 
- backports      1.1.2   2017-12-13 CRAN (R 3.5.0)
- 
- base         * 3.5.1   2018-07-05 local         
- base64enc      0.1-3   2015-07-28 CRAN (R 3.5.0)
- bindr          0.1.1   2018-03-13 CRAN (R 3.5.0)
- bindrcpp     * 0.2.2   2018-03-29 CRAN (R 3.5.0)
- broom          0.5.0   2018-07-17 CRAN (R 3.5.0)
- cellranger     1.1.0   2016-07-27 CRAN (R 3.5.0)
- checkmate      1.9.1   2019-01-15 CRAN (R 3.5.2)
- cli            1.0.0   2017-11-05 CRAN (R 3.5.0)
- cluster        2.0.7-1 2018-04-13 CRAN (R 3.5.1)
- colorspace     1.3-2   2016-12-14 CRAN (R 3.5.0)
- compiler       3.5.1   2018-07-05 local         
- crayon         1.3.4   2017-09-16 CRAN (R 3.5.0)
- data.table     1.12.0  2019-01-13 CRAN (R 3.5.2)
- datasets     * 3.5.1   2018-07-05 local         
- devtools       1.13.6  2018-06-27 CRAN (R 3.5.0)
- digest         0.6.18  2018-10-10 cran (@0.6.18)
- dplyr        * 0.7.8   2018-11-10 cran (@0.7.8) 
- forcats      * 0.3.0   2018-02-19 CRAN (R 3.5.0)
- foreign        0.8-70  2017-11-28 CRAN (R 3.5.1)
- Formula        1.2-3   2018-05-03 CRAN (R 3.5.0)
- geosphere      1.5-7   2017-11-05 CRAN (R 3.5.0)
- ggmap        * 2.6.1   2016-01-23 CRAN (R 3.5.0)
- ggplot2      * 3.1.0   2018-10-25 cran (@3.1.0) 
- glue           1.3.0   2018-07-17 CRAN (R 3.5.0)
- graphics     * 3.5.1   2018-07-05 local         
- grDevices    * 3.5.1   2018-07-05 local         
- grid         * 3.5.1   2018-07-05 local         
- gridExtra    * 2.3     2017-09-09 CRAN (R 3.5.0)
- gtable       * 0.2.0   2016-02-26 CRAN (R 3.5.0)
- haven          1.1.2   2018-06-27 CRAN (R 3.5.0)
- hexbin       * 1.27.2  2018-01-15 CRAN (R 3.5.0)
- Hmisc          4.2-0   2019-01-26 CRAN (R 3.5.2)
- hms            0.4.2   2018-03-10 CRAN (R 3.5.0)
- htmlTable      1.13.1  2019-01-07 CRAN (R 3.5.2)
- htmltools      0.3.6   2017-04-28 CRAN (R 3.5.0)
- htmlwidgets    1.2     2018-04-19 CRAN (R 3.5.0)
- httr           1.3.1   2017-08-20 CRAN (R 3.5.0)
- jpeg           0.1-8   2014-01-23 cran (@0.1-8) 
- jsonlite       1.5     2017-06-01 CRAN (R 3.5.0)
- knitr          1.20    2018-02-20 CRAN (R 3.5.0)
- labeling       0.3     2014-08-23 CRAN (R 3.5.0)
- lattice        0.20-35 2017-03-25 CRAN (R 3.5.1)
- latticeExtra   0.6-28  2016-02-09 CRAN (R 3.5.0)
- lazyeval       0.2.1   2017-10-29 CRAN (R 3.5.0)
- lubridate      1.7.4   2018-04-11 CRAN (R 3.5.0)
- magrittr       1.5     2014-11-22 CRAN (R 3.5.0)
- mapproj        1.2.6   2018-03-29 CRAN (R 3.5.0)
- maps         * 3.3.0   2018-04-03 CRAN (R 3.5.0)
- Matrix         1.2-14  2018-04-13 CRAN (R 3.5.1)
- memoise        1.1.0   2017-04-21 CRAN (R 3.5.0)
- methods      * 3.5.1   2018-07-05 local         
- mgcv           1.8-24  2018-06-23 CRAN (R 3.5.1)
- modelr         0.1.2   2018-05-11 CRAN (R 3.5.0)
- munsell        0.5.0   2018-06-12 cran (@0.5.0) 
- nlme           3.1-137 2018-04-07 CRAN (R 3.5.1)
- nnet           7.3-12  2016-02-02 CRAN (R 3.5.1)
- pillar         1.2.2   2018-04-26 CRAN (R 3.5.0)
- pkgconfig      2.0.2   2018-08-16 cran (@2.0.2) 
- plyr         * 1.8.4   2016-06-08 CRAN (R 3.5.0)
- png            0.1-7   2013-12-03 CRAN (R 3.5.0)
- proto          1.0.0   2016-10-29 CRAN (R 3.5.0)
- purrr        * 0.2.5   2018-05-29 CRAN (R 3.5.0)
- R6             2.3.0   2018-10-04 cran (@2.3.0) 
- RColorBrewer   1.1-2   2014-12-07 CRAN (R 3.5.0)
- Rcpp           1.0.0   2018-11-07 CRAN (R 3.5.0)
- readr        * 1.1.1   2017-05-16 CRAN (R 3.5.0)
- readxl         1.1.0   2018-04-20 CRAN (R 3.5.0)
- reshape      * 0.8.8   2018-10-23 CRAN (R 3.5.0)
- reshape2       1.4.3   2017-12-11 CRAN (R 3.5.0)
- RgoogleMaps    1.4.3   2018-11-07 CRAN (R 3.5.0)
- rjson          0.2.20  2018-06-08 CRAN (R 3.5.0)
- rlang          0.3.0.1 2018-10-25 CRAN (R 3.5.0)
- rpart          4.1-13  2018-02-23 CRAN (R 3.5.1)
- rstudioapi     0.7     2017-09-07 CRAN (R 3.5.0)
- rvest          0.3.2   2016-06-17 CRAN (R 3.5.0)
- scales         1.0.0   2018-08-09 cran (@1.0.0) 
- sp             1.3-1   2018-06-05 CRAN (R 3.5.0)
- splines        3.5.1   2018-07-05 local         
- stats        * 3.5.1   2018-07-05 local         
- stringi        1.1.7   2018-03-12 CRAN (R 3.5.0)
- stringr      * 1.3.0   2018-02-19 CRAN (R 3.5.0)
- survival       2.42-3  2018-04-16 CRAN (R 3.5.1)
- tibble       * 1.4.2   2018-01-22 CRAN (R 3.5.0)
- tidyr        * 0.8.2   2018-10-28 CRAN (R 3.5.0)
- tidyselect     0.2.5   2018-10-11 CRAN (R 3.5.0)
- tidyverse    * 1.2.1   2017-11-14 CRAN (R 3.5.0)
- tools          3.5.1   2018-07-05 local         
- utils        * 3.5.1   2018-07-05 local         
- viridis      * 0.5.1   2018-03-29 CRAN (R 3.5.0)
- viridisLite  * 0.3.0   2018-02-01 CRAN (R 3.5.0)
- withr          2.1.2   2018-03-15 CRAN (R 3.5.0)
- xml2           1.2.0   2018-01-24 CRAN (R 3.5.0)
- yaml           2.1.18  2018-03-08 CRAN (R 3.5.0)
+**R version 3.5.1 (2018-07-02)**
 
+**Platform:** x86_64-apple-darwin15.6.0 (64-bit) 
+
+**locale:**
+en_GB.UTF-8||en_GB.UTF-8||en_GB.UTF-8||C||en_GB.UTF-8||en_GB.UTF-8
+
+**attached base packages:** 
+_grid_, _stats_, _graphics_, _grDevices_, _utils_, _datasets_, _methods_ and _base_
+
+**other attached packages:** 
+_pander(v.0.6.3)_, _sessioninfo(v.1.1.1)_, _reshape(v.0.8.8)_, _bindrcpp(v.0.2.2)_, _forcats(v.0.3.0)_, _stringr(v.1.3.0)_, _purrr(v.0.2.5)_, _readr(v.1.1.1)_, _tibble(v.1.4.2)_, _tidyverse(v.1.2.1)_, _ggmap(v.2.6.1)_, _hexbin(v.1.27.2)_, _maps(v.3.3.0)_, _gtable(v.0.2.0)_, _gridExtra(v.2.3)_, _viridis(v.0.5.1)_, _viridisLite(v.0.3.0)_, _ggplot2(v.3.1.0)_, _plyr(v.1.8.4)_, _tidyr(v.0.8.2)_ and _dplyr(v.0.7.8)_
+
+**loaded via a namespace (and not attached):** 
+_httr(v.1.3.1)_, _jsonlite(v.1.5)_, _splines(v.3.5.1)_, _modelr(v.0.1.2)_, _Formula(v.1.2-3)_, _assertthat(v.0.2.0)_, _sp(v.1.3-1)_, _latticeExtra(v.0.6-28)_, _cellranger(v.1.1.0)_, _yaml(v.2.1.18)_, _pillar(v.1.2.2)_, _backports(v.1.1.2)_, _lattice(v.0.20-35)_, _glue(v.1.3.0)_, _digest(v.0.6.18)_, _RColorBrewer(v.1.1-2)_, _checkmate(v.1.9.1)_, _rvest(v.0.3.2)_, _colorspace(v.1.3-2)_, _htmltools(v.0.3.6)_, _Matrix(v.1.2-14)_, _clipr(v.0.4.1)_, _devtools(v.1.13.6)_, _pkgconfig(v.2.0.2)_, _broom(v.0.5.0)_, _haven(v.1.1.2)_, _scales(v.1.0.0)_, _jpeg(v.0.1-8)_, _htmlTable(v.1.13.1)_, _mgcv(v.1.8-24)_, _withr(v.2.1.2)_, _nnet(v.7.3-12)_, _lazyeval(v.0.2.1)_, _cli(v.1.0.0)_, _proto(v.1.0.0)_, _readxl(v.1.1.0)_, _survival(v.2.42-3)_, _magrittr(v.1.5)_, _crayon(v.1.3.4)_, _memoise(v.1.1.0)_, _nlme(v.3.1-137)_, _xml2(v.1.2.0)_, _foreign(v.0.8-70)_, _tools(v.3.5.1)_, _data.table(v.1.12.0)_, _hms(v.0.4.2)_, _geosphere(v.1.5-7)_, _RgoogleMaps(v.1.4.3)_, _munsell(v.0.5.0)_, _cluster(v.2.0.7-1)_, _compiler(v.3.5.1)_, _rlang(v.0.3.0.1)_, _rstudioapi(v.0.7)_, _rjson(v.0.2.20)_, _htmlwidgets(v.1.2)_, _base64enc(v.0.1-3)_, _labeling(v.0.3)_, _reshape2(v.1.4.3)_, _R6(v.2.3.0)_, _lubridate(v.1.7.4)_, _knitr(v.1.20)_, _bindr(v.0.1.1)_, _Hmisc(v.4.2-0)_, _stringi(v.1.1.7)_, _Rcpp(v.1.0.0)_, _mapproj(v.1.2.6)_, _rpart(v.4.1-13)_, _acepack(v.1.4.1)_, _png(v.0.1-7)_ and _tidyselect(v.0.2.5)_
