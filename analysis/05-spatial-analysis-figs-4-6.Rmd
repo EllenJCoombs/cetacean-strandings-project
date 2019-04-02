@@ -289,3 +289,4 @@ make_data <- function(ds, years, labs=FALSE){
   ggsave(gr, file = "megaplot_maps.pdf", height = 5) 
   
 ```
+
