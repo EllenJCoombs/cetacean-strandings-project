@@ -79,11 +79,17 @@ For reproducibility purposes, here is the output of `devtools::session_info()` u
 Session info --------------------------------------------------------------
  setting  value                       
  version  R version 3.5.1 (2018-07-02)
- system   x86_64, darwin15.6.0        
- ui       RStudio (1.1.423)           
- language (EN)                        
- collate  en_GB.UTF-8                 
- tz       Europe/London               
+ 
+ system   x86_64, darwin15.6.0     
+ 
+ ui       RStudio (1.1.423)    
+ 
+ language (EN) 
+ 
+ collate  en_GB.UTF-8  
+ 
+ tz       Europe/London  
+ 
  date     2019-04-02                  
 
 Packages ------------------------------------------------------------------
