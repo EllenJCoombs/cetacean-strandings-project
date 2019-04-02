@@ -76,7 +76,7 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 ## Session Info :clipboard:
 For reproducibility purposes, here is the output of `devtools::session_info()` used to perform the analyses in the publication. 
 
-
+```{r}
   setting  value                       
   version  R version 3.5.1 (2018-07-02)
   os       macOS High Sierra 10.13.4   
@@ -88,7 +88,7 @@ For reproducibility purposes, here is the output of `devtools::session_info()` u
   tz       Europe/London               
   date     2019-04-02                  
 
-─ Packages ───────────────────────────────────────────────────────────────
+─ Packages ───────────────────────────────────────────────────────
  package      * version date       lib source <br />       
  acepack        1.4.1   2016-10-29 [1] CRAN (R 3.5.0)<br />
  assertthat     0.2.0   2017-04-11 [1] CRAN (R 3.5.0)<br />
@@ -177,4 +177,4 @@ For reproducibility purposes, here is the output of `devtools::session_info()` u
  xml2           1.2.0   2018-01-24 [1] CRAN (R 3.5.0)<br />
  yaml           2.1.18  2018-03-08 [1] CRAN (R 3.5.0)<br />
 
-
+```
