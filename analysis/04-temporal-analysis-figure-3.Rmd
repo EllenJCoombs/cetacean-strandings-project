@@ -82,6 +82,7 @@ This code rearranges the order of the species to put balaenopterids first.
 ```{r}
 #chance Total_strandings to Total_events to get # events
 plotdat <- ddply(alls, .(Year, Species), summarize, total=sum(Total_strandings))
+#remove NAs from the data set
 
 
 #Change the factor levels
@@ -101,7 +102,7 @@ plotdat$Species <- factor(c("Balaenoptera acutorostrata","Balaenoptera borealis"
                        "Tursiops truncatus", "Ziphius cavirostris"))
 
 
-#plotdat$Species <- factor(plotdat$Species, levels = c("Balaenoptera acutorostrata",
+plotdat$Species <- factor(plotdat$Species, levels = c("Balaenoptera acutorostrata",
                                                       "Balaenoptera borealis",
                                                       "Balaenoptera musculus", 
                                                       "Balaenoptera physalus",
