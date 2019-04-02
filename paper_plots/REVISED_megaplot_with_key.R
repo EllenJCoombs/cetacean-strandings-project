@@ -7,7 +7,7 @@ library(gridExtra)
 library(grid)
 library(gtable)
 
-#This code plots new Figure 1 (line plot)
+#This code plots new Figure 2 (line plot in paper)
 #New code on 15/06/2018 with the key underneath 
 #Final plot for paper 
 
