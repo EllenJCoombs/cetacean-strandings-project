@@ -79,7 +79,7 @@ library(gridExtra)
 library(tidyverse)
 ```
 
-##Plot Figure.4 
+##Plot Figure.4 with distribution maps underneath if desired
 This plot uses the dataset from above (allparv) as well as the final cleaned data UK_and_Irish_sp
 Figure.4: Temporal and spatial strandings for all, odontocetes, mysticetes with added information on key human events throughout the century. 
 ```{r}
