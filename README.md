@@ -77,22 +77,22 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 For reproducibility purposes, here is the output of `devtools::session_info()` used to perform the analyses in the publication. 
 
 
-## setting  value                       
-## version  R version 3.5.1 (2018-07-02)
-## os       macOS High Sierra 10.13.4   
-## system   x86_64, darwin15.6.0        
-## ui       RStudio                     
-## language (EN)                        
-## collate  en_GB.UTF-8                 
-## ctype    en_GB.UTF-8                 
-## tz       Europe/London               
-## date     2019-04-02                  
+  setting  value                       
+  version  R version 3.5.1 (2018-07-02)
+  os       macOS High Sierra 10.13.4   
+  system   x86_64, darwin15.6.0        
+  ui       RStudio                     
+  language (EN)                        
+  collate  en_GB.UTF-8                 
+  ctype    en_GB.UTF-8                 
+  tz       Europe/London               
+  date     2019-04-02                  
 
 ─ Packages ───────────────────────────────────────────────────────────────
- package      * version date       lib source        
- acepack        1.4.1   2016-10-29 [1] CRAN (R 3.5.0)
- assertthat     0.2.0   2017-04-11 [1] CRAN (R 3.5.0)
- backports      1.1.2   2017-12-13 [1] CRAN (R 3.5.0)
+ package      * version date       lib source <br />       
+ acepack        1.4.1   2016-10-29 [1] CRAN (R 3.5.0)<br />
+ assertthat     0.2.0   2017-04-11 [1] CRAN (R 3.5.0)<br />
+ backports      1.1.2   2017-12-13 [1] CRAN (R 3.5.0)<br />
  base64enc      0.1-3   2015-07-28 [1] CRAN (R 3.5.0)
  bindr          0.1.1   2018-03-13 [1] CRAN (R 3.5.0)
  bindrcpp     * 0.2.2   2018-03-29 [1] CRAN (R 3.5.0)
