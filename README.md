@@ -45,9 +45,9 @@ If you're pushed for time, you can download a cleaned dataset for running the Ge
 * **03-final-data-clean.Rmd** This is the final stage of the data cleaning before analysis.
 'UK_and_Irish_sp' is the final dataset used for analysis in our code. 
 
-* **04-temporal-analysis-figure-1.Rmd** This code plots all cetacean strandings from 1913-2015 from the combined dataset (NHM + CSIP + IWDG) and produces Figure.1 from the paper. 
+* **04-temporal-analysis-figs-1-3.Rmd** This code plots all cetacean strandings from 1913-2015 from the combined dataset (NHM + CSIP + IWDG) and produces Figures. 1, 2, and 3 from the paper. 
 
-* **05-spatial-analysis-figure-2.Rmd** Produces Figure 2. 
+* **05-spatial-analysis-figs-4-5.Rmd** Produces Figures 4 and 5. 
 
 If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use the model dataset called `all_strandings.csv` to run the analysis in **12-generalised-additive-models.Rmd**. See 01. above for details on downloading the model input file. 
 
