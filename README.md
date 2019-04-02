@@ -93,88 +93,88 @@ For reproducibility purposes, here is the output of `devtools::session_info()` u
  acepack        1.4.1   2016-10-29 [1] CRAN (R 3.5.0)<br />
  assertthat     0.2.0   2017-04-11 [1] CRAN (R 3.5.0)<br />
  backports      1.1.2   2017-12-13 [1] CRAN (R 3.5.0)<br />
- base64enc      0.1-3   2015-07-28 [1] CRAN (R 3.5.0)
- bindr          0.1.1   2018-03-13 [1] CRAN (R 3.5.0)
- bindrcpp     * 0.2.2   2018-03-29 [1] CRAN (R 3.5.0)
- broom          0.5.0   2018-07-17 [1] CRAN (R 3.5.0)
- cellranger     1.1.0   2016-07-27 [1] CRAN (R 3.5.0)
- checkmate      1.9.1   2019-01-15 [1] CRAN (R 3.5.2)
- cli            1.0.0   2017-11-05 [1] CRAN (R 3.5.0)
- cluster        2.0.7-1 2018-04-13 [1] CRAN (R 3.5.1)
- colorspace     1.3-2   2016-12-14 [1] CRAN (R 3.5.0)
- crayon         1.3.4   2017-09-16 [1] CRAN (R 3.5.0)
- data.table     1.12.0  2019-01-13 [1] CRAN (R 3.5.2)
- devtools       1.13.6  2018-06-27 [1] CRAN (R 3.5.0)
- digest         0.6.18  2018-10-10 [1] CRAN (R 3.5.0)
- dplyr        * 0.7.8   2018-11-10 [1] CRAN (R 3.5.0)
- forcats      * 0.3.0   2018-02-19 [1] CRAN (R 3.5.0)
- foreign        0.8-70  2017-11-28 [1] CRAN (R 3.5.1)
- Formula        1.2-3   2018-05-03 [1] CRAN (R 3.5.0)
- geosphere      1.5-7   2017-11-05 [1] CRAN (R 3.5.0)
- ggmap        * 2.6.1   2016-01-23 [1] CRAN (R 3.5.0)
- ggplot2      * 3.1.0   2018-10-25 [1] CRAN (R 3.5.0)
- glue           1.3.0   2018-07-17 [1] CRAN (R 3.5.0)
- gridExtra    * 2.3     2017-09-09 [1] CRAN (R 3.5.0)
- gtable       * 0.2.0   2016-02-26 [1] CRAN (R 3.5.0)
- haven          1.1.2   2018-06-27 [1] CRAN (R 3.5.0)
- hexbin       * 1.27.2  2018-01-15 [1] CRAN (R 3.5.0)
- Hmisc          4.2-0   2019-01-26 [1] CRAN (R 3.5.2)
- hms            0.4.2   2018-03-10 [1] CRAN (R 3.5.0)
- htmlTable      1.13.1  2019-01-07 [1] CRAN (R 3.5.2)
- htmltools      0.3.6   2017-04-28 [1] CRAN (R 3.5.0)
- htmlwidgets    1.2     2018-04-19 [1] CRAN (R 3.5.0)
- httr           1.3.1   2017-08-20 [1] CRAN (R 3.5.0)
- jpeg           0.1-8   2014-01-23 [1] CRAN (R 3.5.0)
- jsonlite       1.5     2017-06-01 [1] CRAN (R 3.5.0)
- knitr          1.20    2018-02-20 [1] CRAN (R 3.5.0)
- labeling       0.3     2014-08-23 [1] CRAN (R 3.5.0)
- lattice        0.20-35 2017-03-25 [1] CRAN (R 3.5.1)
- latticeExtra   0.6-28  2016-02-09 [1] CRAN (R 3.5.0)
- lazyeval       0.2.1   2017-10-29 [1] CRAN (R 3.5.0)
- lubridate      1.7.4   2018-04-11 [1] CRAN (R 3.5.0)
- magrittr       1.5     2014-11-22 [1] CRAN (R 3.5.0)
- mapproj        1.2.6   2018-03-29 [1] CRAN (R 3.5.0)
- maps         * 3.3.0   2018-04-03 [1] CRAN (R 3.5.0)
- Matrix         1.2-14  2018-04-13 [1] CRAN (R 3.5.1)
- memoise        1.1.0   2017-04-21 [1] CRAN (R 3.5.0)
- mgcv           1.8-24  2018-06-23 [1] CRAN (R 3.5.1)
- modelr         0.1.2   2018-05-11 [1] CRAN (R 3.5.0)
- munsell        0.5.0   2018-06-12 [1] CRAN (R 3.5.0)
- nlme           3.1-137 2018-04-07 [1] CRAN (R 3.5.1)
- nnet           7.3-12  2016-02-02 [1] CRAN (R 3.5.1)
- pillar         1.2.2   2018-04-26 [1] CRAN (R 3.5.0)
- pkgconfig      2.0.2   2018-08-16 [1] CRAN (R 3.5.0)
- plyr         * 1.8.4   2016-06-08 [1] CRAN (R 3.5.0)
- png            0.1-7   2013-12-03 [1] CRAN (R 3.5.0)
- proto          1.0.0   2016-10-29 [1] CRAN (R 3.5.0)
- purrr        * 0.2.5   2018-05-29 [1] CRAN (R 3.5.0)
- R6             2.3.0   2018-10-04 [1] CRAN (R 3.5.0)
- RColorBrewer   1.1-2   2014-12-07 [1] CRAN (R 3.5.0)
- Rcpp           1.0.0   2018-11-07 [1] CRAN (R 3.5.0)
- readr        * 1.1.1   2017-05-16 [1] CRAN (R 3.5.0)
- readxl         1.1.0   2018-04-20 [1] CRAN (R 3.5.0)
- reshape      * 0.8.8   2018-10-23 [1] CRAN (R 3.5.0)
- reshape2       1.4.3   2017-12-11 [1] CRAN (R 3.5.0)
- RgoogleMaps    1.4.3   2018-11-07 [1] CRAN (R 3.5.0)
- rjson          0.2.20  2018-06-08 [1] CRAN (R 3.5.0)
- rlang          0.3.0.1 2018-10-25 [1] CRAN (R 3.5.0)
- rpart          4.1-13  2018-02-23 [1] CRAN (R 3.5.1)
- rstudioapi     0.7     2017-09-07 [1] CRAN (R 3.5.0)
- rvest          0.3.2   2016-06-17 [1] CRAN (R 3.5.0)
- scales         1.0.0   2018-08-09 [1] CRAN (R 3.5.0)
- sessioninfo    1.1.1   2018-11-05 [1] CRAN (R 3.5.0)
- sp             1.3-1   2018-06-05 [1] CRAN (R 3.5.0)
- stringi        1.1.7   2018-03-12 [1] CRAN (R 3.5.0)
- stringr      * 1.3.0   2018-02-19 [1] CRAN (R 3.5.0)
- survival       2.42-3  2018-04-16 [1] CRAN (R 3.5.1)
- tibble       * 1.4.2   2018-01-22 [1] CRAN (R 3.5.0)
- tidyr        * 0.8.2   2018-10-28 [1] CRAN (R 3.5.0)
- tidyselect     0.2.5   2018-10-11 [1] CRAN (R 3.5.0)
- tidyverse    * 1.2.1   2017-11-14 [1] CRAN (R 3.5.0)
- viridis      * 0.5.1   2018-03-29 [1] CRAN (R 3.5.0)
- viridisLite  * 0.3.0   2018-02-01 [1] CRAN (R 3.5.0)
- withr          2.1.2   2018-03-15 [1] CRAN (R 3.5.0)
- xml2           1.2.0   2018-01-24 [1] CRAN (R 3.5.0)
- yaml           2.1.18  2018-03-08 [1] CRAN (R 3.5.0)
+ base64enc      0.1-3   2015-07-28 [1] CRAN (R 3.5.0)<br />
+ bindr          0.1.1   2018-03-13 [1] CRAN (R 3.5.0)<br />
+ bindrcpp     * 0.2.2   2018-03-29 [1] CRAN (R 3.5.0)<br />
+ broom          0.5.0   2018-07-17 [1] CRAN (R 3.5.0)<br />
+ cellranger     1.1.0   2016-07-27 [1] CRAN (R 3.5.0)<br />
+ checkmate      1.9.1   2019-01-15 [1] CRAN (R 3.5.2)<br />
+ cli            1.0.0   2017-11-05 [1] CRAN (R 3.5.0)<br />
+ cluster        2.0.7-1 2018-04-13 [1] CRAN (R 3.5.1)<br />
+ colorspace     1.3-2   2016-12-14 [1] CRAN (R 3.5.0)<br />
+ crayon         1.3.4   2017-09-16 [1] CRAN (R 3.5.0)<br />
+ data.table     1.12.0  2019-01-13 [1] CRAN (R 3.5.2)<br />
+ devtools       1.13.6  2018-06-27 [1] CRAN (R 3.5.0)<br />
+ digest         0.6.18  2018-10-10 [1] CRAN (R 3.5.0)<br />
+ dplyr        * 0.7.8   2018-11-10 [1] CRAN (R 3.5.0)<br />
+ forcats      * 0.3.0   2018-02-19 [1] CRAN (R 3.5.0)<br />
+ foreign        0.8-70  2017-11-28 [1] CRAN (R 3.5.1)<br />
+ Formula        1.2-3   2018-05-03 [1] CRAN (R 3.5.0)<br />
+ geosphere      1.5-7   2017-11-05 [1] CRAN (R 3.5.0)<br />
+ ggmap        * 2.6.1   2016-01-23 [1] CRAN (R 3.5.0)<br />
+ ggplot2      * 3.1.0   2018-10-25 [1] CRAN (R 3.5.0)<br />
+ glue           1.3.0   2018-07-17 [1] CRAN (R 3.5.0)<br />
+ gridExtra    * 2.3     2017-09-09 [1] CRAN (R 3.5.0)<br />
+ gtable       * 0.2.0   2016-02-26 [1] CRAN (R 3.5.0)<br />
+ haven          1.1.2   2018-06-27 [1] CRAN (R 3.5.0)<br />
+ hexbin       * 1.27.2  2018-01-15 [1] CRAN (R 3.5.0)<br />
+ Hmisc          4.2-0   2019-01-26 [1] CRAN (R 3.5.2)<br />
+ hms            0.4.2   2018-03-10 [1] CRAN (R 3.5.0)<br />
+ htmlTable      1.13.1  2019-01-07 [1] CRAN (R 3.5.2)<br />
+ htmltools      0.3.6   2017-04-28 [1] CRAN (R 3.5.0)<br />
+ htmlwidgets    1.2     2018-04-19 [1] CRAN (R 3.5.0)<br />
+ httr           1.3.1   2017-08-20 [1] CRAN (R 3.5.0)<br />
+ jpeg           0.1-8   2014-01-23 [1] CRAN (R 3.5.0)<br />
+ jsonlite       1.5     2017-06-01 [1] CRAN (R 3.5.0)<br />
+ knitr          1.20    2018-02-20 [1] CRAN (R 3.5.0)<br />
+ labeling       0.3     2014-08-23 [1] CRAN (R 3.5.0)<br />
+ lattice        0.20-35 2017-03-25 [1] CRAN (R 3.5.1)<br />
+ latticeExtra   0.6-28  2016-02-09 [1] CRAN (R 3.5.0)<br />
+ lazyeval       0.2.1   2017-10-29 [1] CRAN (R 3.5.0)<br />
+ lubridate      1.7.4   2018-04-11 [1] CRAN (R 3.5.0)<br />
+ magrittr       1.5     2014-11-22 [1] CRAN (R 3.5.0)<br />
+ mapproj        1.2.6   2018-03-29 [1] CRAN (R 3.5.0)<br />
+ maps         * 3.3.0   2018-04-03 [1] CRAN (R 3.5.0)<br />
+ Matrix         1.2-14  2018-04-13 [1] CRAN (R 3.5.1)<br />
+ memoise        1.1.0   2017-04-21 [1] CRAN (R 3.5.0)<br />
+ mgcv           1.8-24  2018-06-23 [1] CRAN (R 3.5.1)<br />
+ modelr         0.1.2   2018-05-11 [1] CRAN (R 3.5.0)<br />
+ munsell        0.5.0   2018-06-12 [1] CRAN (R 3.5.0)<br />
+ nlme           3.1-137 2018-04-07 [1] CRAN (R 3.5.1)<br />
+ nnet           7.3-12  2016-02-02 [1] CRAN (R 3.5.1)<br />
+ pillar         1.2.2   2018-04-26 [1] CRAN (R 3.5.0)<br />
+ pkgconfig      2.0.2   2018-08-16 [1] CRAN (R 3.5.0)<br />
+ plyr         * 1.8.4   2016-06-08 [1] CRAN (R 3.5.0)<br />
+ png            0.1-7   2013-12-03 [1] CRAN (R 3.5.0)<br />
+ proto          1.0.0   2016-10-29 [1] CRAN (R 3.5.0)<br />
+ purrr        * 0.2.5   2018-05-29 [1] CRAN (R 3.5.0)<br />
+ R6             2.3.0   2018-10-04 [1] CRAN (R 3.5.0)<br />
+ RColorBrewer   1.1-2   2014-12-07 [1] CRAN (R 3.5.0)<br />
+ Rcpp           1.0.0   2018-11-07 [1] CRAN (R 3.5.0)<br />
+ readr        * 1.1.1   2017-05-16 [1] CRAN (R 3.5.0)<br />
+ readxl         1.1.0   2018-04-20 [1] CRAN (R 3.5.0)<br />
+ reshape      * 0.8.8   2018-10-23 [1] CRAN (R 3.5.0)<br />
+ reshape2       1.4.3   2017-12-11 [1] CRAN (R 3.5.0)<br />
+ RgoogleMaps    1.4.3   2018-11-07 [1] CRAN (R 3.5.0)<br />
+ rjson          0.2.20  2018-06-08 [1] CRAN (R 3.5.0)<br />
+ rlang          0.3.0.1 2018-10-25 [1] CRAN (R 3.5.0)<br />
+ rpart          4.1-13  2018-02-23 [1] CRAN (R 3.5.1)<br />
+ rstudioapi     0.7     2017-09-07 [1] CRAN (R 3.5.0)<br />
+ rvest          0.3.2   2016-06-17 [1] CRAN (R 3.5.0)<br />
+ scales         1.0.0   2018-08-09 [1] CRAN (R 3.5.0)<br />
+ sessioninfo    1.1.1   2018-11-05 [1] CRAN (R 3.5.0)<br />
+ sp             1.3-1   2018-06-05 [1] CRAN (R 3.5.0)<br />
+ stringi        1.1.7   2018-03-12 [1] CRAN (R 3.5.0)<br />
+ stringr      * 1.3.0   2018-02-19 [1] CRAN (R 3.5.0)<br />
+ survival       2.42-3  2018-04-16 [1] CRAN (R 3.5.1)<br />
+ tibble       * 1.4.2   2018-01-22 [1] CRAN (R 3.5.0)<br />
+ tidyr        * 0.8.2   2018-10-28 [1] CRAN (R 3.5.0)<br />
+ tidyselect     0.2.5   2018-10-11 [1] CRAN (R 3.5.0)<br />
+ tidyverse    * 1.2.1   2017-11-14 [1] CRAN (R 3.5.0)<br />
+ viridis      * 0.5.1   2018-03-29 [1] CRAN (R 3.5.0)<br />
+ viridisLite  * 0.3.0   2018-02-01 [1] CRAN (R 3.5.0)<br />
+ withr          2.1.2   2018-03-15 [1] CRAN (R 3.5.0)<br />
+ xml2           1.2.0   2018-01-24 [1] CRAN (R 3.5.0)<br />
+ yaml           2.1.18  2018-03-08 [1] CRAN (R 3.5.0)<br />
 
 
