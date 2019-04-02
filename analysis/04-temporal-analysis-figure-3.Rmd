@@ -25,13 +25,15 @@ Here we are loading the 'UK_and_Irish.sp' dataset (see `03-final-data-clean.Rmd`
 ```{r}
 #Load data 
 UK_and_Irish_sp <- read.csv("UK_and_Irish_sp.csv")
-#'Speciesyearcount' cleaned data: a count of current scientific name and year 
-#Had to add dplyr:: when I ran this but may be the case that it isn't needed 
 ```
 
 ## Create a new dataframe 
 This code counts the number of each species which strands per year. It adds 0s when there are no strandings for that species 
+
 ```{r}
+#'Speciesyearcount' cleaned data: a count of current scientific name and year 
+#Had to add dplyr:: when I ran this but may be the case that it isn't needed 
+
 speciesyearcount <- dplyr::count(UK_and_Irish_sp, Name.Current.Sci, Year) %>%
   na.omit()
 
