@@ -73,6 +73,9 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 `cleaned data/` contains cleaned geomagnetic data, population data nd other correlates data
 `modelling/` contains code for models run in the supplementary material. See folder `modelling/supplementary-models`
 
+## License :page_with_curl:
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
 ## Session Info :clipboard:
 For reproducibility purposes, here is the output of `devtools::session_info()` used to perform the analyses in the publication. 
 
