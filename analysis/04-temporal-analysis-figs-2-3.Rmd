@@ -16,13 +16,16 @@ Splitting data into years and species and then attempting to look at mysticetes 
 ### Load packages 
 ```{r}
 
+#This code is looking at some species plots - still messy 
+#Splitting data into years and species and then attempting to look at mysticetes seperately 
+#Messy variable names - need to clean 
+
 library(dplyr)
 library(tidyverse)
 library(ggplot2)
 library(reshape) 
 library(viridis)
-library(readr)
-library(gridExtra)
+
 
 UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
 UK_and_Irish$X <- NULL
@@ -55,14 +58,17 @@ speciesyearcount <- speciesyearcount %>%
 
 
 p <- ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Species))+
-  theme(panel.background = element_blank(), panel.border = element_rect(colour = "grey40", fill = NA)) +
+  theme_bw() +
   labs(x = "Year", y = "Count") +
   geom_line() +
   theme(legend.position="bottom") +
   scale_fill_viridis(option="viridis") + 
   theme_minimal()
   
- p + facet_wrap(~Species, scales = 'free')
+pp <- p + facet_wrap(~ Species, scales = 'free')
+ 
+pp + theme(strip.background = element_rect(colour = "black", fill = "grey40")) +
+  theme_bw()
  
  ```
 
