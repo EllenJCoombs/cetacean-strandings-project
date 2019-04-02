@@ -60,7 +60,7 @@ write.csv(all_strandings, file = "all_strandings.csv")
 
 ## Plotting all species which strand each year 
 ### Load packages 
-This code is for Figure 1. in the paper 
+This code is for Figure 3 in the paper 
 ```{r}
 library(plyr)
 library(ggplot2)
@@ -147,6 +147,6 @@ p <- ggplot(plotdat) +
 
 print(p)
 #Save plot 
-ggsave(p, filename="Figure1.pdf", width=10, height=6)
+ggsave(p, filename="Figure3.pdf", width=10, height=6)
 
 ```
