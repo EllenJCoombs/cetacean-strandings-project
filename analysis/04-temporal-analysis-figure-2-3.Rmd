@@ -21,7 +21,8 @@ library(tidyverse)
 library(ggplot2)
 library(reshape) 
 library(viridis)
-
+library(readr)
+library(gridExtra)
 
 UK_and_Irish <- read.csv("UK_and_Irish_strandings.csv")
 UK_and_Irish$X <- NULL
