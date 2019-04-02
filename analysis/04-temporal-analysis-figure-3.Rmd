@@ -73,14 +73,14 @@ library(viridis)
 ### Load data 
 ```{r}
 
-# load all the strandings data
+#load all the strandings data
 alls <- read.csv("all_strandings.csv")
 ```
 
 ## Plot data 
 This code rearranges the order of the species to put balaenopterids first. 
 ```{r}
-# chance Total_strandings to Total_events to get # events
+#chance Total_strandings to Total_events to get # events
 plotdat <- ddply(alls, .(Year, Species), summarize, total=sum(Total_strandings))
 
 
@@ -100,8 +100,8 @@ plotdat$Species <- factor(c("Balaenoptera acutorostrata","Balaenoptera borealis"
                        "Pseudorca crassidens", "Stenella coeruleoalba",
                        "Tursiops truncatus", "Ziphius cavirostris"))
 
-#
-plotdat$Species <- factor(plotdat$Species, levels = c("Balaenoptera acutorostrata",
+
+#plotdat$Species <- factor(plotdat$Species, levels = c("Balaenoptera acutorostrata",
                                                       "Balaenoptera borealis",
                                                       "Balaenoptera musculus", 
                                                       "Balaenoptera physalus",
@@ -121,7 +121,7 @@ plotdat$Species <- factor(plotdat$Species, levels = c("Balaenoptera acutorostrat
                                                       "Stenellacoeruleoalba",
                                                       "Tursiops truncatus","Ziphius cavirostris"))
 
-# remove the zeros so they are transparent in plot
+#remove the zeros so they are transparent in plot
 plotdat <- plotdat[plotdat$total != 0,]
 # reverse sp. order alphabetically
 plotdat$Species <- factor(plotdat$Species, levels = rev(levels(plotdat$Species)))
