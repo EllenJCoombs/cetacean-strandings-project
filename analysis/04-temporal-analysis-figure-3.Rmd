@@ -1,5 +1,5 @@
 ---
-title: "04-temporal-analysis-figure-1"
+title: "04-temporal-analysis-figure-3"
 author: "Ellen Coombs"
 date: "10/01/2018"
 output: html_document
@@ -10,9 +10,9 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Temporal strandings plot 
-This markdown document requires the output from `03-final-data-clean.Rmd`. This code plots all cetacean strandings from 1913-2015 from the combined dataset (NHM + CSIP + IWDG) and produces Figure.1 from the paper. 
+This markdown document requires the output from `03-final-data-clean.Rmd`. This code plots all cetacean strandings from 1913-2015 from the combined dataset (NHM + CSIP + IWDG) and produces Figure.3 from the paper. 
 
-Before being able to plot Figure 1, we need to gather the data for doing so. This dataframe contains Year, Species and total number of strandings for each species for that year. 
+Before being able to plot Figure 3, we need to gather the data for doing so. This dataframe contains Year, Species and total number of strandings for each species for that year. 
 
 ## Load packages 
 ```{r}
