@@ -1,5 +1,5 @@
 ---
-title: "04-temporal-analysis-figs-2-3"
+title: "04-temporal-analysis-figs-1-3"
 author: "Ellen Coombs"
 date: "10/01/2018"
 output: html_document
