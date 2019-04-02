@@ -77,17 +77,16 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 For reproducibility purposes, here is the output of `devtools::session_info()` used to perform the analyses in the publication. 
 
 
-─ Session info ───────────────────────────────────────────────────────────:clipboard:
- setting  value                       
- version  R version 3.5.1 (2018-07-02)
- os       macOS High Sierra 10.13.4   
- system   x86_64, darwin15.6.0        
- ui       RStudio                     
- language (EN)                        
- collate  en_GB.UTF-8                 
- ctype    en_GB.UTF-8                 
- tz       Europe/London               
- date     2019-04-02                  
+## setting  value                       
+## version  R version 3.5.1 (2018-07-02)
+## os       macOS High Sierra 10.13.4   
+## system   x86_64, darwin15.6.0        
+## ui       RStudio                     
+## language (EN)                        
+## collate  en_GB.UTF-8                 
+## ctype    en_GB.UTF-8                 
+## tz       Europe/London               
+## date     2019-04-02                  
 
 ─ Packages ───────────────────────────────────────────────────────────────
  package      * version date       lib source        
