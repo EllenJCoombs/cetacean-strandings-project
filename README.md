@@ -74,7 +74,7 @@ If you are pushed for time, you can skip RMarkdown documents 06 to 11 and use th
 `modelling/` contains code for models run in the supplementary material. See folder `modelling/supplementary-models`
 
 ## Session Info :clipboard:
-For reproducibility purposes, here is the output of `devtools::session_info()` used to perform the analyses in the publication.
+For reproducibility purposes, here is the output of `devtools::session_info()` used to perform the analyses in the publication. 
 
 
 ─ Session info ───────────────────────────────────────────────────────────:clipboard:
