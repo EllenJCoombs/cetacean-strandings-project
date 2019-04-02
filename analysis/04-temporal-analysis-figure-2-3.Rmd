@@ -65,7 +65,7 @@ p <- ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Species))+
  
  ```
 
-## Temporal strandings plot 
+## Fig. 3 - All  strandings plot 
 This markdown document requires the output from `03-final-data-clean.Rmd`. This code plots all cetacean strandings from 1913-2015 from the combined dataset (NHM + CSIP + IWDG) and produces Figure.3 from the paper. 
 
 Before being able to plot Figure 3, we need to gather the data for doing so. This dataframe contains Year, Species and total number of strandings for each species for that year. 
