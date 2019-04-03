@@ -124,13 +124,17 @@ p <- ggplot(data = speciesyearcount, aes(x = Year, y = n, colour= Species))+
   labs(x = "Year", y = "Count") +
   geom_line() +
   theme(legend.position="bottom") +
+  theme(legend.key.size = unit(1.2, "lines")) +
   scale_fill_viridis(option="viridis") + 
-  theme_minimal()
-  
-pp <- p + facet_wrap(~ Species, scales = 'free')
- 
-pp + theme(strip.background = element_rect(colour = "black", fill = "grey40")) +
+  facet_wrap(~ Species, scales = 'free') +
+  theme_minimal() + 
+  theme(strip.background = element_rect(colour = "black", fill = "grey40")) +
   theme_bw()
+
+print(p)
+
+#Save as pdf if desired 
+ggsave(p, file = "species1.pdf",  height=12, width=20) 
  
  ```
 
