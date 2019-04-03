@@ -18,7 +18,7 @@ library(dplyr)
 library(mgcv)
 library(devtools) #for downlading gratia 
 
-#Installing gratia for extra nice plots (in body of the paper)
+#Installing gratia for extra nice plots (if required)
 devtools::install_github('gavinsimpson/gratia')
 library(gratia)
 ```
