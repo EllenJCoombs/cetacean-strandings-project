@@ -9,7 +9,10 @@ __Authors:__
 
 
 __To cite the paper__: 
-> Coombs, E.J., Deaville, R., Sabin, R. C., Allan, L., O’Connell, M., Berrow, S., Smith, B., Brownlow, A., Ten Doeschate, M., Penrose, R., Williams, R., Perkins, M., Jepson, P., Cooper, N. What can cetacean stranding records tell us? A study of UK and Irish cetacean diversity over the past 100 years. (2019). X. XXX-XXX 
+> Coombs, E.J., Deaville, R., Sabin, R. C., Allan, L., O’Connell, M., Berrow, S., Smith, B., Brownlow, A., Ten Doeschate, M., Penrose, R., Williams, R., Perkins, M., Jepson, P., Cooper, N. What can cetacean stranding records tell us? A study of UK and Irish cetacean diversity over the past 100 years. 2019. Marine Mammal Science, 000(000): 1–29. 
+
+
+Available at: https://onlinelibrary.wiley.com/doi/full/10.1111/mms.12610
 
 
 __To cite this repo__: 
