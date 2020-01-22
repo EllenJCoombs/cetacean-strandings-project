@@ -16,9 +16,9 @@ Available at: https://onlinelibrary.wiley.com/doi/full/10.1111/mms.12610
 
 
 __To cite this repo__: 
-> Coombs, E.J., Deaville, R., Sabin, R. C., Allan, L., O’Connell, M., Berrow, S., Smith, B., Brownlow, A., Ten Doeschate, M., Penrose, R., Williams, R., Perkins, M., Jepson, P., Cooper, N. What can cetacean stranding records tell us? A study of UK and Irish cetacean diversity over the past 100 years. (2019). GitHub: github.com/EllenJCoombs/cetacean-strandings-project Published version v.1.0. Zenodo. http://doi.org/10.5281/zenodo.2612908
+> Coombs, E.J., Deaville, R., Sabin, R. C., Allan, L., O’Connell, M., Berrow, S., Smith, B., Brownlow, A., Ten Doeschate, M., Penrose, R., Williams, R., Perkins, M., Jepson, P., Cooper, N. What can cetacean stranding records tell us? A study of UK and Irish cetacean diversity over the past 100 years. (2019). GitHub: github.com/EllenJCoombs/cetacean-strandings-project Published version v.1.0. Zenodo. https://doi.org/10.5281/zenodo.2613807
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2612908.svg)](https://doi.org/10.5281/zenodo.2612908)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2613807.svg)](https://doi.org/10.5281/zenodo.2613807)
 
 
 ## Data :bar_chart: :chart_with_downwards_trend: 
